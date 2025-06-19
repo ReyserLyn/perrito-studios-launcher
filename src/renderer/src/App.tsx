@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { LanguageTest } from './components/LanguageTest'
 import { SplashScreen } from './components/SplashScreen'
 import { AuthExample } from './components/examples/AuthExample'
+import { Toaster } from './components/ui/sonner'
 import { AppProvider } from './providers/AppProvider'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           </div>
         </div>
       </div>
+      <Toaster />
     </AppProvider>
   )
 }

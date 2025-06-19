@@ -158,8 +158,9 @@ function setupAuthHandlers(): void {
   // Añadir cuenta Mojang
   ipcMain.handle('auth:add-mojang-account', async (_event, username: string) => {
     try {
-      console.log(`[+] Añadiendo cuenta Mojang: ${username}`)
+      console.log(`[IPC Handler] Recibida solicitud para añadir cuenta Mojang: ${username}`)
       const account = await AuthManager.addAccount(username)
+      console.log(`[IPC Handler] Cuenta añadida exitosamente:`, account)
       return {
         success: true,
         account

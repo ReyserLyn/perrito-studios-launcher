@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { queryKeys } from '../lib/queryClient'
 import { useAppStore } from '../stores/appStore'
 
@@ -9,15 +10,30 @@ export const useAuthStatus = () => {
   return useQuery({
     queryKey: queryKeys.auth.status,
     queryFn: async () => {
+      console.log('[useAuthStatus] Verificando estado de autenticación...')
       const result = await window.api.auth.checkStatus()
+      console.log('[useAuthStatus] Resultado:', result)
       if (result.success) {
-        setUser(result.user)
-        setAuthenticated(!!result.user)
+        // Solo actualizar si hay cambios
+        if (result.user) {
+          setUser({
+            uuid: result.user.id,
+            displayName: result.user.username,
+            type: result.user.provider
+          })
+          setAuthenticated(true)
+        } else {
+          setUser(null)
+          setAuthenticated(false)
+        }
         return result
       }
       throw new Error(result.error || 'Error verificando estado de autenticación')
     },
-    refetchInterval: 30000 // Verificar cada 30 segundos
+    refetchInterval: 60000, // Aumentar intervalo a 60 segundos para reducir conflictos
+    staleTime: 30000, // Considerar datos frescos por 30 segundos
+    refetchOnWindowFocus: false, // No revalidar al enfocar la ventana
+    refetchOnMount: false // No revalidar al montar si ya tenemos datos
   })
 }
 
@@ -55,32 +71,29 @@ export const useSelectedAccount = () => {
 // Hook para añadir cuenta Mojang
 export const useAddMojangAccount = () => {
   const queryClient = useQueryClient()
-  const { addNotification } = useAppStore()
 
   return useMutation({
     mutationFn: async (username: string) => {
+      console.log(`[useAddMojangAccount] Iniciando solicitud para: ${username}`)
       const result = await window.api.auth.addMojangAccount(username)
+      console.log(`[useAddMojangAccount] Resultado recibido:`, result)
       if (!result.success) {
         throw new Error(result.error || 'Error añadiendo cuenta Mojang')
       }
       return result
     },
     onSuccess: () => {
+      console.log(`[useAddMojangAccount] Mutación exitosa, invalidando queries`)
       // Invalidar queries relacionadas
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
 
-      addNotification({
-        type: 'success',
-        message: 'Cuenta Mojang añadida exitosamente'
-      })
+      toast.success('Cuenta Mojang añadida exitosamente')
     },
     onError: (error: Error) => {
-      addNotification({
-        type: 'error',
-        message: error.message
-      })
+      console.error(`[useAddMojangAccount] Error en mutación:`, error)
+      toast.error(error.message)
     }
   })
 }
@@ -88,7 +101,6 @@ export const useAddMojangAccount = () => {
 // Hook para añadir cuenta Microsoft
 export const useAddMicrosoftAccount = () => {
   const queryClient = useQueryClient()
-  const { addNotification } = useAppStore()
 
   return useMutation({
     mutationFn: async (authCode: string) => {
@@ -103,16 +115,10 @@ export const useAddMicrosoftAccount = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
 
-      addNotification({
-        type: 'success',
-        message: 'Cuenta Microsoft añadida exitosamente'
-      })
+      toast.success('Cuenta Microsoft añadida exitosamente')
     },
     onError: (error: Error) => {
-      addNotification({
-        type: 'error',
-        message: error.message
-      })
+      toast.error(error.message)
     }
   })
 }
@@ -120,31 +126,40 @@ export const useAddMicrosoftAccount = () => {
 // Hook para seleccionar cuenta
 export const useSelectAccount = () => {
   const queryClient = useQueryClient()
-  const { addNotification, setUser } = useAppStore()
+  const { setUser, setAuthenticated } = useAppStore()
 
   return useMutation({
     mutationFn: async (uuid: string) => {
+      console.log(`[useSelectAccount] Seleccionando cuenta: ${uuid}`)
       const result = await window.api.auth.selectAccount(uuid)
+      console.log(`[useSelectAccount] Resultado:`, result)
       if (!result.success) {
         throw new Error(result.error || 'Error seleccionando cuenta')
       }
       return result
     },
     onSuccess: (data) => {
-      setUser(data.account)
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
+      console.log(`[useSelectAccount] Cuenta seleccionada exitosamente:`, data.account)
+      if (data.account) {
+        // Actualizar el estado del store inmediatamente
+        setUser({
+          uuid: data.account.uuid,
+          displayName: data.account.displayName,
+          type: data.account.type
+        })
+        setAuthenticated(true)
 
-      addNotification({
-        type: 'success',
-        message: 'Cuenta seleccionada exitosamente'
-      })
+        // Invalidar queries para refrescar datos
+        queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
+        queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
+        queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
+      }
+
+      toast.success('Cuenta seleccionada exitosamente')
     },
     onError: (error: Error) => {
-      addNotification({
-        type: 'error',
-        message: error.message
-      })
+      console.error(`[useSelectAccount] Error en mutación:`, error)
+      toast.error(error.message)
     }
   })
 }
@@ -152,7 +167,7 @@ export const useSelectAccount = () => {
 // Hook para cerrar sesión
 export const useLogout = () => {
   const queryClient = useQueryClient()
-  const { addNotification, setUser, setAuthenticated } = useAppStore()
+  const { setUser, setAuthenticated } = useAppStore()
 
   return useMutation({
     mutationFn: async () => {
@@ -171,24 +186,16 @@ export const useLogout = () => {
       queryClient.removeQueries({ queryKey: queryKeys.auth.selectedAccount })
       queryClient.removeQueries({ queryKey: queryKeys.auth.status })
 
-      addNotification({
-        type: 'success',
-        message: 'Sesión cerrada exitosamente'
-      })
+      toast.success('Sesión cerrada exitosamente')
     },
     onError: (error: Error) => {
-      addNotification({
-        type: 'error',
-        message: error.message
-      })
+      toast.error(error.message)
     }
   })
 }
 
 // Hook para validar cuenta seleccionada
 export const useValidateAccount = () => {
-  const { addNotification } = useAppStore()
-
   return useMutation({
     mutationFn: async () => {
       const result = await window.api.auth.validateSelected()
@@ -198,10 +205,7 @@ export const useValidateAccount = () => {
       return result.isValid
     },
     onError: (error: Error) => {
-      addNotification({
-        type: 'error',
-        message: error.message
-      })
+      toast.error(error.message)
     }
   })
 }

@@ -165,19 +165,28 @@ async function fullMicrosoftAuthFlow(
  */
 export async function addAccount(username: string): Promise<any> {
   try {
+    console.log(`[AuthManager] Añadiendo cuenta Mojang para: ${username}`)
+
     const hash = crypto.createHash('md5')
     hash.update(username)
     const userId = hash.digest('hex')
 
+    console.log(`[AuthManager] UUID generado: ${userId}`)
+
     const ret = ConfigManager.addMojangAuthAccount(userId, 'sry', username, username)
+    console.log(`[AuthManager] Cuenta añadida al ConfigManager:`, ret)
 
     if (ConfigManager.getClientToken() == null) {
       ConfigManager.setClientToken('sry')
+      console.log(`[AuthManager] Client token establecido`)
     }
 
     ConfigManager.save()
+    console.log(`[AuthManager] Configuración guardada`)
+
     return ret
   } catch (err) {
+    console.error(`[AuthManager] Error añadiendo cuenta:`, err)
     return Promise.reject(err)
   }
 }
@@ -334,7 +343,9 @@ export async function validateSelected(): Promise<boolean> {
  * Obtiene información de la cuenta seleccionada
  */
 export function getSelectedAccount(): any {
-  return ConfigManager.getSelectedAccount()
+  const account = ConfigManager.getSelectedAccount()
+  console.log(`[AuthManager] getSelectedAccount returning:`, account)
+  return account
 }
 
 /**
@@ -348,5 +359,10 @@ export function getAuthAccounts(): any {
  * Selecciona una cuenta por UUID
  */
 export function setSelectedAccount(uuid: string): any {
-  return ConfigManager.setSelectedAccount(uuid)
+  console.log(`[AuthManager] setSelectedAccount called with UUID: ${uuid}`)
+  const result = ConfigManager.setSelectedAccount(uuid)
+  console.log(`[AuthManager] setSelectedAccount result:`, result)
+  ConfigManager.save()
+  console.log(`[AuthManager] Configuration saved after selecting account`)
+  return result
 }

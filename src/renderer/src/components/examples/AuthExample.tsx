@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   useAccounts,
   useAddMojangAccount,
@@ -5,14 +6,20 @@ import {
   useLogout,
   useSelectAccount
 } from '../../hooks/useAuth'
-import { useAuth, useNotifications } from '../../stores/appStore'
+import { useAuth } from '../../stores/appStore'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 
 export function AuthExample() {
+  // Estado para el diálogo
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [username, setUsername] = useState('')
+
   // Usar el estado global
   const { user, isAuthenticated } = useAuth()
-  const notifications = useNotifications()
 
   // Usar los hooks de React Query
   const { isLoading: statusLoading } = useAuthStatus()
@@ -21,14 +28,26 @@ export function AuthExample() {
   const selectAccount = useSelectAccount()
   const logout = useLogout()
 
-  const handleAddAccount = () => {
-    const username = prompt('Ingresa tu nombre de usuario:')
-    if (username) {
-      addMojangAccount.mutate(username)
+  const handleConfirmAddAccount = () => {
+    console.log('[AuthExample] Username ingresado:', username)
+    if (username.trim()) {
+      console.log('[AuthExample] Ejecutando mutación addMojangAccount')
+      addMojangAccount.mutate(username.trim())
+      setUsername('')
+      setIsDialogOpen(false)
+    } else {
+      console.log('[AuthExample] No se ingresó username válido, cancelando')
     }
   }
 
+  const handleCancelAddAccount = () => {
+    console.log('[AuthExample] Cancelando añadir cuenta')
+    setUsername('')
+    setIsDialogOpen(false)
+  }
+
   const handleSelectAccount = (uuid: string) => {
+    console.log('[AuthExample] Seleccionando cuenta:', uuid)
     selectAccount.mutate(uuid)
   }
 
@@ -115,9 +134,45 @@ export function AuthExample() {
         </CardHeader>
         <CardContent>
           <div className="flex gap-2 flex-wrap">
-            <Button onClick={handleAddAccount} disabled={addMojangAccount.isPending}>
-              {addMojangAccount.isPending ? 'Añadiendo...' : 'Añadir Cuenta Mojang'}
-            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button disabled={addMojangAccount.isPending}>
+                  {addMojangAccount.isPending ? 'Añadiendo...' : 'Añadir Cuenta Mojang'}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Añadir Cuenta Mojang</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="username" className="text-right">
+                      Nombre de usuario
+                    </Label>
+                    <Input
+                      id="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="col-span-3"
+                      placeholder="Ingresa tu nombre de usuario"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleConfirmAddAccount()
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={handleCancelAddAccount}>
+                    Cancelar
+                  </Button>
+                  <Button onClick={handleConfirmAddAccount} disabled={!username.trim()}>
+                    Añadir
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             <Button
               variant="destructive"
@@ -129,35 +184,6 @@ export function AuthExample() {
           </div>
         </CardContent>
       </Card>
-
-      {/* Notificaciones */}
-      {notifications.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Notificaciones</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-2 rounded text-sm ${
-                    notification.type === 'error'
-                      ? 'bg-red-100 text-red-800'
-                      : notification.type === 'success'
-                        ? 'bg-green-100 text-green-800'
-                        : notification.type === 'warning'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-blue-100 text-blue-800'
-                  }`}
-                >
-                  {notification.message}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   )
 }
