@@ -54,3 +54,54 @@ export const DISCORD_RPC = {
   UPDATE_DETAILS: 'discord:update-details',
   SHUTDOWN: 'discord:shutdown'
 } as const
+
+export const CONFIG_OPCODE = {
+  GET_LAUNCHER_DIRECTORY: 'config:get-launcher-directory',
+  GET_DATA_DIRECTORY: 'config:get-data-directory',
+  SET_DATA_DIRECTORY: 'config:set-data-directory',
+  GET_COMMON_DIRECTORY: 'config:get-common-directory',
+  GET_INSTANCE_DIRECTORY: 'config:get-instance-directory',
+  SAVE: 'config:save',
+  LOAD: 'config:load',
+  IS_FIRST_LAUNCH: 'config:is-first-launch',
+  GET_GAME_WIDTH: 'config:get-game-width',
+  SET_GAME_WIDTH: 'config:set-game-width',
+  GET_GAME_HEIGHT: 'config:get-game-height',
+  SET_GAME_HEIGHT: 'config:set-game-height',
+  GET_FULLSCREEN: 'config:get-fullscreen',
+  SET_FULLSCREEN: 'config:set-fullscreen',
+  GET_AUTO_CONNECT: 'config:get-auto-connect',
+  SET_AUTO_CONNECT: 'config:set-auto-connect',
+  GET_LAUNCH_DETACHED: 'config:get-launch-detached',
+  SET_LAUNCH_DETACHED: 'config:set-launch-detached',
+  GET_ALLOW_PRERELEASE: 'config:get-allow-prerelease',
+  SET_ALLOW_PRERELEASE: 'config:set-allow-prerelease',
+  GET_SYNC_LANGUAGE: 'config:get-sync-language',
+  SET_SYNC_LANGUAGE: 'config:set-sync-language',
+  GET_SELECTED_SERVER: 'config:get-selected-server',
+  SET_SELECTED_SERVER: 'config:set-selected-server',
+  GET_MIN_RAM: 'config:get-min-ram',
+  SET_MIN_RAM: 'config:set-min-ram',
+  GET_MAX_RAM: 'config:get-max-ram',
+  SET_MAX_RAM: 'config:set-max-ram',
+  GET_JAVA_EXECUTABLE: 'config:get-java-executable',
+  SET_JAVA_EXECUTABLE: 'config:set-java-executable',
+  GET_JVM_OPTIONS: 'config:get-jvm-options',
+  SET_JVM_OPTIONS: 'config:set-jvm-options',
+  ENSURE_JAVA_CONFIG: 'config:ensure-java-config',
+  GET_ABSOLUTE_MIN_RAM: 'config:get-absolute-min-ram',
+  GET_ABSOLUTE_MAX_RAM: 'config:get-absolute-max-ram'
+} as const
+
+export const DISTRIBUTION_OPCODE = {
+  GET_DISTRIBUTION: 'distro:get-distribution',
+  REFRESH_DISTRIBUTION: 'distro:refresh-distribution',
+  GET_SERVER_BY_ID: 'distro:get-server-by-id',
+  GET_MAIN_SERVER: 'distro:get-main-server'
+} as const
+
+export const PROCESS_BUILDER_OPCODE = {
+  LAUNCH_GAME: 'process:launch-game',
+  KILL_PROCESS: 'process:kill-process',
+  GET_PROCESS_STATUS: 'process:get-process-status'
+} as const
