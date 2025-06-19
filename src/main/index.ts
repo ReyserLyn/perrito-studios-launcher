@@ -2,6 +2,7 @@ import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { app } from 'electron'
 import { setupIpcHandlers } from './ipcHandlers'
 import { createMenu } from './menu'
+import { runPreloadTasks } from './preloader'
 import { languageManager } from './utils/language'
 import { createMainWindow, getMainWindow } from './window'
 
@@ -19,7 +20,12 @@ app.whenReady().then(() => {
 
   setupIpcHandlers()
 
-  createMainWindow()
+  const mainWindow = createMainWindow()
+
+  // Ejecutar tareas de pre-carga
+  runPreloadTasks(mainWindow).catch((err) =>
+    console.error('[PRELOADER] Error durante la pre-carga:', err)
+  )
 
   createMenu()
 
