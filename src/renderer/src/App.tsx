@@ -8,7 +8,7 @@ function App(): React.JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8 font-sans">
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
           {/* Features Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">🚀 CaracterísticasF</CardTitle>
+              <CardTitle className="flex items-center gap-2">🚀 Características</CardTitle>
               <CardDescription>Tecnologías modernas integradas</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
