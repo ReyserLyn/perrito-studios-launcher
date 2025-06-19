@@ -36,3 +36,15 @@ export const AUTO_UPDATER = {
 export const DISTRIBUTION = {
   INDEX_DONE: 'distributionIndexDone'
 } as const
+
+export const DROPIN_MOD_OPCODE = {
+  SCAN_MODS: 'dropin:scan-mods',
+  ADD_MODS: 'dropin:add-mods',
+  DELETE_MOD: 'dropin:delete-mod',
+  TOGGLE_MOD: 'dropin:toggle-mod',
+  SCAN_SHADERPACKS: 'dropin:scan-shaderpacks',
+  GET_ENABLED_SHADERPACK: 'dropin:get-enabled-shaderpack',
+  SET_ENABLED_SHADERPACK: 'dropin:set-enabled-shaderpack',
+  ADD_SHADERPACKS: 'dropin:add-shaderpacks',
+  GET_MOD_STATS: 'dropin:get-mod-stats'
+} as const
