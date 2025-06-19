@@ -1,4 +1,10 @@
 {
+  "loginOptions": {
+    "loginOptionsTitle": "Sign In",
+    "loginWithMicrosoft": "Continue with Microsoft",
+    "loginWithMojang": "Continue with Mojang",
+    "cancelButton": "Cancel"
+  },
   "test": {
     "title": "🧪 Language System Tests",
     "subtitle": "Usage examples and features",
@@ -73,5 +79,9 @@
     "profile": "Profile",
     "settings": "Settings",
     "help": "Help"
+  },
+  "discord": {
+    "waiting": "Waiting for the player...",
+    "state": "Playing on {{shortId}}"
   }
 }

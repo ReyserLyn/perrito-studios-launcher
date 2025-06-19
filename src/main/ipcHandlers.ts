@@ -1,7 +1,8 @@
 import { BrowserWindow, ipcMain, shell } from 'electron'
 import * as path from 'path'
-import { DISTRIBUTION, DROPIN_MOD_OPCODE, SHELL_OPCODE } from './constants/ipc'
+import { DISCORD_RPC, DISTRIBUTION, DROPIN_MOD_OPCODE, SHELL_OPCODE } from './constants/ipc'
 import * as AuthManager from './services/authManager'
+import * as DiscordWrapper from './services/discordwrapper'
 import * as DropinModUtil from './services/dropinModUtil'
 import { languageManager } from './utils/language'
 
@@ -33,6 +34,9 @@ export function setupIpcHandlers(): void {
 
   // === HANDLERS DE MODS DROP-IN & SHADERPACKS ===
   setupDropinModHandlers()
+
+  // === HANDLERS DE DISCORD RPC ===
+  setupDiscordRpcHandlers()
 
   // Mostrar toast (notificaciones)
   ipcMain.on('show-toast', (_event, { type, message }) => {
@@ -498,4 +502,53 @@ function setupDropinModHandlers(): void {
       }
     }
   )
+}
+
+function setupDiscordRpcHandlers(): void {
+  ipcMain.handle(
+    DISCORD_RPC.INIT,
+    async (
+      _event,
+      genSettings: DiscordWrapper.GeneralSettings,
+      servSettings: DiscordWrapper.ServerSettings,
+      initialDetails?: string
+    ) => {
+      try {
+        DiscordWrapper.initRPC(genSettings, servSettings, initialDetails)
+        return { success: true }
+      } catch (error) {
+        console.error('Error iniciando Discord RPC:', error)
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Error desconocido al iniciar RPC'
+        }
+      }
+    }
+  )
+
+  ipcMain.handle(DISCORD_RPC.UPDATE_DETAILS, async (_event, details: string) => {
+    try {
+      DiscordWrapper.updateDetails(details)
+      return { success: true }
+    } catch (error) {
+      console.error('Error actualizando detalles RPC:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error desconocido al actualizar RPC'
+      }
+    }
+  })
+
+  ipcMain.handle(DISCORD_RPC.SHUTDOWN, async () => {
+    try {
+      DiscordWrapper.shutdownRPC()
+      return { success: true }
+    } catch (error) {
+      console.error('Error cerrando Discord RPC:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error desconocido al cerrar RPC'
+      }
+    }
+  })
 }

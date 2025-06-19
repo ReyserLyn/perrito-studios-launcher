@@ -48,3 +48,9 @@ export const DROPIN_MOD_OPCODE = {
   ADD_SHADERPACKS: 'dropin:add-shaderpacks',
   GET_MOD_STATS: 'dropin:get-mod-stats'
 } as const
+
+export const DISCORD_RPC = {
+  INIT: 'discord:init',
+  UPDATE_DETAILS: 'discord:update-details',
+  SHUTDOWN: 'discord:shutdown'
+} as const
