@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import logoImage from '../assets/logos/Rec_Color_LBlanco.webp'
+import logoImage from '../assets/images/logos/Rec_Color_LBlanco.webp'
 
 interface SplashScreenProps {
   onComplete: () => void
