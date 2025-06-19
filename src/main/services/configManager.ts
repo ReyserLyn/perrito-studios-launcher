@@ -192,7 +192,9 @@ let config: Config | null = null
  * Guarda la configuración actual en un archivo.
  */
 export function save(): void {
+  console.log(`[ConfigManager] Guardando configuración en: ${configPath}`)
   fs.writeFileSync(configPath, JSON.stringify(config, null, 4), 'utf8')
+  console.log(`[ConfigManager] Configuración guardada exitosamente`)
 }
 
 /**
