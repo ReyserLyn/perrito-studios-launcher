@@ -30,6 +30,7 @@ asarUnpack:
 # Windows Configuration
 win:
   executableName: perrito-studios-launcher
+  icon: resources/icon.png
   target:
     - target: 'nsis'
       arch: 'x64'
@@ -47,6 +48,7 @@ nsis:
 # macOS Configuration
 
 mac:
+  icon: resources/icon.png
   target:
     - target: 'dmg'
       arch:
@@ -57,6 +59,7 @@ mac:
 
 # Linux Configuration
 linux:
+  icon: resources/icon.png
   target: 'AppImage'
   maintainer: 'ReyserLyn'
   vendor: 'ReyserLyn'
