@@ -1,5 +1,6 @@
 import { BrowserWindow, ipcMain, shell } from 'electron'
 import { DISTRIBUTION, SHELL_OPCODE } from './constants/ipc'
+import * as AuthManager from './services/authManager'
 import { languageManager } from './utils/language'
 
 export function setupIpcHandlers(): void {
@@ -120,42 +121,202 @@ function setupLanguageHandlers(): void {
 }
 
 function setupAuthHandlers(): void {
+  // === HANDLERS DE CUENTAS MOJANG ===
+
+  // Añadir cuenta Mojang
+  ipcMain.handle('auth:add-mojang-account', async (_event, username: string) => {
+    try {
+      console.log(`[+] Añadiendo cuenta Mojang: ${username}`)
+      const account = await AuthManager.addAccount(username)
+      return {
+        success: true,
+        account
+      }
+    } catch (error) {
+      console.error('Error añadiendo cuenta Mojang:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error añadiendo cuenta Mojang'
+      }
+    }
+  })
+
+  // Remover cuenta Mojang
+  ipcMain.handle('auth:remove-mojang-account', async (_event, uuid: string) => {
+    try {
+      console.log(`[+] Removiendo cuenta Mojang: ${uuid}`)
+      await AuthManager.removeMojangAccount(uuid)
+      return {
+        success: true
+      }
+    } catch (error) {
+      console.error('Error removiendo cuenta Mojang:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error removiendo cuenta Mojang'
+      }
+    }
+  })
+
+  // === HANDLERS DE CUENTAS MICROSOFT ===
+
+  // Añadir cuenta Microsoft
+  ipcMain.handle('auth:add-microsoft-account', async (_event, authCode: string) => {
+    try {
+      console.log('[+] Añadiendo cuenta Microsoft...')
+      const account = await AuthManager.addMicrosoftAccount(authCode)
+      return {
+        success: true,
+        account
+      }
+    } catch (error) {
+      console.error('Error añadiendo cuenta Microsoft:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error añadiendo cuenta Microsoft'
+      }
+    }
+  })
+
+  // Remover cuenta Microsoft
+  ipcMain.handle('auth:remove-microsoft-account', async (_event, uuid: string) => {
+    try {
+      console.log(`[+] Removiendo cuenta Microsoft: ${uuid}`)
+      await AuthManager.removeMicrosoftAccount(uuid)
+      return {
+        success: true
+      }
+    } catch (error) {
+      console.error('Error removiendo cuenta Microsoft:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error removiendo cuenta Microsoft'
+      }
+    }
+  })
+
+  // === HANDLERS DE GESTIÓN DE CUENTAS ===
+
+  // Obtener cuenta seleccionada
+  ipcMain.handle('auth:get-selected-account', async () => {
+    try {
+      const account = AuthManager.getSelectedAccount()
+      return {
+        success: true,
+        account
+      }
+    } catch (error) {
+      console.error('Error obteniendo cuenta seleccionada:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error obteniendo cuenta seleccionada'
+      }
+    }
+  })
+
+  // Obtener todas las cuentas
+  ipcMain.handle('auth:get-all-accounts', async () => {
+    try {
+      const accounts = AuthManager.getAuthAccounts()
+      return {
+        success: true,
+        accounts
+      }
+    } catch (error) {
+      console.error('Error obteniendo cuentas:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error obteniendo cuentas'
+      }
+    }
+  })
+
+  // Seleccionar cuenta
+  ipcMain.handle('auth:select-account', async (_event, uuid: string) => {
+    try {
+      console.log(`[+] Seleccionando cuenta: ${uuid}`)
+      const account = AuthManager.setSelectedAccount(uuid)
+      return {
+        success: true,
+        account
+      }
+    } catch (error) {
+      console.error('Error seleccionando cuenta:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error seleccionando cuenta'
+      }
+    }
+  })
+
+  // Validar cuenta seleccionada
+  ipcMain.handle('auth:validate-selected', async () => {
+    try {
+      console.log('[+] Validando cuenta seleccionada...')
+      const isValid = await AuthManager.validateSelected()
+      return {
+        success: true,
+        isValid
+      }
+    } catch (error) {
+      console.error('Error validando cuenta:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error validando cuenta'
+      }
+    }
+  })
+
+  // === HANDLERS DE COMPATIBILIDAD ===
+
   // Verificar estado de autenticación
   ipcMain.handle('auth:check-status', async () => {
     try {
-      // Aquí podrías verificar si hay tokens guardados, sesión activa, etc.
-      return { user: null }
+      const account = AuthManager.getSelectedAccount()
+      return {
+        success: true,
+        user: account
+          ? {
+              id: account.uuid,
+              username: account.displayName,
+              email: account.username,
+              provider: account.type || 'mojang'
+            }
+          : null
+      }
     } catch (error) {
       console.error('Error checking auth status:', error)
-      return { user: null }
+      return {
+        success: false,
+        user: null,
+        error: error instanceof Error ? error.message : 'Error verificando estado'
+      }
     }
   })
 
   // Login con Microsoft
-  ipcMain.handle('auth:microsoft-login', async () => {
+  ipcMain.handle('auth:microsoft-login', async (_event, authCode?: string) => {
     try {
       console.log('[+] Iniciando autenticación Microsoft...')
 
-      // Por ahora simulamos una autenticación exitosa
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      // Si no se proporciona authCode, usar uno por defecto para testing
+      const code = authCode || 'default_auth_code'
+      const account = await AuthManager.addMicrosoftAccount(code)
 
-      const user = {
-        id: 'microsoft_' + Date.now(),
-        username: 'Usuario Microsoft',
-        email: 'usuario@microsoft.com',
-        provider: 'microsoft' as const
-      }
-
-      console.log('[+] Autenticación Microsoft exitosa')
       return {
         success: true,
-        user
+        user: {
+          id: account.uuid,
+          username: account.displayName,
+          email: account.username,
+          provider: 'microsoft'
+        }
       }
     } catch (error) {
       console.error('Error Microsoft auth:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error en la autenticación'
+        error: error instanceof Error ? error.message : 'Error en la autenticación con Microsoft'
       }
     }
   })
@@ -164,6 +325,16 @@ function setupAuthHandlers(): void {
   ipcMain.handle('auth:logout', async () => {
     try {
       console.log('[+] Cerrando sesión...')
+      const account = AuthManager.getSelectedAccount()
+
+      if (account) {
+        if (account.type === 'microsoft') {
+          await AuthManager.removeMicrosoftAccount(account.uuid)
+        } else {
+          await AuthManager.removeMojangAccount(account.uuid)
+        }
+      }
+
       console.log('[+] Sesión cerrada exitosamente')
       return { success: true }
     } catch (error) {
