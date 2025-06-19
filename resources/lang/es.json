@@ -1,0 +1,77 @@
+{
+  "test": {
+    "title": "🧪 Pruebas del Sistema de Idiomas",
+    "subtitle": "Ejemplos de uso y funcionalidades",
+    "simple": "Texto simple en español",
+    "withVariable": "Hola {{name}}, bienvenido al launcher",
+    "withNumber": "Tienes {{count}} juegos instalados",
+    "progress": "Progreso: {{percent}}%",
+    "games": {
+      "zero": "No tienes juegos",
+      "one": "Tienes {{count}} juego",
+      "other": "Tienes {{count}} juegos"
+    },
+    "users": {
+      "zero": "No hay usuarios conectados",
+      "one": "{{count}} usuario conectado",
+      "other": "{{count}} usuarios conectados"
+    },
+    "lastSeen": "Última vez visto: {{date}}",
+    "fileSize": "Tamaño del archivo: {{size}} bytes",
+    "sections": {
+      "basic": "Uso Básico",
+      "variables": "Variables",
+      "pluralization": "Pluralización",
+      "formatting": "Formateo"
+    }
+  },
+  "microsoft": {
+    "loginTitle": "Iniciar Sesión con Microsoft",
+    "logoutTitle": "Cerrar Sesión de Microsoft",
+    "connecting": "Conectando con Microsoft...",
+    "success": "Autenticación exitosa",
+    "error": "Error en la autenticación"
+  },
+  "updater": {
+    "checking": "Buscando actualizaciones...",
+    "available": "Actualización disponible v{{version}}",
+    "downloading": "Descargando actualización...",
+    "downloaded": "Actualización descargada",
+    "notAvailable": "No hay actualizaciones disponibles",
+    "error": "Error al buscar actualizaciones",
+    "progress": "Descargando: {{percent}}%",
+    "installNow": "Instalar ahora",
+    "installLater": "Instalar después"
+  },
+  "general": {
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "ok": "Aceptar",
+    "close": "Cerrar",
+    "yes": "Sí",
+    "no": "No",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar"
+  },
+  "launcher": {
+    "title": "Perrito Studios Launcher",
+    "loading": "Cargando launcher...",
+    "connecting": "Conectando...",
+    "ready": "Listo para jugar",
+    "welcome": "¡Bienvenido de vuelta, {{username}}!",
+    "totalGames": "Total de juegos: {{count}}",
+    "lastPlayed": "Último juego: {{game}}",
+    "playTime": "Tiempo jugado: {{hours}} horas"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "games": "Juegos",
+    "store": "Tienda",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "help": "Ayuda"
+  }
+}

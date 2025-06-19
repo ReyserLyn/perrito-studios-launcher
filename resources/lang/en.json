@@ -1,0 +1,77 @@
+{
+  "test": {
+    "title": "🧪 Language System Tests",
+    "subtitle": "Usage examples and features",
+    "simple": "Simple text in English",
+    "withVariable": "Hello {{name}}, welcome to the launcher",
+    "withNumber": "You have {{count}} games installed",
+    "progress": "Progress: {{percent}}%",
+    "games": {
+      "zero": "You have no games",
+      "one": "You have {{count}} game",
+      "other": "You have {{count}} games"
+    },
+    "users": {
+      "zero": "No users connected",
+      "one": "{{count}} user connected",
+      "other": "{{count}} users connected"
+    },
+    "lastSeen": "Last seen: {{date}}",
+    "fileSize": "File size: {{size}} bytes",
+    "sections": {
+      "basic": "Basic Usage",
+      "variables": "Variables",
+      "pluralization": "Pluralization",
+      "formatting": "Formatting"
+    }
+  },
+  "microsoft": {
+    "loginTitle": "Microsoft Login",
+    "logoutTitle": "Microsoft Logout",
+    "connecting": "Connecting to Microsoft...",
+    "success": "Authentication successful",
+    "error": "Authentication error"
+  },
+  "updater": {
+    "checking": "Checking for updates...",
+    "available": "Update available v{{version}}",
+    "downloading": "Downloading update...",
+    "downloaded": "Update downloaded",
+    "notAvailable": "No updates available",
+    "error": "Error checking for updates",
+    "progress": "Downloading: {{percent}}%",
+    "installNow": "Install now",
+    "installLater": "Install later"
+  },
+  "general": {
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "launcher": {
+    "title": "Perrito Studios Launcher",
+    "loading": "Loading launcher...",
+    "connecting": "Connecting...",
+    "ready": "Ready to play",
+    "welcome": "Welcome back, {{username}}!",
+    "totalGames": "Total games: {{count}}",
+    "lastPlayed": "Last game: {{game}}",
+    "playTime": "Play time: {{hours}} hours"
+  },
+  "navigation": {
+    "home": "Home",
+    "games": "Games",
+    "store": "Store",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help"
+  }
+}
