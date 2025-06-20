@@ -119,7 +119,7 @@ export function DialogServers() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-2 bg-[#151126] border-[#2c1e4d] border-1 max-w-80 justify-start h-auto p-3"
+          className="flex items-center gap-2 bg-[#151126] border-[#2c1e4d] border-1 max-w-72 justify-start h-auto p-3"
         >
           <Server size={20} />
           <div className="flex flex-col items-start">

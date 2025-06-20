@@ -1,10 +1,10 @@
 import logo from '@/assets/images/logos/Rec_Color_LBlanco.webp'
 import { DialogAccounts } from '@/components/DialogAccounts'
 import { DialogServers } from '@/components/DialogServers'
+import { LaunchButton } from '@/components/launchButton'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { useCurrentServerStatus, useServerData } from '@/hooks'
-import { Loader2, Play } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 export function Home() {
   const { currentServer, isLoading: serverLoading } = useServerData()
@@ -57,14 +57,7 @@ export function Home() {
             <div className="flex flex-col gap-2">
               <DialogServers />
 
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 bg-[#151126] border-[#2c1e4d] border-1 max-w-80 justify-start h-auto"
-                effect="shineHover"
-              >
-                <Play size={25} />
-                <span className="text-xl font-medium">Play</span>
-              </Button>
+              <LaunchButton />
             </div>
           </div>
 
