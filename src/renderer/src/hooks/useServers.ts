@@ -22,6 +22,7 @@ export const useDistribution = () => {
   })
 }
 
+// Hook para obtener todos los servidores
 export const useAllServers = () => {
   return useQuery({
     queryKey: ['servers'],
@@ -37,6 +38,7 @@ export const useAllServers = () => {
   })
 }
 
+// Hook para obtener el ID del servidor seleccionado
 export const useGetIdSelectedServer = () => {
   return useQuery({
     queryKey: ['selectedServer'],
@@ -54,6 +56,7 @@ export const useGetIdSelectedServer = () => {
   })
 }
 
+// Hook para obtener el servidor actual
 export const useCurrentServer = (): HeliosServer | undefined => {
   const idSelectedServer = useGetIdSelectedServer()
   const serverList = useAllServers()
