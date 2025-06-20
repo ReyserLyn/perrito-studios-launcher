@@ -103,19 +103,6 @@ export const useCurrentServerStatus = () => {
 }
 
 /*
-export const useServerStatus = (serverId: string) => {
-  return useQuery({
-    queryKey: ['serverStatus', serverId],
-    queryFn: async () => {
-      const result = await window.api.server.getStatus(serverId)
-      if (!result.success) throw new Error(result.error)
-      return result.status
-    },
-    refetchInterval: 30000, // Poll cada 30 segundos
-    retry: 1, // Solo 1 retry para server status
-    enabled: !!serverId
-  })
-}
 
 export const useNews = () => {
   return useQuery({
