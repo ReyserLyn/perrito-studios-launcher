@@ -45,7 +45,7 @@ export function SplashScreen({ onComplete, duration = 2500 }: SplashScreenProps)
           </div>
 
           <div className="text-center">
-            <span className="text-[#9d9d9d] text-xl sm:text-2xl font-acherus-grotesque font-bold tracking-wide">
+            <span className="text-[#9d9d9d] text-xl sm:text-2xl font-acherus tracking-wide">
               Powered by Perrito Studios
             </span>
           </div>
