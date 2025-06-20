@@ -44,11 +44,11 @@ export function Home() {
           </div>
 
           <div className="flex flex-col gap-4 w-[400px] justify-center items-center">
-            <div className="bg-[#151126] border-[#2c1e4d] border-1 rounded-full p-4">
+            <div className="bg-[#151126] border-[#2c1e4d] border-1 rounded-full p-2">
               <img
                 src={currentServer?.rawServer?.icon}
                 alt="Perrito Studios"
-                className="w-48 h-auto object-contain"
+                className="w-48 h-auto object-contain rounded-full"
               />
             </div>
           </div>
