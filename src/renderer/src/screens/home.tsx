@@ -10,7 +10,6 @@ export function Home() {
   const { data: currentServerStatus, isLoading: statusLoading } = useCurrentServerStatus()
   console.log('currentServerStatus', currentServerStatus)
 
-  // Mostrar loading mientras cargan los datos principales
   if (serverLoading) {
     return (
       <main className="px-12 py-24 w-full h-full flex items-center justify-center">
