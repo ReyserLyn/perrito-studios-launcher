@@ -1,5 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
-import { HeliosDistribution } from 'perrito-core/dist/common/distribution/DistributionFactory'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  HeliosDistribution,
+  HeliosServer
+} from 'perrito-core/dist/common/distribution/DistributionFactory'
 
 // Hook para obtener la distribución de servidores
 export const useDistribution = () => {
@@ -32,6 +35,29 @@ export const useAllServers = () => {
       return result.distribution.servers || []
     }
   })
+}
+
+export const useGetIdSelectedServer = () => {
+  return useQuery({
+    queryKey: ['selectedServer'],
+    queryFn: async () => {
+      const result = await window.api.config.getSelectedServer()
+
+      if (!result.success) {
+        throw new Error(result.error || 'Error obteniendo servidor seleccionado')
+      }
+
+      return result.selectedServer
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    retry: 1
+  })
+}
+
+export const useCurrentServer = (): HeliosServer | undefined => {
+  const idSelectedServer = useGetIdSelectedServer()
+  const serverList = useAllServers()
+  return serverList.data?.find((server) => server.rawServer?.id === idSelectedServer.data)
 }
 
 /*
@@ -81,6 +107,8 @@ export const useFileValidation = () => {
 export const useServerData = () => {
   const distribution = useDistribution()
   const servers = useAllServers()
+  const idSelectedServer = useGetIdSelectedServer()
+  const currentServer = useCurrentServer()
 
   return {
     // Estados de carga
@@ -90,11 +118,34 @@ export const useServerData = () => {
     // Datos
     distribution: distribution.data,
     serverList: servers.data,
+    idSelectedServer: idSelectedServer.data,
+    currentServer: currentServer,
 
     // Funciones
     refetch: () => {
       distribution.refetch()
       servers.refetch()
+      idSelectedServer.refetch()
     }
   }
+}
+
+export const useSetSelectedServer = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (serverId: string) => {
+      const result = await window.api.config.setSelectedServer(serverId)
+
+      if (!result.success) {
+        throw new Error(result.error || 'Error estableciendo servidor seleccionado')
+      }
+
+      return result
+    },
+    onSuccess: () => {
+      // Invalidar queries relacionadas para refrescar los datos
+      queryClient.invalidateQueries({ queryKey: ['selectedServer'] })
+    }
+  })
 }

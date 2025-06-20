@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useTranslation } from '../hooks/useTranslation'
-import { Button } from './ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
+import { useTranslation } from '../../hooks/useTranslation'
+import { Button } from '../ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 
 export function LanguageTest() {
   const { t, plural, formatDate, formatNumber, currentLanguage, changeLanguage, isReady } =
