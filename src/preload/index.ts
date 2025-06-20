@@ -88,6 +88,12 @@ const distributionAPI = {
   getServerById: (serverId: string) => ipcRenderer.invoke('distro:get-server-by-id', serverId)
 }
 
+// Server Status API
+const serverAPI = {
+  getStatus: (hostname: string, port: number) =>
+    ipcRenderer.invoke('server:get-status', hostname, port)
+}
+
 // Process Builder API
 const processAPI = {
   launchGame: (options: any) => ipcRenderer.invoke('process:launch-game', options),
@@ -218,7 +224,8 @@ const api = {
   language: languageAPI,
   updater: updaterAPI,
   microsoftAuth: microsoftAuthAPI,
-  system: systemAPI
+  system: systemAPI,
+  server: serverAPI
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

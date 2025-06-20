@@ -76,6 +76,11 @@ interface DistributionAPI {
   getMainServer: () => Promise<any>
 }
 
+// Server API Types
+interface ServerAPI {
+  getStatus: (hostname: string, port: number) => Promise<any>
+}
+
 // Process API Types
 interface ProcessAPI {
   launchGame: (options: any) => Promise<any>
@@ -170,6 +175,7 @@ interface API {
   updater: UpdaterAPI
   microsoftAuth: MicrosoftAuthAPI
   system: SystemAPI
+  server: ServerAPI
 }
 
 declare global {

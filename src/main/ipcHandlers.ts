@@ -1,5 +1,6 @@
 import { BrowserWindow, ipcMain, shell } from 'electron'
 import * as path from 'path'
+import { getServerStatus } from 'perrito-core/mojang'
 import {
   CONFIG_OPCODE,
   DISCORD_RPC,
@@ -60,6 +61,9 @@ export function setupIpcHandlers(): void {
 
   // === HANDLERS DE DISCORD RPC ===
   setupDiscordRpcHandlers()
+
+  // === HANDLERS DE SERVER STATUS ===
+  setupServerStatusHandlers()
 
   // Mostrar toast (notificaciones)
   ipcMain.on('show-toast', (_event, { type, message }) => {
@@ -1113,6 +1117,45 @@ function setupDiscordRpcHandlers(): void {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Error desconocido al cerrar RPC'
+      }
+    }
+  })
+}
+
+function setupServerStatusHandlers(): void {
+  // Obtener estado del servidor
+  ipcMain.handle('server:get-status', async (_event, hostname: string, port: number) => {
+    try {
+      const servStat = await getServerStatus(47, hostname, port)
+
+      return {
+        success: true,
+        status: {
+          status: 'online',
+          players: {
+            online: servStat.players.online,
+            max: servStat.players.max,
+            label: `${servStat.players.online}/${servStat.players.max} jugadores conectados`
+          },
+          version: servStat.version?.name || 'Desconocido',
+          motd: servStat.description?.text || 'Servidor en línea'
+        }
+      }
+    } catch (error) {
+      console.warn(`Unable to connect to server ${hostname}:${port}, assuming offline.`, error)
+
+      return {
+        success: true,
+        status: {
+          status: 'offline',
+          players: {
+            online: 0,
+            max: 0,
+            label: 'Fuera de línea'
+          },
+          version: 'Desconocido',
+          motd: 'Servidor fuera de línea'
+        }
       }
     }
   })
