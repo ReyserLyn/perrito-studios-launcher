@@ -96,8 +96,7 @@ export const CONFIG_OPCODE = {
 export const DISTRIBUTION_OPCODE = {
   GET_DISTRIBUTION: 'distro:get-distribution',
   REFRESH_DISTRIBUTION: 'distro:refresh-distribution',
-  GET_SERVER_BY_ID: 'distro:get-server-by-id',
-  GET_MAIN_SERVER: 'distro:get-main-server'
+  GET_SERVER_BY_ID: 'distro:get-server-by-id'
 } as const
 
 export const PROCESS_BUILDER_OPCODE = {

@@ -1,136 +1,100 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { queryKeys } from '../lib/queryClient'
-import { useAppStore } from '../stores/appStore'
+import { useQuery } from '@tanstack/react-query'
+import { HeliosDistribution } from 'perrito-core/dist/common/distribution/DistributionFactory'
 
 // Hook para obtener la distribución de servidores
 export const useDistribution = () => {
-  return useQuery({
-    queryKey: queryKeys.distribution.list(),
+  return useQuery<HeliosDistribution>({
+    queryKey: ['distribution'],
     queryFn: async () => {
       const result = await window.api.distribution.getDistribution()
-      if (result.success) {
-        return result.distribution
+
+      if (!result.success) {
+        throw new Error(result.error || 'Error obteniendo distribución')
       }
-      throw new Error(result.error || 'Error obteniendo distribución')
+
+      return result.distribution as HeliosDistribution
     },
-    staleTime: 10 * 60 * 1000 // 10 minutos antes de considerar stale
+    staleTime: 10 * 60 * 1000,
+    retry: 2
   })
 }
 
-// Hook para refrescar la distribución
-export const useRefreshDistribution = () => {
-  const queryClient = useQueryClient()
-  const { addNotification } = useAppStore()
+export const useAllServers = () => {
+  return useQuery({
+    queryKey: ['servers'],
+    queryFn: async () => {
+      const result = await window.api.distribution.getDistribution()
 
-  return useMutation({
-    mutationFn: async () => {
-      const result = await window.api.distribution.refreshDistribution()
       if (!result.success) {
-        throw new Error(result.error || 'Error refrescando distribución')
+        throw new Error(result.error || 'No se encontraron servidores')
       }
-      return result.distribution
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.distribution.all })
 
-      addNotification({
-        type: 'success',
-        message: 'Lista de servidores actualizada'
-      })
-    },
-    onError: (error: Error) => {
-      addNotification({
-        type: 'error',
-        message: `Error actualizando servidores: ${error.message}`
-      })
+      return result.distribution.servers || []
     }
   })
 }
 
-// Hook para obtener un servidor específico
-export const useServer = (serverId: string) => {
+/*
+export const useServerStatus = (serverId: string) => {
   return useQuery({
-    queryKey: queryKeys.distribution.detail(serverId),
+    queryKey: ['serverStatus', serverId],
     queryFn: async () => {
-      const result = await window.api.distribution.getServerById(serverId)
-      if (result.success) {
-        return result.server
-      }
-      throw new Error(result.error || 'Error obteniendo servidor')
+      const result = await window.api.server.getStatus(serverId)
+      if (!result.success) throw new Error(result.error)
+      return result.status
     },
+    refetchInterval: 30000, // Poll cada 30 segundos
+    retry: 1, // Solo 1 retry para server status
     enabled: !!serverId
   })
 }
 
-// Hook para obtener el servidor principal
-export const useMainServer = () => {
+export const useNews = () => {
   return useQuery({
-    queryKey: queryKeys.distribution.mainServer(),
+    queryKey: ['news'],
     queryFn: async () => {
-      const result = await window.api.distribution.getMainServer()
-      if (result.success) {
-        return result.server
-      }
-      throw new Error(result.error || 'Error obteniendo servidor principal')
-    }
+      const result = await window.api.news.getNews()
+      if (!result.success) throw new Error(result.error)
+      return result.articles
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    retry: 2
   })
 }
 
-// Hook para obtener lista de servidores simplificada
-export const useServerList = () => {
-  const distribution = useDistribution()
-
-  return {
-    ...distribution,
-    data: distribution.data ? extractServerList(distribution.data) : undefined
-  }
+// Hook para validar archivos durante el launch
+export const useFileValidation = () => {
+  return useMutation({
+    mutationFn: async (serverId: string) => {
+      const result = await window.api.launcher.validateFiles(serverId)
+      if (!result.success) throw new Error(result.error)
+      return result
+    },
+    onSuccess: (data) => {
+      console.log('Files validated:', data)
+    }
+  })
 }
-
-// Función auxiliar para extraer lista de servidores
-function extractServerList(distribution: any) {
-  if (!distribution || !distribution.servers) {
-    return []
-  }
-
-  return distribution.servers.map((server: any) => ({
-    id: server.rawServer?.id || server.id,
-    name: server.rawServer?.name || server.name,
-    description: server.rawServer?.description || server.description,
-    icon: server.rawServer?.icon || server.icon,
-    version: server.rawServer?.minecraftVersion || server.version,
-    address: server.rawServer?.address || server.address,
-    mainServer: server.rawServer?.mainServer || false
-  }))
-}
+*/
 
 // Hook combinado para toda la información de servidores
-export const useServerData = (serverId?: string) => {
+export const useServerData = () => {
   const distribution = useDistribution()
-  const mainServer = useMainServer()
-  const currentServer = useServer(serverId || '')
-  const { config } = useAppStore()
-
-  // Determinar servidor activo
-  const activeServerId = serverId || config.selectedServer || mainServer.data?.rawServer?.id
-  const activeServer = activeServerId ? currentServer.data : mainServer.data
+  const servers = useAllServers()
 
   return {
     // Estados de carga
-    isLoading: distribution.isLoading || mainServer.isLoading,
-    isError: distribution.isError || mainServer.isError,
+    isLoading: distribution.isLoading,
+    isError: distribution.isError,
 
     // Datos
     distribution: distribution.data,
-    serverList: distribution.data ? extractServerList(distribution.data) : [],
-    mainServer: mainServer.data,
-    activeServer,
-    activeServerId,
+    serverList: servers.data,
 
     // Funciones
     refetch: () => {
       distribution.refetch()
-      mainServer.refetch()
-      if (activeServerId) currentServer.refetch()
+      servers.refetch()
     }
   }
 }

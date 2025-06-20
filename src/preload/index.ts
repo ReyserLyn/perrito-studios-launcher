@@ -85,8 +85,7 @@ const configAPI = {
 const distributionAPI = {
   getDistribution: () => ipcRenderer.invoke('distro:get-distribution'),
   refreshDistribution: () => ipcRenderer.invoke('distro:refresh-distribution'),
-  getServerById: (serverId: string) => ipcRenderer.invoke('distro:get-server-by-id', serverId),
-  getMainServer: () => ipcRenderer.invoke('distro:get-main-server')
+  getServerById: (serverId: string) => ipcRenderer.invoke('distro:get-server-by-id', serverId)
 }
 
 // Process Builder API

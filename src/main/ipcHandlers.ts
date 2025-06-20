@@ -856,30 +856,6 @@ function setupDistributionHandlers(): void {
       }
     }
   })
-
-  // Obtener servidor principal
-  ipcMain.handle(DISTRIBUTION_OPCODE.GET_MAIN_SERVER, async () => {
-    try {
-      const distribution = await DistroAPI.getDistribution()
-      if (distribution) {
-        const mainServer = (distribution as any).getMainServer()
-        return {
-          success: true,
-          server: mainServer
-        }
-      }
-      return {
-        success: false,
-        error: 'Distribución no disponible'
-      }
-    } catch (error) {
-      console.error('Error obteniendo servidor principal:', error)
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Error obteniendo servidor principal'
-      }
-    }
-  })
 }
 
 function setupProcessBuilderHandlers(): void {
