@@ -1,4 +1,5 @@
 import logo from '@/assets/images/logos/Rec_Color_LBlanco.webp'
+import { DialogAccounts } from '@/components/DialogAccounts'
 import { DialogServers } from '@/components/DialogServers'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,7 +9,6 @@ import { Loader2, Play } from 'lucide-react'
 export function Home() {
   const { currentServer, isLoading: serverLoading } = useServerData()
   const { data: currentServerStatus, isLoading: statusLoading } = useCurrentServerStatus()
-  console.log('currentServerStatus', currentServerStatus)
 
   if (serverLoading) {
     return (
@@ -25,9 +25,11 @@ export function Home() {
     <main className="px-12 py-24 w-full h-full">
       <div className="flex flex-col gap-4 justify-between h-full">
         {/* Header */}
-        <div className="flex flex-col">
+        <div className="flex justify-between">
           <img src={logo} alt="Perrito Studios" className="2xl:w-96 w-80 h-auto" />
           <h1 className="text-2xl font-bold hidden">Perrito Studios</h1>
+
+          <DialogAccounts />
         </div>
 
         {/* Servidor */}
