@@ -34,6 +34,19 @@ export function createMainWindow(): BrowserWindow {
     return { action: 'deny' }
   })
 
+  // Interceptar requests para agregar headers necesarios solo para imágenes
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
+    { urls: ['https://perrito.reyserlyn.com/*', 'https://*.perrito.reyserlyn.com/*'] },
+    (details, callback) => {
+      // Solo para imágenes, remover el referrer
+      if (details.resourceType === 'image') {
+        delete details.requestHeaders['Referer']
+        delete details.requestHeaders['referer']
+      }
+      callback({ requestHeaders: details.requestHeaders })
+    }
+  )
+
   // Desactivar las teclas de recarga
   mainWindow.webContents.on('before-input-event', (event, input) => {
     if (
