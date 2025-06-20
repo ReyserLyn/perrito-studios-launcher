@@ -2,11 +2,25 @@ import logo from '@/assets/images/logos/Rec_Color_LBlanco.webp'
 import { DialogServers } from '@/components/DialogServers'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useServerData } from '@/hooks'
-import { Play } from 'lucide-react'
+import { useCurrentServerStatus, useServerData } from '@/hooks'
+import { Loader2, Play } from 'lucide-react'
 
 export function Home() {
-  const { currentServer } = useServerData()
+  const { currentServer, isLoading: serverLoading } = useServerData()
+  const { data: currentServerStatus, isLoading: statusLoading } = useCurrentServerStatus()
+  console.log('currentServerStatus', currentServerStatus)
+
+  // Mostrar loading mientras cargan los datos principales
+  if (serverLoading) {
+    return (
+      <main className="px-12 py-24 w-full h-full flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 size={48} className="animate-spin" />
+          <p className="text-lg">Cargando...</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="px-12 py-24 w-full h-full">
@@ -21,8 +35,18 @@ export function Home() {
         <section className="flex gap-4 justify-between">
           <div className="flex flex-col gap-4">
             <Badge variant="secondary" className="bg-[#151126] py-1 px-4 flex items-center">
-              <div className="w-2 h-2 rounded-full bg-green-500 mr-1"></div>
-              {currentServer?.rawServer?.address || 69} jugadores conectados
+              {statusLoading ? (
+                <Loader2 size={12} className="animate-spin mr-1" />
+              ) : (
+                <div
+                  className={`w-2 h-2 rounded-full mr-1 ${
+                    currentServerStatus?.status === 'online' ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                />
+              )}
+              {statusLoading
+                ? 'Cargando...'
+                : currentServerStatus?.players?.label || 'Desconectado'}
             </Badge>
 
             <h1 className="text-5xl 2xl:text-6xl font-extrabold">

@@ -63,6 +63,40 @@ export const useCurrentServer = (): HeliosServer | undefined => {
   return serverList.data?.find((server) => server.rawServer?.id === idSelectedServer.data)
 }
 
+// Hook para obtener el estado del servidor actual
+export const useCurrentServerStatus = () => {
+  const currentServer = useCurrentServer()
+
+  return useQuery({
+    queryKey: ['currentServerStatus', currentServer?.rawServer?.id],
+    queryFn: async () => {
+      if (!currentServer?.rawServer) {
+        return {
+          status: 'offline' as const,
+          players: {
+            online: 0,
+            max: 0,
+            label: 'Sin servidor'
+          },
+          version: 'Desconocido',
+          motd: 'No hay servidor seleccionado'
+        }
+      }
+
+      const result = await window.api.server.getStatus(
+        currentServer.hostname,
+        currentServer.port || 25565
+      )
+
+      return result.status
+    },
+    enabled: true,
+    refetchInterval: currentServer?.rawServer ? 30000 : false,
+    retry: 1,
+    staleTime: 25000
+  })
+}
+
 /*
 export const useServerStatus = (serverId: string) => {
   return useQuery({
@@ -112,6 +146,7 @@ export const useServerData = () => {
   const servers = useAllServers()
   const idSelectedServer = useGetIdSelectedServer()
   const currentServer = useCurrentServer()
+  const currentServerStatus = useCurrentServerStatus()
 
   return {
     // Estados de carga
@@ -123,12 +158,14 @@ export const useServerData = () => {
     serverList: servers.data,
     idSelectedServer: idSelectedServer.data,
     currentServer: currentServer,
+    currentServerStatus: currentServerStatus.data,
 
     // Funciones
     refetch: () => {
       distribution.refetch()
       servers.refetch()
       idSelectedServer.refetch()
+      currentServerStatus.refetch()
     }
   }
 }
