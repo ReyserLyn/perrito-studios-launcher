@@ -64,21 +64,27 @@ export class ProcessBuilder {
   private llPath: string | null = null
 
   constructor(options: ProcessBuilderOptions) {
+    this.gameDir = path.join(
+      ConfigManager.getInstanceDirectory(),
+      options.distroServer.rawServer.id
+    )
+    this.commonDir = ConfigManager.getCommonDirectory()
     this.server = options.distroServer
+
     this.vanillaManifest = options.vanillaManifest
     this.modManifest = options.modManifest
     this.authUser = options.authUser
     this.launcherVersion = options.launcherVersion
 
-    // Configurar directorios
-    this.gameDir = path.join(ConfigManager.getInstanceDirectory(), this.server.rawServer.id)
-    this.commonDir = ConfigManager.getCommonDirectory()
-    this.libPath = path.join(this.commonDir, 'libraries')
-
     // Archivos de configuración de mods
     this.forgeModListFile = path.join(this.gameDir, 'forgeMods.list') // 1.13+
     this.fmlDir = path.join(this.gameDir, 'forgeModList.json')
     this.llDir = path.join(this.gameDir, 'liteloaderModList.json')
+    this.libPath = path.join(this.commonDir, 'libraries')
+
+    this.usingLiteLoader = false
+    this.usingFabricLoader = false
+    this.llPath = null
   }
 
   /**
@@ -102,7 +108,6 @@ export class ProcessBuilder {
       // Configurar LiteLoader si está presente
       await this.setupLiteLoader()
       logger.info(`Usando LiteLoader: ${this.usingLiteLoader}`)
-
       // Detectar si usamos Fabric
       this.usingFabricLoader = this.server.modules.some(
         (mdl) => mdl.rawModule.type === ModuleType.Fabric
@@ -111,7 +116,7 @@ export class ProcessBuilder {
 
       // Resolver configuración de mods
       const modConfig = ConfigManager.getModConfiguration(this.server.rawServer.id)
-      const modObj = this.resolveModConfiguration(modConfig?.mods || {}, this.server.modules)
+      const modObj = this.resolveModConfiguration(modConfig?.mods, this.server.modules)
 
       // Generar listas de mods para versiones < 1.13
       if (!mcVersionAtLeast('1.13', this.server.rawServer.minecraftVersion)) {
@@ -400,7 +405,7 @@ export class ProcessBuilder {
 
     if (save) {
       const filePath = type === 'forge' ? this.fmlDir : this.llDir
-      await fs.writeFile(filePath, JSON.stringify(result, null, 4), 'utf8')
+      await fs.writeFile(filePath, JSON.stringify(result, null, 4), 'utf-8')
       logger.info(`Lista de mods ${type} guardada en: ${filePath}`)
     }
 
@@ -418,7 +423,7 @@ export class ProcessBuilder {
       .join('\n')
 
     if (writeBuffer) {
-      await fs.writeFile(this.forgeModListFile, writeBuffer, 'utf8')
+      await fs.writeFile(this.forgeModListFile, writeBuffer, 'utf-8')
       logger.info(`Lista de mods escrita en: ${this.forgeModListFile}`)
 
       if (this.usingFabricLoader) {
@@ -528,9 +533,9 @@ export class ProcessBuilder {
       for (const argStr of this.modManifest.arguments.jvm) {
         args.push(
           argStr
-            .replace(/\${library_directory}/g, this.libPath)
-            .replace(/\${classpath_separator}/g, ProcessBuilder.getClasspathSeparator())
-            .replace(/\${version_name}/g, this.modManifest.id)
+            .replaceAll('${library_directory}', this.libPath)
+            .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
+            .replaceAll('${version_name}', this.modManifest.id)
         )
       }
     }

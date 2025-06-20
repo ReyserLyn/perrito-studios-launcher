@@ -52,14 +52,16 @@ export interface Rule {
 
 // Tipos de módulos soportados
 export enum ModuleType {
+  Library = 'Library',
   ForgeHosted = 'ForgeHosted',
+  Forge = 'Forge',
   Fabric = 'Fabric',
+  LiteLoader = 'LiteLoader',
   ForgeMod = 'ForgeMod',
   FabricMod = 'FabricMod',
   LiteMod = 'LiteMod',
-  LiteLoader = 'LiteLoader',
-  Library = 'Library',
-  File = 'File'
+  File = 'File',
+  VersionManifest = 'VersionManifest'
 }
 
 // Interfaces del módulo de distribución
