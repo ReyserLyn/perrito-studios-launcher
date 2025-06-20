@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { LanguageTest } from './components/LanguageTest'
-import { SplashScreen } from './components/SplashScreen'
-import { AuthExample } from './components/examples/AuthExample'
+import fondo from './assets/images/fondos/noche-steve-dog.webp'
 import { Toaster } from './components/ui/sonner'
 import { AppProvider } from './providers/AppProvider'
+import { Home } from './screens/home'
+import { Sidebar } from './screens/sidebar'
+import { SplashScreen } from './screens/SplashScreen'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -14,23 +15,24 @@ function App() {
 
   return (
     <AppProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen">
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
 
         <div
           className={`transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}
         >
-          <div className="container mx-auto p-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <h2 className="text-white text-xl font-bold mb-4">Sistema de Idiomas</h2>
-                <LanguageTest />
-              </div>
-              <div>
-                <h2 className="text-white text-xl font-bold mb-4">Sistema de Autenticación</h2>
-                <AuthExample />
-              </div>
-            </div>
+          <img
+            src={fondo}
+            alt="Fondo de la aplicación"
+            className="w-full h-full object-cover absolute top-0 left-0 -z-10"
+          />
+
+          {/* Layout con Sidebar */}
+          <div className="flex h-screen">
+            <Sidebar />
+            <main className="flex-1 overflow-auto">
+              <Home />
+            </main>
           </div>
         </div>
       </div>

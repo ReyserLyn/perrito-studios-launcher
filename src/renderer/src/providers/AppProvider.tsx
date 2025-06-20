@@ -12,7 +12,7 @@ export function AppProvider({ children }: AppProviderProps) {
     <QueryClientProvider client={queryClient}>
       {children}
       {/* Solo mostrar devtools en desarrollo */}
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />}
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   )
 }
