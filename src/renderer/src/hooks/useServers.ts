@@ -60,7 +60,16 @@ export const useGetIdSelectedServer = () => {
 export const useCurrentServer = (): HeliosServer | undefined => {
   const idSelectedServer = useGetIdSelectedServer()
   const serverList = useAllServers()
-  return serverList.data?.find((server) => server.rawServer?.id === idSelectedServer.data)
+
+  const selectedServer = serverList.data?.find(
+    (server) => server.rawServer?.id === idSelectedServer.data
+  )
+
+  if (!selectedServer && serverList.data && serverList.data.length > 0) {
+    return serverList.data[0]
+  }
+
+  return selectedServer
 }
 
 // Hook para obtener el estado del servidor actual
@@ -73,11 +82,7 @@ export const useCurrentServerStatus = () => {
       if (!currentServer?.rawServer) {
         return {
           status: 'offline' as const,
-          players: {
-            online: 0,
-            max: 0,
-            label: 'Sin servidor'
-          },
+          players: { online: 0, max: 0, label: 'Sin servidor' },
           version: 'Desconocido',
           motd: 'No hay servidor seleccionado'
         }
