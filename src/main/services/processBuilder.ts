@@ -11,25 +11,28 @@
  *
  * @module processbuilder
  */
-
 import AdmZip from 'adm-zip'
 import { ChildProcess, spawn } from 'child_process'
 import * as crypto from 'crypto'
 import * as fs from 'fs-extra'
+import { Type } from 'helios-distribution-types'
 import * as os from 'os'
 import * as path from 'path'
 import { LoggerUtil } from 'perrito-core'
-import { getMojangOS, isLibraryCompatible, mcVersionAtLeast } from 'perrito-core/common'
+import {
+  getMojangOS,
+  HeliosModule,
+  HeliosServer,
+  isLibraryCompatible,
+  mcVersionAtLeast
+} from 'perrito-core/common'
 import {
   AuthUser,
   ConditionalArgument,
-  DistroModule,
-  DistroServer,
   Library,
   ModConfigEntry,
   ModConfiguration,
   ModManifest,
-  ModuleType,
   ProcessBuilderOptions,
   Rule,
   VanillaManifest
@@ -46,7 +49,7 @@ export class ProcessBuilder {
   // Propiedades de configuración
   private readonly gameDir: string
   private readonly commonDir: string
-  private readonly server: DistroServer
+  private readonly server: HeliosServer
   private readonly vanillaManifest: VanillaManifest
   private readonly modManifest: ModManifest
   private readonly authUser: AuthUser
@@ -109,9 +112,7 @@ export class ProcessBuilder {
       await this.setupLiteLoader()
       logger.info(`Usando LiteLoader: ${this.usingLiteLoader}`)
       // Detectar si usamos Fabric
-      this.usingFabricLoader = this.server.modules.some(
-        (mdl) => mdl.rawModule.type === ModuleType.Fabric
-      )
+      this.usingFabricLoader = this.server.modules.some((mdl) => mdl.rawModule.type === Type.Fabric)
       logger.info(`Usando Fabric: ${this.usingFabricLoader}`)
 
       // Resolver configuración de mods
@@ -257,7 +258,7 @@ export class ProcessBuilder {
    */
   private async setupLiteLoader(): Promise<void> {
     for (const module of this.server.modules) {
-      if (module.rawModule.type === ModuleType.LiteLoader) {
+      if (module.rawModule.type === Type.LiteLoader) {
         const required = module.getRequired()
 
         if (!required.value) {
@@ -285,34 +286,27 @@ export class ProcessBuilder {
    * Resuelve la configuración de mods habilitados
    */
   private resolveModConfiguration(
-    modCfg: Record<string, ModConfigEntry>,
-    modules: DistroModule[]
+    modCfg: Record<string, ModConfigEntry> | undefined,
+    modules: HeliosModule[]
   ): ModConfiguration {
-    const fMods: DistroModule[] = []
-    const lMods: DistroModule[] = []
+    const fMods: HeliosModule[] = []
+    const lMods: HeliosModule[] = []
 
     for (const module of modules) {
       const type = module.rawModule.type
 
-      if (
-        [
-          ModuleType.ForgeMod,
-          ModuleType.LiteMod,
-          ModuleType.LiteLoader,
-          ModuleType.FabricMod
-        ].includes(type)
-      ) {
+      if ([Type.ForgeMod, Type.LiteMod, Type.LiteLoader, Type.FabricMod].includes(type)) {
         const required = module.getRequired()
         const isOptional = !required.value
         const isEnabled = ProcessBuilder.isModEnabled(
-          modCfg[module.getVersionlessMavenIdentifier()],
+          modCfg?.[module.getVersionlessMavenIdentifier()] ?? null,
           required
         )
 
         if (!isOptional || (isOptional && isEnabled)) {
           // Procesar submódulos recursivamente
           if (module.subModules.length > 0) {
-            const subModConfig = modCfg[module.getVersionlessMavenIdentifier()]
+            const subModConfig = modCfg?.[module.getVersionlessMavenIdentifier()]
             const subMods = this.resolveModConfiguration(
               subModConfig && typeof subModConfig === 'object' && 'mods' in subModConfig
                 ? subModConfig.mods || {}
@@ -324,8 +318,8 @@ export class ProcessBuilder {
           }
 
           // Añadir el módulo actual (excepto LiteLoader que se maneja por separado)
-          if (type !== ModuleType.LiteLoader) {
-            if (type === ModuleType.ForgeMod || type === ModuleType.FabricMod) {
+          if (type !== Type.LiteLoader) {
+            if (type === Type.ForgeMod || type === Type.FabricMod) {
               fMods.push(module)
             } else {
               lMods.push(module)
@@ -382,7 +376,7 @@ export class ProcessBuilder {
    */
   private async constructJSONModList(
     type: 'forge' | 'liteloader',
-    mods: DistroModule[],
+    mods: HeliosModule[],
     save: boolean = false
   ): Promise<Record<string, any>> {
     const repositoryRoot =
@@ -415,7 +409,7 @@ export class ProcessBuilder {
   /**
    * Construye la lista de argumentos de mods para Forge 1.13+ y Fabric
    */
-  private async constructModList(mods: DistroModule[]): Promise<string[]> {
+  private async constructModList(mods: HeliosModule[]): Promise<string[]> {
     const writeBuffer = mods
       .map((mod) => {
         return this.usingFabricLoader ? mod.getPath() : mod.getExtensionlessMavenIdentifier()
@@ -453,7 +447,7 @@ export class ProcessBuilder {
         args.push('--server')
         args.push(this.server.hostname)
         args.push('--port')
-        args.push(this.server.port)
+        args.push(this.server.port.toString())
       }
       logger.info(`Configurada autoconexión a: ${this.server.hostname}:${this.server.port}`)
     }
@@ -463,7 +457,7 @@ export class ProcessBuilder {
    * Construye el array de argumentos que se pasará al proceso JVM
    */
   private async constructJVMArguments(
-    mods: DistroModule[],
+    mods: HeliosModule[],
     tempNativePath: string
   ): Promise<string[]> {
     if (mcVersionAtLeast('1.13', this.server.rawServer.minecraftVersion)) {
@@ -477,7 +471,7 @@ export class ProcessBuilder {
    * Construye argumentos JVM para Minecraft 1.12 y anteriores
    */
   private async constructJVMArguments112(
-    mods: DistroModule[],
+    mods: HeliosModule[],
     tempNativePath: string
   ): Promise<string[]> {
     const args: string[] = []
@@ -517,21 +511,28 @@ export class ProcessBuilder {
    * Construye argumentos JVM para Minecraft 1.13+
    */
   private async constructJVMArguments113(
-    mods: DistroModule[],
+    mods: HeliosModule[],
     tempNativePath: string
   ): Promise<string[]> {
     const argDiscovery = /\${*(.*)}/
-    let args: string[] = []
+    const jvmArgs: string[] = []
+    const gameArgs: string[] = []
 
-    // Argumentos JVM de la versión vanilla
+    // Procesar argumentos JVM de la versión vanilla
     if (this.vanillaManifest.arguments?.jvm) {
-      args = [...this.vanillaManifest.arguments.jvm] as string[]
+      const vanillaJvmArgs = await this.processGameArguments(
+        this.vanillaManifest.arguments.jvm as string[],
+        tempNativePath,
+        mods,
+        argDiscovery
+      )
+      jvmArgs.push(...vanillaJvmArgs)
     }
 
     // Argumentos JVM del mod manifest
     if (this.modManifest.arguments?.jvm) {
       for (const argStr of this.modManifest.arguments.jvm) {
-        args.push(
+        jvmArgs.push(
           argStr
             .replaceAll('${library_directory}', this.libPath)
             .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
@@ -547,42 +548,42 @@ export class ProcessBuilder {
 
     // Argumentos específicos de plataforma
     if (process.platform === 'darwin') {
-      args.push('-Xdock:name=PerritoStudiosLauncher')
-      args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
+      jvmArgs.push('-Xdock:name=PerritoStudiosLauncher')
+      jvmArgs.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
     }
 
     // Configuración de memoria y JVM
-    args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
-    args.push('-Xms' + ConfigManager.getMinRAM(this.server.rawServer.id))
-    args.push(...ConfigManager.getJVMOptions(this.server.rawServer.id))
-
-    // Configuración de autenticación personalizada (si no es Microsoft)
-    const currentAccount = ConfigManager.getSelectedAccount()
-    if (currentAccount && currentAccount.type !== 'microsoft') {
-      this.addCustomAuthArgs(args)
-    }
+    jvmArgs.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
+    jvmArgs.push('-Xms' + ConfigManager.getMinRAM(this.server.rawServer.id))
+    jvmArgs.push(...ConfigManager.getJVMOptions(this.server.rawServer.id))
 
     // Clase principal
-    args.push(this.modManifest.mainClass)
+    jvmArgs.push(this.modManifest.mainClass)
 
-    // Argumentos del juego vanilla
+    // Procesar argumentos del juego vanilla
     if (this.vanillaManifest.arguments?.game) {
-      args = args.concat(this.vanillaManifest.arguments.game as string[])
+      const vanillaGameArgs = await this.processGameArguments(
+        this.vanillaManifest.arguments.game as string[],
+        tempNativePath,
+        mods,
+        argDiscovery
+      )
+      gameArgs.push(...vanillaGameArgs)
     }
 
-    // Procesar argumentos condicionales y variables
-    args = await this.processGameArguments(args, tempNativePath, mods, argDiscovery)
-
     // Autoconexión
-    this.processAutoConnectArg(args)
+    this.processAutoConnectArg(gameArgs)
 
     // Argumentos específicos del mod
     if (this.modManifest.arguments?.game) {
-      args = args.concat(this.modManifest.arguments.game)
+      gameArgs.push(...this.modManifest.arguments.game)
     }
 
+    // Combinar argumentos JVM y del juego
+    const allArgs = [...jvmArgs, ...gameArgs]
+
     // Filtrar valores nulos
-    return args.filter((arg) => arg != null)
+    return allArgs.filter((arg) => arg != null)
   }
 
   /**
@@ -631,29 +632,12 @@ export class ProcessBuilder {
   }
 
   /**
-   * Añade argumentos de autenticación personalizada
-   */
-  private addCustomAuthArgs(args: string[]): void {
-    args.push('-Duser.language=es')
-    args.push('-Dminecraft.api.env=custom')
-
-    // URLs de autenticación personalizada (Perrito Studios)
-    const authBaseUrl = 'https://auth.perritostudios.com/api/yggdrasil'
-    args.push(`-Dminecraft.api.auth.host=${authBaseUrl}/authserver`)
-    args.push(`-Dminecraft.api.account.host=${authBaseUrl}/api`)
-    args.push(`-Dminecraft.api.session.host=${authBaseUrl}/sessionserver`)
-    args.push(`-Dminecraft.api.services.host=${authBaseUrl}/minecraftservices`)
-
-    logger.info('Configurada autenticación personalizada de Perrito Studios')
-  }
-
-  /**
    * Procesa argumentos del juego, resolviendo variables y argumentos condicionales
    */
   private async processGameArguments(
     args: string[],
     tempNativePath: string,
-    mods: DistroModule[],
+    mods: HeliosModule[],
     argDiscovery: RegExp
   ): Promise<string[]> {
     const processedArgs: string[] = []
@@ -725,7 +709,7 @@ export class ProcessBuilder {
   private async resolveArgumentVariable(
     arg: string,
     tempNativePath: string,
-    mods: DistroModule[],
+    mods: HeliosModule[],
     argDiscovery: RegExp
   ): Promise<string | null> {
     const match = arg.match(argDiscovery)
@@ -733,43 +717,66 @@ export class ProcessBuilder {
 
     const identifier = match[1]
 
+    let val: string | null = null
+
     switch (identifier) {
       case 'auth_player_name':
-        return this.authUser.displayName.trim()
+        val = this.authUser.displayName.trim()
+        break
       case 'version_name':
-        return this.server.rawServer.id
+        val = this.server.rawServer.id
+        break
       case 'game_directory':
-        return this.gameDir
+        val = this.gameDir
+        break
       case 'assets_root':
-        return path.join(this.commonDir, 'assets')
+        val = path.join(this.commonDir, 'assets')
+        break
       case 'assets_index_name':
-        return this.vanillaManifest.assets
+        val = this.vanillaManifest.assets
+        break
       case 'auth_uuid':
-        return this.authUser.uuid.trim()
+        val = this.authUser.uuid.trim()
+        break
       case 'auth_access_token':
-        return this.authUser.accessToken
+        val = this.authUser.accessToken
+        break
       case 'user_type':
-        return this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
+        val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
+        break
       case 'version_type':
-        return this.vanillaManifest.type
+        val = this.vanillaManifest.type
+        break
       case 'resolution_width':
-        return ConfigManager.getGameWidth().toString()
+        val = ConfigManager.getGameWidth().toString()
+        break
       case 'resolution_height':
-        return ConfigManager.getGameHeight().toString()
+        val = ConfigManager.getGameHeight().toString()
+        break
       case 'natives_directory':
-        return tempNativePath
+        return arg.replace(argDiscovery, tempNativePath)
       case 'launcher_name':
-        return 'PerritoStudiosLauncher'
+        return arg.replace(argDiscovery, 'PerritoStudiosLauncher')
       case 'launcher_version':
-        return this.launcherVersion
+        return arg.replace(argDiscovery, this.launcherVersion)
       case 'classpath':
         // eslint-disable-next-line no-case-declarations
         const classpathArgs = await this.classpathArg(mods, tempNativePath)
         return classpathArgs.join(ProcessBuilder.getClasspathSeparator())
+      case 'clientid':
+        return arg.replace(argDiscovery, '')
+      case 'auth_xuid':
+        return arg.replace(argDiscovery, '')
       default:
         logger.warn(`Variable de argumento desconocida: ${identifier}`)
         return null
     }
+
+    if (val != null) {
+      return arg.replace(argDiscovery, val)
+    }
+
+    return null
   }
 
   /**
@@ -839,7 +846,7 @@ export class ProcessBuilder {
   /**
    * Resuelve el classpath completo para este proceso
    */
-  private async classpathArg(mods: DistroModule[], tempNativePath: string): Promise<string[]> {
+  private async classpathArg(mods: HeliosModule[], tempNativePath: string): Promise<string[]> {
     const cpArgs: string[] = []
 
     // Añadir version.jar al classpath (no para Forge 1.17+ excepto Fabric)
@@ -975,13 +982,13 @@ export class ProcessBuilder {
   /**
    * Resuelve las librerías declaradas por el servidor
    */
-  private async resolveServerLibraries(mods: DistroModule[]): Promise<Record<string, string>> {
+  private async resolveServerLibraries(mods: HeliosModule[]): Promise<Record<string, string>> {
     let libs: Record<string, string> = {}
 
     // Localizar Forge/Fabric/Librerías
     for (const module of this.server.modules) {
       const type = module.rawModule.type
-      if ([ModuleType.ForgeHosted, ModuleType.Fabric, ModuleType.Library].includes(type)) {
+      if ([Type.ForgeHosted, Type.Fabric, Type.Library].includes(type)) {
         libs[module.getVersionlessMavenIdentifier()] = module.getPath()
 
         if (module.subModules.length > 0) {
@@ -1006,7 +1013,7 @@ export class ProcessBuilder {
   /**
    * Resuelve recursivamente las librerías requeridas por un módulo
    */
-  private async resolveModuleLibraries(module: DistroModule): Promise<Record<string, string>> {
+  private async resolveModuleLibraries(module: HeliosModule): Promise<Record<string, string>> {
     if (module.subModules.length === 0) {
       return {}
     }
@@ -1014,7 +1021,7 @@ export class ProcessBuilder {
     const libs: Record<string, string> = {}
 
     for (const subModule of module.subModules) {
-      if (subModule.rawModule.type === ModuleType.Library) {
+      if (subModule.rawModule.type === Type.Library) {
         // Verificar si la librería debe incluirse en el classpath
         const shouldInclude = subModule.rawModule.classpath !== false
 

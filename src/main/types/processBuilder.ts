@@ -2,21 +2,13 @@
  * Tipos e interfaces para el ProcessBuilder
  */
 
+import { HeliosModule, HeliosServer } from 'perrito-core/common'
+
 // Tipos base del sistema de distribución
 export interface RawServer {
   id: string
   minecraftVersion: string
   autoconnect?: boolean
-}
-
-export interface Required {
-  value: boolean
-  def?: boolean
-}
-
-export interface RawModule {
-  type: ModuleType
-  classpath?: boolean
 }
 
 export interface Downloads {
@@ -48,38 +40,6 @@ export interface Rule {
     version?: string
   }
   features?: Record<string, boolean>
-}
-
-// Tipos de módulos soportados
-export enum ModuleType {
-  Library = 'Library',
-  ForgeHosted = 'ForgeHosted',
-  Forge = 'Forge',
-  Fabric = 'Fabric',
-  LiteLoader = 'LiteLoader',
-  ForgeMod = 'ForgeMod',
-  FabricMod = 'FabricMod',
-  LiteMod = 'LiteMod',
-  File = 'File',
-  VersionManifest = 'VersionManifest'
-}
-
-// Interfaces del módulo de distribución
-export interface DistroModule {
-  rawModule: RawModule
-  subModules: DistroModule[]
-  getRequired(): Required
-  getPath(): string
-  getVersionlessMavenIdentifier(): string
-  getExtensionlessMavenIdentifier(): string
-  getMavenIdentifier(): string
-}
-
-export interface DistroServer {
-  rawServer: RawServer
-  modules: DistroModule[]
-  hostname: string
-  port: string
 }
 
 // Manifiestos de versión
@@ -120,8 +80,8 @@ export interface AuthUser {
 
 // Configuración de mods
 export interface ModConfiguration {
-  fMods: DistroModule[]
-  lMods: DistroModule[]
+  fMods: HeliosModule[]
+  lMods: HeliosModule[]
 }
 
 export interface ModConfigEntry {
@@ -131,7 +91,7 @@ export interface ModConfigEntry {
 
 // Opciones de construcción del proceso
 export interface ProcessBuilderOptions {
-  distroServer: DistroServer
+  distroServer: HeliosServer
   vanillaManifest: VanillaManifest
   modManifest: ModManifest
   authUser: AuthUser
