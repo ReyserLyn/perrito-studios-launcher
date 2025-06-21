@@ -102,5 +102,20 @@ export const DISTRIBUTION_OPCODE = {
 export const PROCESS_BUILDER_OPCODE = {
   LAUNCH_GAME: 'process:launch-game',
   KILL_PROCESS: 'process:kill-process',
-  GET_PROCESS_STATUS: 'process:get-process-status'
+  GET_PROCESS_STATUS: 'process:get-process-status',
+  VALIDATE_LAUNCH: 'process:validate-launch',
+  SYSTEM_SCAN: 'process:system-scan',
+  DOWNLOAD_JAVA: 'process:download-java',
+  VALIDATE_FILES: 'process:validate-files',
+  DOWNLOAD_FILES: 'process:download-files',
+  VALIDATE_AND_DOWNLOAD: 'process:validate-and-download', // Nuevo handler combinado
+  PREPARE_LAUNCH: 'process:prepare-launch'
+} as const
+
+export const LAUNCH_OPCODE = {
+  LAUNCH_READY: 'launch:ready',
+  LAUNCH_PROGRESS: 'launch:progress',
+  LAUNCH_ERROR: 'launch:error',
+  LAUNCH_SUCCESS: 'launch:success',
+  LAUNCH_LOG: 'launch:log'
 } as const

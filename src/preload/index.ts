@@ -98,7 +98,47 @@ const serverAPI = {
 const processAPI = {
   launchGame: (options: any) => ipcRenderer.invoke('process:launch-game', options),
   killProcess: () => ipcRenderer.invoke('process:kill-process'),
-  getProcessStatus: () => ipcRenderer.invoke('process:get-process-status')
+  getProcessStatus: () => ipcRenderer.invoke('process:get-process-status'),
+  // Nuevas APIs para lanzamiento completo
+  validateLaunch: () => ipcRenderer.invoke('process:validate-launch'),
+  systemScan: (serverId: string) => ipcRenderer.invoke('process:system-scan', serverId),
+  downloadJava: (serverId: string) => ipcRenderer.invoke('process:download-java', serverId),
+  validateFiles: (serverId: string) => ipcRenderer.invoke('process:validate-files', serverId),
+  downloadFiles: (serverId: string) => ipcRenderer.invoke('process:download-files', serverId),
+  validateAndDownload: (serverId: string) =>
+    ipcRenderer.invoke('process:validate-and-download', serverId),
+  prepareLaunch: (serverId: string) => ipcRenderer.invoke('process:prepare-launch', serverId)
+}
+
+// Launch API con eventos
+const launchAPI = {
+  // Event listeners para progreso de lanzamiento
+  onProgress: (callback: (stage: string, progress: number, details?: string) => void) => {
+    ipcRenderer.on('launch:progress', (_, stage, progress, details) =>
+      callback(stage, progress, details)
+    )
+  },
+  onError: (callback: (error: string) => void) => {
+    ipcRenderer.on('launch:error', (_, error) => callback(error))
+  },
+  onSuccess: (callback: () => void) => {
+    ipcRenderer.on('launch:success', () => callback())
+  },
+  onLog: (callback: (type: 'stdout' | 'stderr', data: string) => void) => {
+    ipcRenderer.on('launch:log', (_, type, data) => callback(type, data))
+  },
+  removeProgressListener: () => {
+    ipcRenderer.removeAllListeners('launch:progress')
+  },
+  removeErrorListener: () => {
+    ipcRenderer.removeAllListeners('launch:error')
+  },
+  removeSuccessListener: () => {
+    ipcRenderer.removeAllListeners('launch:success')
+  },
+  removeLogListener: () => {
+    ipcRenderer.removeAllListeners('launch:log')
+  }
 }
 
 // Dropin Mods API
@@ -219,6 +259,7 @@ const api = {
   config: configAPI,
   distribution: distributionAPI,
   process: processAPI,
+  launch: launchAPI,
   mods: modsAPI,
   discord: discordAPI,
   language: languageAPI,

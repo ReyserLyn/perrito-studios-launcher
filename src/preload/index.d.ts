@@ -86,6 +86,26 @@ interface ProcessAPI {
   launchGame: (options: any) => Promise<any>
   killProcess: () => Promise<any>
   getProcessStatus: () => Promise<any>
+  validateLaunch: () => Promise<any>
+  systemScan: (serverId: string) => Promise<any>
+  downloadJava: (serverId: string) => Promise<any>
+  validateFiles: (serverId: string) => Promise<any>
+  downloadFiles: (serverId: string) => Promise<any>
+  validateAndDownload: (serverId: string) => Promise<any>
+  prepareLaunch: (serverId: string) => Promise<any>
+}
+
+// Launch API Types
+interface LaunchAPI {
+  // Event listeners para progreso de lanzamiento
+  onProgress: (callback: (stage: string, progress: number, details?: string) => void) => void
+  onError: (callback: (error: string) => void) => void
+  onSuccess: (callback: () => void) => void
+  onLog: (callback: (type: 'stdout' | 'stderr', data: string) => void) => void
+  removeProgressListener: () => void
+  removeErrorListener: () => void
+  removeSuccessListener: () => void
+  removeLogListener: () => void
 }
 
 // Mods API Types
@@ -169,6 +189,7 @@ interface API {
   config: ConfigAPI
   distribution: DistributionAPI
   process: ProcessAPI
+  launch: LaunchAPI
   mods: ModsAPI
   discord: DiscordAPI
   language: LanguageAPI
