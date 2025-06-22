@@ -1,12 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  HeliosDistribution,
-  HeliosServer
-} from 'perrito-core/dist/common/distribution/DistributionFactory'
 
 // Hook para obtener la distribución de servidores
 export const useDistribution = () => {
-  return useQuery<HeliosDistribution>({
+  return useQuery({
     queryKey: ['distribution'],
     queryFn: async () => {
       const result = await window.api.distribution.getDistribution()
@@ -15,7 +11,7 @@ export const useDistribution = () => {
         throw new Error(result.error || 'Error obteniendo distribución')
       }
 
-      return result.distribution as HeliosDistribution
+      return result.distribution
     },
     staleTime: 10 * 60 * 1000,
     retry: 2
@@ -57,7 +53,7 @@ export const useGetIdSelectedServer = () => {
 }
 
 // Hook para obtener el servidor actual
-export const useCurrentServer = (): HeliosServer | undefined => {
+export const useCurrentServer = () => {
   const idSelectedServer = useGetIdSelectedServer()
   const serverList = useAllServers()
 

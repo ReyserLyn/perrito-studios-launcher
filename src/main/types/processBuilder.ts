@@ -3,79 +3,108 @@
  */
 
 import { HeliosModule, HeliosServer } from 'perrito-core/common'
-
-// Tipos base del sistema de distribución
-export interface RawServer {
-  id: string
-  minecraftVersion: string
-  autoconnect?: boolean
-}
-
-export interface Downloads {
-  artifact?: Artifact
-  classifiers?: Record<string, Artifact>
-}
-
-export interface Artifact {
-  path: string
-  url?: string
-  sha1?: string
-  size?: number
-}
-
-export interface Library {
-  name: string
-  downloads: Downloads
-  rules?: Rule[]
-  natives?: Record<string, string>
-  extract?: {
-    exclude: string[]
-  }
-}
+import { AuthAccount } from '../services/configManager'
 
 export interface Rule {
-  action: 'allow' | 'disallow'
+  action: string
   os?: {
     name: string
     version?: string
   }
-  features?: Record<string, boolean>
+  features?: {
+    [key: string]: boolean
+  }
+}
+
+export interface Natives {
+  linux?: string
+  osx?: string
+  windows?: string
+}
+
+export interface BaseArtifact {
+  sha1: string
+  size: number
+  url: string
+}
+
+export interface LibraryArtifact extends BaseArtifact {
+  path: string
+}
+
+export interface Library {
+  downloads: {
+    artifact: LibraryArtifact
+    classifiers?: {
+      javadoc?: LibraryArtifact
+      'natives-linux'?: LibraryArtifact
+      'natives-macos'?: LibraryArtifact
+      'natives-windows'?: LibraryArtifact
+      sources?: LibraryArtifact
+    }
+  }
+  extract?: {
+    exclude: string[]
+  }
+  name: string
+  natives?: Natives
+  rules?: Rule[]
 }
 
 // Manifiestos de versión
 export interface VanillaManifest {
-  id: string
-  type: string
-  assets: string
-  libraries: Library[]
-  arguments: {
-    jvm: Array<string | ConditionalArgument>
-    game: Array<string | ConditionalArgument>
-  }
-  mainClass: string
-}
-
-export interface ModManifest {
-  id: string
-  mainClass: string
-  minecraftArguments?: string
   arguments?: {
-    jvm?: string[]
-    game?: string[]
+    game: (string | RuleBasedArgument)[]
+    jvm: (string | RuleBasedArgument)[]
   }
+  assetIndex: {
+    id: string
+    sha1: string
+    size: number
+    totalSize: number
+    url: string
+  }
+  assets: string
+  complianceLevel?: number
+  downloads: {
+    client: BaseArtifact
+    client_mappings?: BaseArtifact
+    server: BaseArtifact
+    server_mappings?: BaseArtifact
+  }
+  id: string
+  javaVersion?: {
+    component: string
+    majorVersion: number
+  }
+  libraries: Library[]
+  logging: {
+    client: {
+      argument: string
+      file: {
+        id: string
+        sha1: string
+        size: number
+        url: string
+      }
+      type: string
+    }
+  }
+  mainClass: string
+  minimumLauncherVersion?: number
+  releaseTime: string
+  time: string
+  type: string
 }
 
-export interface ConditionalArgument {
+export interface RuleBasedArgument {
   rules: Rule[]
   value: string | string[]
 }
 
-// Usuario autenticado
-export interface AuthUser {
-  displayName: string
-  uuid: string
-  accessToken: string
-  type: 'microsoft' | 'mojang'
+export interface ModManifest extends VanillaManifest {
+  inheritsFrom?: string
+  minecraftArguments?: string
 }
 
 // Configuración de mods
@@ -94,6 +123,6 @@ export interface ProcessBuilderOptions {
   distroServer: HeliosServer
   vanillaManifest: VanillaManifest
   modManifest: ModManifest
-  authUser: AuthUser
+  authUser: AuthAccount
   launcherVersion: string
 }

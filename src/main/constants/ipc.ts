@@ -94,9 +94,7 @@ export const CONFIG_OPCODE = {
 } as const
 
 export const DISTRIBUTION_OPCODE = {
-  GET_DISTRIBUTION: 'distro:get-distribution',
-  REFRESH_DISTRIBUTION: 'distro:refresh-distribution',
-  GET_SERVER_BY_ID: 'distro:get-server-by-id'
+  GET_DISTRIBUTION: 'distro:get-distribution'
 } as const
 
 export const PROCESS_BUILDER_OPCODE = {
@@ -106,16 +104,10 @@ export const PROCESS_BUILDER_OPCODE = {
   VALIDATE_LAUNCH: 'process:validate-launch',
   SYSTEM_SCAN: 'process:system-scan',
   DOWNLOAD_JAVA: 'process:download-java',
-  VALIDATE_FILES: 'process:validate-files',
-  DOWNLOAD_FILES: 'process:download-files',
-  VALIDATE_AND_DOWNLOAD: 'process:validate-and-download', // Nuevo handler combinado
+  VALIDATE_AND_DOWNLOAD: 'process:validate-and-download',
   PREPARE_LAUNCH: 'process:prepare-launch'
 } as const
 
-export const LAUNCH_OPCODE = {
-  LAUNCH_READY: 'launch:ready',
-  LAUNCH_PROGRESS: 'launch:progress',
-  LAUNCH_ERROR: 'launch:error',
-  LAUNCH_SUCCESS: 'launch:success',
-  LAUNCH_LOG: 'launch:log'
+export const SERVER_STATUS_OPCODE = {
+  GET_STATUS: 'server:get-status'
 } as const

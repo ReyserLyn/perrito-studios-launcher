@@ -123,20 +123,15 @@ export const useGameLauncher = () => {
         throw new Error(validateAndDownloadResult.error || 'Error validando y descargando archivos')
       }
 
-      console.log(
-        `[GameLauncher] Validación y descarga completadas. Archivos inválidos iniciales: ${validateAndDownloadResult.invalidFileCount}, descarga realizada: ${validateAndDownloadResult.downloadPerformed}`
-      )
-
       // 5. Preparar lanzamiento
       const prepResult = await window.api.process.prepareLaunch(serverId)
       if (!prepResult.success) {
         throw new Error(prepResult.error || 'Error preparando lanzamiento')
       }
 
-      console.log('Pasó los resultados de prepareLaunch:', prepResult)
-
       // 6. Lanzar juego
       const launchResult = await window.api.process.launchGame(prepResult)
+
       if (!launchResult.success) {
         throw new Error(launchResult.error || 'Error lanzando Minecraft')
       }

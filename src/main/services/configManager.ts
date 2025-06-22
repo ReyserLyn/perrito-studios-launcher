@@ -41,7 +41,7 @@ interface NewsCache {
   dismissed: boolean
 }
 
-interface AuthAccount {
+export interface AuthAccount {
   type?: 'mojang' | 'microsoft'
   accessToken: string
   username: string

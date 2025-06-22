@@ -27,17 +27,17 @@ import {
   mcVersionAtLeast
 } from 'perrito-core/common'
 import {
-  AuthUser,
-  ConditionalArgument,
   Library,
   ModConfigEntry,
   ModConfiguration,
   ModManifest,
   ProcessBuilderOptions,
+  RuleBasedArgument,
   Rule,
   VanillaManifest
 } from '../types/processBuilder'
 import * as ConfigManager from './configManager'
+import { AuthAccount } from './configManager'
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 
@@ -52,7 +52,7 @@ export class ProcessBuilder {
   private readonly server: HeliosServer
   private readonly vanillaManifest: VanillaManifest
   private readonly modManifest: ModManifest
-  private readonly authUser: AuthUser
+  private readonly authUser: AuthAccount
   private readonly launcherVersion: string
   private readonly libPath: string
 
@@ -521,7 +521,7 @@ export class ProcessBuilder {
     // Procesar argumentos JVM de la versión vanilla
     if (this.vanillaManifest.arguments?.jvm) {
       const vanillaJvmArgs = await this.processGameArguments(
-        this.vanillaManifest.arguments.jvm as string[],
+        this.vanillaManifest.arguments.jvm,
         tempNativePath,
         mods,
         argDiscovery
@@ -532,12 +532,14 @@ export class ProcessBuilder {
     // Argumentos JVM del mod manifest
     if (this.modManifest.arguments?.jvm) {
       for (const argStr of this.modManifest.arguments.jvm) {
-        jvmArgs.push(
-          argStr
-            .replaceAll('${library_directory}', this.libPath)
-            .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
-            .replaceAll('${version_name}', this.modManifest.id)
-        )
+        if (typeof argStr === 'string') {
+          jvmArgs.push(
+            argStr
+              .replaceAll('${library_directory}', this.libPath)
+              .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
+              .replaceAll('${version_name}', this.modManifest.id)
+          )
+        }
       }
     }
 
@@ -576,7 +578,11 @@ export class ProcessBuilder {
 
     // Argumentos específicos del mod
     if (this.modManifest.arguments?.game) {
-      gameArgs.push(...this.modManifest.arguments.game)
+      for (const argStr of this.modManifest.arguments.game) {
+        if (typeof argStr === 'string') {
+          gameArgs.push(argStr)
+        }
+      }
     }
 
     // Combinar argumentos JVM y del juego
@@ -635,7 +641,7 @@ export class ProcessBuilder {
    * Procesa argumentos del juego, resolviendo variables y argumentos condicionales
    */
   private async processGameArguments(
-    args: string[],
+    args: (string | RuleBasedArgument)[],
     tempNativePath: string,
     mods: HeliosModule[],
     argDiscovery: RegExp
@@ -647,7 +653,7 @@ export class ProcessBuilder {
 
       if (typeof arg === 'object' && 'rules' in arg) {
         // Procesar argumento condicional
-        const conditionalArg = arg as ConditionalArgument
+        const conditionalArg = arg as RuleBasedArgument
         if (this.evaluateArgumentRules(conditionalArg.rules)) {
           if (typeof conditionalArg.value === 'string') {
             processedArgs.push(conditionalArg.value)
@@ -906,8 +912,8 @@ export class ProcessBuilder {
         }
         // Librerías regulares
         else {
-          const artifact = lib.downloads.artifact
-          if (artifact) {
+          const artifact = lib.downloads?.artifact
+          if (artifact?.path) {
             const libPath = path.join(this.libPath, artifact.path)
             const versionIndependentId = lib.name.substring(0, lib.name.lastIndexOf(':'))
             libs[versionIndependentId] = libPath
