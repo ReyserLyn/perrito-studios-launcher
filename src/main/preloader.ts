@@ -5,7 +5,7 @@ import * as path from 'path'
 import { LoggerUtil } from 'perrito-core'
 import { DISTRIBUTION } from './constants/ipc'
 import * as ConfigManager from './services/configManager'
-import { DistroAPI } from './services/distributionManager'
+import { distroAPI } from './services/distributionManager'
 
 const log = LoggerUtil.getLogger('Preloader')
 
@@ -25,18 +25,18 @@ export async function runPreloadTasks(win: BrowserWindow): Promise<void> {
 
   // 2) Asegurar que la API de distribución usa los directorios correctos.
   try {
-    // @ts-ignore DistroAPI expone estas propiedades dinámicamente en perrito-core
-    DistroAPI.commonDir = ConfigManager.getCommonDirectory()
+    // @ts-ignore distroAPI expone estas propiedades dinámicamente en perrito-core
+    distroAPI.commonDir = ConfigManager.getCommonDirectory()
     // @ts-ignore Propiedad dinámica en la implementación original del core
-    DistroAPI.instanceDir = ConfigManager.getInstanceDirectory()
+    distroAPI.instanceDir = ConfigManager.getInstanceDirectory()
   } catch (error) {
-    log.warn('No se pudieron establecer los directorios comunes de DistroAPI:', error)
+    log.warn('No se pudieron establecer los directorios comunes de distroAPI:', error)
   }
 
   // 3) Descargar o cargar en caché el índice de distribución.
   let distroLoaded = false
   try {
-    const distro = await DistroAPI.getDistribution()
+    const distro = await distroAPI.getDistribution()
     distroLoaded = distro != null
     log.info('[+] Índice de distribución cargado')
 

@@ -28,7 +28,7 @@ import {
 import * as AuthManager from './services/authManager'
 import * as ConfigManager from './services/configManager'
 import * as DiscordWrapper from './services/discordwrapper'
-import { DistroAPI } from './services/distributionManager'
+import { distroAPI } from './services/distributionManager'
 import * as DropinModUtil from './services/dropinModUtil'
 import { ProcessBuilder } from './services/processBuilder'
 import { languageManager } from './utils/language'
@@ -820,7 +820,7 @@ function setupDistributionHandlers(): void {
   // Obtener distribución
   ipcMain.handle(DISTRIBUTION_OPCODE.GET_DISTRIBUTION, async () => {
     try {
-      const distribution = await DistroAPI.getDistribution()
+      const distribution = await distroAPI.getDistribution()
       return {
         success: true,
         distribution
@@ -837,7 +837,7 @@ function setupDistributionHandlers(): void {
   // Refrescar distribución
   ipcMain.handle(DISTRIBUTION_OPCODE.REFRESH_DISTRIBUTION, async () => {
     try {
-      const distribution = await DistroAPI.refreshDistributionOrFallback()
+      const distribution = await distroAPI.refreshDistributionOrFallback()
       return {
         success: true,
         distribution
@@ -854,7 +854,7 @@ function setupDistributionHandlers(): void {
   // Obtener servidor por ID
   ipcMain.handle(DISTRIBUTION_OPCODE.GET_SERVER_BY_ID, async (_event, serverId: string) => {
     try {
-      const distribution = await DistroAPI.getDistribution()
+      const distribution = await distroAPI.getDistribution()
       if (distribution) {
         const server = (distribution as any).getServerById(serverId)
         return {
@@ -916,7 +916,7 @@ function setupProcessBuilderHandlers(): void {
         throw new Error('No hay servidor seleccionado')
       }
 
-      const distro = await DistroAPI.getDistribution()
+      const distro = await distroAPI.getDistribution()
       const server = distro.getServerById(selectedServer)
 
       if (!server) {
@@ -934,7 +934,7 @@ function setupProcessBuilderHandlers(): void {
     try {
       emitProgress('java-scan', 0, 'Verificando instalación de Java...')
 
-      const distro = await DistroAPI.getDistribution()
+      const distro = await distroAPI.getDistribution()
       const server = distro.getServerById(serverId)
 
       if (!server) {
@@ -993,7 +993,7 @@ function setupProcessBuilderHandlers(): void {
 
       emitProgress('java-download', 0, 'Preparando descarga de Java...')
 
-      const distro = await DistroAPI.getDistribution()
+      const distro = await distroAPI.getDistribution()
       const server = distro.getServerById(serverId)
 
       if (!server) {
@@ -1057,7 +1057,7 @@ function setupProcessBuilderHandlers(): void {
 
       // Refrescar distribución para asegurar que tenemos la información más actualizada
       console.log(`[FullRepair] Refrescando distribución...`)
-      const distro = await DistroAPI.refreshDistributionOrFallback()
+      const distro = await distroAPI.refreshDistributionOrFallback()
       const server = distro.getServerById(serverId)
 
       if (!server) {
@@ -1069,14 +1069,14 @@ function setupProcessBuilderHandlers(): void {
       console.log(`[FullRepair] Common directory: ${ConfigManager.getCommonDirectory()}`)
       console.log(`[FullRepair] Instance directory: ${ConfigManager.getInstanceDirectory()}`)
       console.log(`[FullRepair] Launcher directory: ${ConfigManager.getLauncherDirectory()}`)
-      console.log(`[FullRepair] Dev mode: ${DistroAPI.isDevMode()}`)
+      console.log(`[FullRepair] Dev mode: ${distroAPI.isDevMode()}`)
 
       const fullRepairModule = new FullRepair(
         ConfigManager.getCommonDirectory(),
         ConfigManager.getInstanceDirectory(),
         ConfigManager.getLauncherDirectory(),
         serverId,
-        DistroAPI.isDevMode()
+        distroAPI.isDevMode()
       )
 
       fullRepairModule.spawnReceiver()
@@ -1141,7 +1141,7 @@ function setupProcessBuilderHandlers(): void {
 
       // Refrescar distribución para asegurar que tenemos la información más actualizada
       console.log(`[FullRepair] Refrescando distribución para descarga...`)
-      const distro = await DistroAPI.refreshDistributionOrFallback()
+      const distro = await distroAPI.refreshDistributionOrFallback()
       const server = distro.getServerById(serverId)
 
       if (!server) {
@@ -1156,7 +1156,7 @@ function setupProcessBuilderHandlers(): void {
         ConfigManager.getInstanceDirectory(),
         ConfigManager.getLauncherDirectory(),
         serverId,
-        DistroAPI.isDevMode()
+        distroAPI.isDevMode()
       )
 
       fullRepairModule.spawnReceiver()
@@ -1213,7 +1213,7 @@ function setupProcessBuilderHandlers(): void {
     try {
       // Refrescar distribución para asegurar que tenemos la información más actualizada
       console.log(`[FullRepair] Refrescando distribución para validación y descarga...`)
-      const distro = await DistroAPI.refreshDistributionOrFallback()
+      const distro = await distroAPI.refreshDistributionOrFallback()
       const server = distro.getServerById(serverId)
 
       if (!server) {
@@ -1225,7 +1225,7 @@ function setupProcessBuilderHandlers(): void {
       console.log(`[FullRepair] Common directory: ${ConfigManager.getCommonDirectory()}`)
       console.log(`[FullRepair] Instance directory: ${ConfigManager.getInstanceDirectory()}`)
       console.log(`[FullRepair] Launcher directory: ${ConfigManager.getLauncherDirectory()}`)
-      console.log(`[FullRepair] Dev mode: ${DistroAPI.isDevMode()}`)
+      console.log(`[FullRepair] Dev mode: ${distroAPI.isDevMode()}`)
 
       // Crear UNA SOLA instancia de FullRepair (como en el código original)
       fullRepairModule = new FullRepair(
@@ -1233,7 +1233,7 @@ function setupProcessBuilderHandlers(): void {
         ConfigManager.getInstanceDirectory(),
         ConfigManager.getLauncherDirectory(),
         serverId,
-        DistroAPI.isDevMode()
+        distroAPI.isDevMode()
       )
 
       fullRepairModule.spawnReceiver()
@@ -1320,7 +1320,7 @@ function setupProcessBuilderHandlers(): void {
     try {
       emitProgress('launch-prep', 0, 'Preparando lanzamiento...')
 
-      const distro = await DistroAPI.refreshDistributionOrFallback()
+      const distro = await distroAPI.refreshDistributionOrFallback()
       const server = distro.getServerById(serverId)
       const authUser = ConfigManager.getSelectedAccount()
 
@@ -1388,7 +1388,7 @@ function setupProcessBuilderHandlers(): void {
 
       const { server, authUser, modLoaderData, versionData } = launchData
 
-      const distro = await DistroAPI.refreshDistributionOrFallback()
+      const distro = await distroAPI.refreshDistributionOrFallback()
       const heliosServer = distro.getServerById(server.rawServer?.id || server.id)
 
       if (!heliosServer) {

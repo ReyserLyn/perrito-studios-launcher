@@ -6,6 +6,6 @@ export const REMOTE_DISTRO_URL = 'https://perrito.reyserlyn.com/servers/distribu
 //export const REMOTE_DISTRO_URL = 'https://helios-files.geekcorner.eu.org/distribution.json'
 
 // Crear la instancia de la API de distribución
-const api = new DistributionAPI(getLauncherDirectory(), '', '', REMOTE_DISTRO_URL, false)
+const distroAPI = new DistributionAPI(getLauncherDirectory(), '', '', REMOTE_DISTRO_URL, false)
 
-export { api as DistroAPI }
+export { distroAPI }

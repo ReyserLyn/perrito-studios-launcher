@@ -97,7 +97,7 @@ export const useCurrentServerStatus = () => {
     },
     enabled: true,
     refetchInterval: currentServer?.rawServer ? 30000 : false,
-    retry: 1,
+    retry: 3,
     staleTime: 25000
   })
 }
