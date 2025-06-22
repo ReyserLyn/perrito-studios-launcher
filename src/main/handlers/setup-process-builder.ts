@@ -373,8 +373,7 @@ export default function setupProcessBuilderHandlers(): void {
     async (_event, launchData: LaunchGameOptions) => {
       try {
         emitProgress('launching', 0, 'Construyendo proceso de Minecraft...')
-
-        const { server, account, modLoaderData, versionData } = launchData
+        const { server, authUser, modLoaderData, versionData } = launchData
 
         const distro = await distroAPI.refreshDistributionOrFallback()
         const perritoServer = distro.getServerById(server.rawServer.id)
@@ -393,7 +392,7 @@ export default function setupProcessBuilderHandlers(): void {
           distroServer: perritoServer,
           vanillaManifest: versionData,
           modManifest: modLoaderData,
-          authUser: account,
+          authUser: authUser,
           launcherVersion: app.getVersion()
         })
 

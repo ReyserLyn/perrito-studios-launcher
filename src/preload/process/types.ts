@@ -21,7 +21,7 @@ type PrepareLaunchResponse =
   | {
       success: true
       server: HeliosServer
-      account: AuthAccount
+      authUser: AuthAccount
       modLoaderData: ModManifest
       versionData: VanillaManifest
     }
@@ -31,7 +31,7 @@ type LaunchGameResponse = { success: true; pid: number } | { success: false; err
 
 export type LaunchGameOptions = {
   server: HeliosServer
-  account: AuthAccount
+  authUser: AuthAccount
   modLoaderData: ModManifest
   versionData: VanillaManifest
 }
