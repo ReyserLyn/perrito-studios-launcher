@@ -147,7 +147,7 @@ export function DialogServers() {
             </div>
           ) : serverList && serverList.length > 0 ? (
             serverList.map((server) => (
-              <ServerListingCard key={server.rawServer?.id || server.id} server={server} />
+              <ServerListingCard key={server.rawServer?.id} server={server} />
             ))
           ) : (
             <div className="text-center py-8 ">No se encontraron servidores disponibles</div>

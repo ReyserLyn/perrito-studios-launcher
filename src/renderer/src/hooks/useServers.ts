@@ -84,17 +84,30 @@ export const useCurrentServerStatus = () => {
         }
       }
 
-      const result = await window.api.server.getStatus(
-        currentServer.hostname,
-        currentServer.port || 25565
-      )
-
-      return result.status
+      try {
+        const result = await window.api.server.getStatus(
+          currentServer.hostname,
+          currentServer.port || 25565
+        )
+        return result.status
+      } catch (error) {
+        // Si hay error de conexión, devolver estado offline sin hacer throw
+        console.warn('Error obteniendo estado del servidor:', error)
+        return {
+          status: 'offline' as const,
+          players: { online: 0, max: 0, label: 'Conexión perdida' },
+          version: 'Desconocido',
+          motd: 'Error de conexión temporal'
+        }
+      }
     },
     enabled: true,
-    refetchInterval: currentServer?.rawServer ? 30000 : false,
-    retry: 3,
-    staleTime: 25000
+    refetchInterval: currentServer?.rawServer ? 45000 : false,
+    retry: 1,
+    retryDelay: 5000,
+    staleTime: 40000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true
   })
 }
 
