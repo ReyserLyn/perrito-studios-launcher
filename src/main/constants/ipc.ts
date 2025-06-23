@@ -1,5 +1,5 @@
 // Microsoft OAuth constants
-export const AZURE_CLIENT_ID = 'client-id-here'
+export const AZURE_CLIENT_ID = '2f8e5a7e-eab6-4d49-8133-f82e7fb958a2'
 
 export const MSFT_OPCODE = {
   OPEN_LOGIN: 'MSFT_AUTH_OPEN_LOGIN',
@@ -93,6 +93,8 @@ export const CONFIG_OPCODE = {
   GET_ABSOLUTE_MAX_RAM: 'config:get-absolute-max-ram'
 } as const
 
+// ==== Comprobado ====
+
 export const DISTRIBUTION_OPCODE = {
   GET_DISTRIBUTION: 'distro:get-distribution'
 } as const
@@ -111,3 +113,15 @@ export const PROCESS_BUILDER_OPCODE = {
 export const SERVER_STATUS_OPCODE = {
   GET_STATUS: 'server:get-status'
 } as const
+
+export const AUTH_OPCODE = {
+  ADD_MOJANG_ACCOUNT: 'auth:add-mojang-account',
+  REMOVE_MOJANG_ACCOUNT: 'auth:remove-mojang-account',
+  ADD_MICROSOFT_ACCOUNT: 'auth:add-microsoft-account',
+  REMOVE_MICROSOFT_ACCOUNT: 'auth:remove-microsoft-account',
+  GET_SELECTED_ACCOUNT: 'auth:get-selected-account',
+  GET_ALL_ACCOUNTS: 'auth:get-all-accounts',
+  SELECT_ACCOUNT: 'auth:select-account',
+  VALIDATE_SELECTED: 'auth:validate-selected',
+  LOGOUT: 'auth:logout'
+}
