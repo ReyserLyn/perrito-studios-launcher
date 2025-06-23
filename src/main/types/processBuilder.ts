@@ -3,7 +3,7 @@
  */
 
 import { HeliosModule, HeliosServer } from 'perrito-core/common'
-import { AuthAccount } from '../services/configManager'
+import { AuthAccount } from './auth'
 
 export interface Rule {
   action: string
