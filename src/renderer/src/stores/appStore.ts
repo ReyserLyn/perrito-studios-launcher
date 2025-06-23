@@ -1,63 +1,6 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-
-// Types
-interface AuthState {
-  user: any | null
-  isAuthenticated: boolean
-  accounts: any[]
-}
-
-interface ConfigState {
-  gameWidth: number
-  gameHeight: number
-  fullscreen: boolean
-  autoConnect: boolean
-  launchDetached: boolean
-  allowPrerelease: boolean
-  syncLanguage: boolean
-  selectedServer: string | null
-  language: string
-}
-
-interface UIState {
-  isLoading: boolean
-  currentPage: string
-  sidebarCollapsed: boolean
-  notifications: Array<{
-    id: string
-    type: 'success' | 'error' | 'warning' | 'info'
-    message: string
-    timestamp: number
-  }>
-}
-
-interface GameState {
-  isGameRunning: boolean
-  processId: number | null
-  lastLaunchTime: number | null
-}
-
-interface AppState {
-  // State
-  auth: AuthState
-  config: ConfigState
-  ui: UIState
-  game: GameState
-
-  // Actions
-  setUser: (user: any) => void
-  setAuthenticated: (authenticated: boolean) => void
-  setAccounts: (accounts: any[]) => void
-  updateConfig: (config: Partial<ConfigState>) => void
-  setLoading: (loading: boolean) => void
-  setCurrentPage: (page: string) => void
-  setSidebarCollapsed: (collapsed: boolean) => void
-  addNotification: (notification: Omit<UIState['notifications'][0], 'id' | 'timestamp'>) => void
-  removeNotification: (id: string) => void
-  setGameRunning: (running: boolean, processId?: number | null) => void
-  reset: () => void
-}
+import { AppState } from '../types'
 
 const initialState = {
   auth: {

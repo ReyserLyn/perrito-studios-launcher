@@ -1,42 +1,45 @@
-import { useState } from 'react'
-import fondo from './assets/images/fondos/noche-steve-dog.webp'
+import { useEffect } from 'react'
 import { Toaster } from './components/ui/sonner'
 import { AppProvider } from './providers/AppProvider'
-import { Home } from './screens/home'
-import { Sidebar } from './screens/sidebar'
-import { SplashScreen } from './screens/SplashScreen'
+import { AppLayout } from './components/AppLayout'
+import { AppScreens } from './components/AppScreens'
+import { useAppNavigation, AppScreen } from './hooks/useAppNavigation'
 
-function App() {
-  const [showSplash, setShowSplash] = useState(true)
+function AppContent() {
+  const navigation = useAppNavigation()
+  const { checkAuthenticationState, currentScreen, authStatus } = navigation
 
-  const handleSplashComplete = () => {
-    setShowSplash(false)
-  }
+  useEffect(() => {
+    if (currentScreen !== AppScreen.Splash) {
+      checkAuthenticationState()
+    }
+  }, [
+    authStatus.hasAccounts,
+    authStatus.hasSelectedAccount,
+    currentScreen,
+    checkAuthenticationState
+  ])
 
   return (
+    <AppLayout>
+      <AppScreens
+        currentScreen={navigation.currentScreen}
+        authStatus={navigation.authStatus}
+        onSplashComplete={navigation.handleSplashComplete}
+        onLoginSuccess={navigation.handleLoginSuccess}
+        onAccountSelected={navigation.handleAccountSelected}
+        onAddNewAccount={navigation.handleAddNewAccount}
+        onShowAccountsAvailable={navigation.handleShowAccountsAvailable}
+      />
+    </AppLayout>
+  )
+}
+
+function App() {
+  return (
     <AppProvider>
-      <div className="min-h-screen">
-        {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-
-        <div
-          className={`transition-opacity duration-500 ${showSplash ? 'opacity-0' : 'opacity-100'}`}
-        >
-          <img
-            src={fondo}
-            alt="Fondo de la aplicación"
-            className="w-full h-full object-cover absolute top-0 left-0 -z-10"
-          />
-
-          {/* Layout con Sidebar */}
-          <div className="flex h-screen">
-            <Sidebar />
-            <main className="flex-1 overflow-auto">
-              <Home />
-            </main>
-          </div>
-        </div>
-      </div>
-      <Toaster />
+      <AppContent />
+      <Toaster richColors />
     </AppProvider>
   )
 }

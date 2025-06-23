@@ -9,25 +9,18 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { useAccounts, useSelectAccount } from '@/hooks/useAuth'
+import { useAuthStatus, useSelectAccount, useLogout } from '@/hooks/useAuth'
 import { useAuth } from '@/stores/appStore'
-import { Loader2, User, UserCheck, Users } from 'lucide-react'
+import { AuthAccount } from '@/types'
+import { Loader2, LogOut, User, UserCheck, Users } from 'lucide-react'
 import { useState } from 'react'
-
-interface Account {
-  uuid: string
-  displayName: string
-  type: 'microsoft' | 'mojang'
-}
 
 export function DialogAccounts() {
   const { user } = useAuth()
-  const { data: accounts, isLoading } = useAccounts()
+  const { accountsList, isLoading } = useAuthStatus()
   const selectAccount = useSelectAccount()
+  const logout = useLogout()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  // Convertir el objeto de cuentas a array
-  const accountsList = accounts ? Object.values(accounts) : []
 
   const handleAccountSelect = async (uuid: string) => {
     try {
@@ -38,24 +31,30 @@ export function DialogAccounts() {
     }
   }
 
-  const AccountCard = ({ account }: { account: Account }) => {
+  const handleLogout = async (event: React.MouseEvent) => {
+    event.stopPropagation()
+    try {
+      await logout.mutateAsync()
+      setIsDialogOpen(false)
+    } catch (error) {
+      console.error('Error cerrando sesión:', error)
+    }
+  }
+
+  const AccountCard = ({ account }: { account: AuthAccount }) => {
     const isSelected = user?.uuid === account.uuid
     const accountType = account.type === 'microsoft' ? 'Microsoft' : 'Mojang'
 
     return (
-      <Button
-        variant={isSelected ? 'outline' : 'default'}
-        effect="shineHover"
+      <div
         className={`
-          w-full h-auto p-4 flex items-start gap-3 justify-start
+          w-full h-auto p-4 flex items-start gap-3 justify-start border rounded-lg
           ${
             isSelected
               ? 'bg-[#1d1332] border-[#2c1e4d] border-1 '
               : 'bg-gray-900 border-[#2c1e4d] border-1 hover:bg-[#1d1332]'
           }
         `}
-        onClick={() => handleAccountSelect(account.uuid)}
-        disabled={selectAccount.isPending}
       >
         {/* Avatar del usuario */}
         <div className="relative flex-shrink-0">
@@ -82,8 +81,11 @@ export function DialogAccounts() {
           )}
         </div>
 
-        {/* Detalles de la cuenta */}
-        <div className="flex-1 text-left space-y-1">
+        {/* Área clickeable para seleccionar cuenta */}
+        <div
+          className="flex-1 text-left space-y-1 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => handleAccountSelect(account.uuid)}
+        >
           <div className="font-medium text-sm">{account.displayName || 'Usuario sin nombre'}</div>
 
           <div className="text-xs text-muted-foreground">UUID: {account.uuid}</div>
@@ -104,15 +106,34 @@ export function DialogAccounts() {
           </div>
         </div>
 
-        {/* Indicador de carga o selección */}
-        <div className="flex-shrink-0">
-          {selectAccount.isPending && selectAccount.variables === account.uuid ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : isSelected ? (
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
-          ) : null}
+        {/* Botones de acción */}
+        <div className="flex-shrink-0 flex items-center gap-2">
+          {/* Indicador de carga o selección */}
+          <div className="flex items-center">
+            {selectAccount.isPending && selectAccount.variables === account.uuid ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : isSelected ? (
+              <div className="w-3 h-3 bg-green-500 rounded-full" />
+            ) : null}
+          </div>
+
+          {/* Botón de cerrar sesión */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/20"
+            onClick={(e) => handleLogout(e)}
+            disabled={logout.isPending}
+            title="Cerrar sesión"
+          >
+            {logout.isPending ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : (
+              <LogOut size={14} />
+            )}
+          </Button>
         </div>
-      </Button>
+      </div>
     )
   }
 
@@ -144,9 +165,7 @@ export function DialogAccounts() {
               <span className="ml-2">Cargando cuentas...</span>
             </div>
           ) : accountsList.length > 0 ? (
-            accountsList.map((account) => (
-              <AccountCard key={(account as Account).uuid} account={account as Account} />
-            ))
+            accountsList.map((account) => <AccountCard key={account.uuid} account={account} />)
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <User size={48} className="mx-auto mb-4 opacity-50" />

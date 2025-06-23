@@ -1,38 +1,99 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { queryKeys } from '../lib/queryClient'
 import { useAppStore } from '../stores/appStore'
 
-// Hook para obtener todas las cuentas
-export const useAccounts = () => {
-  const { setAccounts } = useAppStore()
+// ===== HOOK PRINCIPAL PARA ESTADO DE AUTENTICACIÓN =====
+export const useAuthStatus = () => {
+  const { setUser, setAuthenticated, setAccounts } = useAppStore()
 
-  return useQuery({
+  // Query para obtener todas las cuentas
+  const accountsQuery = useQuery({
     queryKey: queryKeys.auth.accounts,
     queryFn: async () => {
       const result = await window.api.auth.getAllAccounts()
       if (result.success) {
-        setAccounts(Object.values(result.accounts))
         return result.accounts
       }
       throw new Error(result.error || 'Error obteniendo cuentas')
-    }
+    },
+    staleTime: 0,
+    gcTime: 0,
+    retry: 1
   })
-}
 
-// Hook para obtener cuenta seleccionada
-export const useSelectedAccount = () => {
-  return useQuery({
+  // Query para obtener cuenta seleccionada
+  const selectedAccountQuery = useQuery({
     queryKey: queryKeys.auth.selectedAccount,
     queryFn: async () => {
       const result = await window.api.auth.getSelectedAccount()
       if (result.success) {
         return result.account
       }
-      throw new Error(result.error || 'Error obteniendo cuenta seleccionada')
-    }
+      // Si no hay cuenta seleccionada, no es un error
+      return null
+    },
+    enabled: !!accountsQuery.data && Object.keys(accountsQuery.data).length > 0,
+    staleTime: 0,
+    gcTime: 0,
+    retry: 1
   })
+
+  // Actualizar store cuando cambien las cuentas
+  useEffect(() => {
+    if (accountsQuery.data) {
+      const accountsArray = Object.values(accountsQuery.data)
+      setAccounts(accountsArray)
+    } else {
+      // Si no hay cuentas, limpiar el array en el store
+      setAccounts([])
+    }
+  }, [accountsQuery.data, selectedAccountQuery.data, selectedAccountQuery.isLoading, setAccounts])
+
+  // Actualizar store cuando cambie la cuenta seleccionada
+  useEffect(() => {
+    const user = selectedAccountQuery.data
+
+    if (user) {
+      setUser(user)
+      setAuthenticated(true)
+    } else if (user === null && !selectedAccountQuery.isLoading) {
+      setUser(null)
+      setAuthenticated(false)
+    }
+  }, [selectedAccountQuery.data, selectedAccountQuery.isLoading, setUser, setAuthenticated])
+
+  // Estados derivados
+  const hasAccounts = accountsQuery.data && Object.keys(accountsQuery.data).length > 0
+  const hasSelectedAccount = !!selectedAccountQuery.data
+  const isLoading = accountsQuery.isLoading || (hasAccounts && selectedAccountQuery.isLoading)
+
+  return {
+    // Estados
+    hasAccounts,
+    hasSelectedAccount,
+    isLoading,
+    isError: accountsQuery.isError || selectedAccountQuery.isError,
+
+    // Datos
+    accounts: accountsQuery.data,
+    selectedAccount: selectedAccountQuery.data,
+    accountsList: accountsQuery.data ? Object.values(accountsQuery.data) : [],
+
+    // Funciones de refetch
+    refetchAccounts: accountsQuery.refetch,
+    refetchSelectedAccount: selectedAccountQuery.refetch,
+
+    // Función para refrescar todo el estado de auth
+    refetchAll: () => {
+      accountsQuery.refetch()
+      selectedAccountQuery.refetch()
+    }
+  }
 }
+
+// ===== HOOKS DE MUTACIONES =====
 
 // Hook para añadir cuenta Mojang
 export const useAddMojangAccount = () => {
@@ -40,20 +101,30 @@ export const useAddMojangAccount = () => {
 
   return useMutation({
     mutationFn: async (username: string) => {
-      console.log(`[useAddMojangAccount] Iniciando solicitud para: ${username}`)
+      // Verificar si el username ya existe en las cuentas cargadas
+      const accountsResult = await window.api.auth.getAllAccounts()
+      if (accountsResult.success && accountsResult.accounts) {
+        const existingAccounts = Object.values(accountsResult.accounts)
+        const duplicateAccount = existingAccounts.find(
+          (account) => account.displayName.toLowerCase() === username.toLowerCase()
+        )
+
+        if (duplicateAccount) {
+          throw new Error(
+            `El nombre de usuario "${username}" ya está en uso. Por favor ingresa otro nombre o revisa las cuentas cargadas.`
+          )
+        }
+      }
+
       const result = await window.api.auth.addMojangAccount(username)
-      console.log(`[useAddMojangAccount] Resultado recibido:`, result)
       if (!result.success) {
         throw new Error(result.error || 'Error añadiendo cuenta Mojang')
       }
       return result
     },
     onSuccess: () => {
-      console.log(`[useAddMojangAccount] Mutación exitosa, invalidando queries`)
-      // Invalidar queries relacionadas
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
 
       toast.success('Cuenta Mojang añadida exitosamente')
     },
@@ -79,11 +150,11 @@ export const useAddMicrosoftAccount = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
 
       toast.success('Cuenta Microsoft añadida exitosamente')
     },
     onError: (error: Error) => {
+      console.error('[useAddMicrosoftAccount] Error completo:', error)
       toast.error(error.message)
     }
   })
@@ -92,34 +163,18 @@ export const useAddMicrosoftAccount = () => {
 // Hook para seleccionar cuenta
 export const useSelectAccount = () => {
   const queryClient = useQueryClient()
-  const { setUser, setAuthenticated } = useAppStore()
 
   return useMutation({
     mutationFn: async (uuid: string) => {
-      console.log(`[useSelectAccount] Seleccionando cuenta: ${uuid}`)
       const result = await window.api.auth.selectAccount(uuid)
-      console.log(`[useSelectAccount] Resultado:`, result)
       if (!result.success) {
         throw new Error(result.error || 'Error seleccionando cuenta')
       }
       return result
     },
-    onSuccess: (data) => {
-      console.log(`[useSelectAccount] Cuenta seleccionada exitosamente:`, data.account)
-      if (data.account) {
-        // Actualizar el estado del store inmediatamente
-        setUser({
-          uuid: data.account.uuid,
-          displayName: data.account.displayName,
-          type: data.account.type
-        })
-        setAuthenticated(true)
-
-        // Invalidar queries para refrescar datos
-        queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-        queryClient.invalidateQueries({ queryKey: queryKeys.auth.status })
-        queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
-      }
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
 
       toast.success('Cuenta seleccionada exitosamente')
     },
@@ -133,7 +188,6 @@ export const useSelectAccount = () => {
 // Hook para cerrar sesión
 export const useLogout = () => {
   const queryClient = useQueryClient()
-  const { setUser, setAuthenticated } = useAppStore()
 
   return useMutation({
     mutationFn: async () => {
@@ -144,31 +198,15 @@ export const useLogout = () => {
       return result
     },
     onSuccess: () => {
-      setUser(null)
-      setAuthenticated(false)
-
       // Limpiar todas las queries de auth
       queryClient.removeQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.removeQueries({ queryKey: queryKeys.auth.selectedAccount })
-      queryClient.removeQueries({ queryKey: queryKeys.auth.status })
+
+      // Forzar refetch para actualizar el estado inmediatamente
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
 
       toast.success('Sesión cerrada exitosamente')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message)
-    }
-  })
-}
-
-// Hook para validar cuenta seleccionada
-export const useValidateAccount = () => {
-  return useMutation({
-    mutationFn: async () => {
-      const result = await window.api.auth.validateSelected()
-      if (!result.success) {
-        throw new Error(result.error || 'Error validando cuenta')
-      }
-      return result.isValid
     },
     onError: (error: Error) => {
       toast.error(error.message)
