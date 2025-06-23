@@ -382,12 +382,6 @@ export default function setupProcessBuilderHandlers(): void {
           throw new Error(`No se pudo encontrar el servidor ${server.rawServer.id}`)
         }
 
-        console.log(`[ProcessBuilder] Servidor reconstruido: ${perritoServer.rawServer.id}`)
-        console.log(`[ProcessBuilder] Módulos en servidor: ${perritoServer.modules.length}`)
-        console.log(
-          `[ProcessBuilder] Primer módulo tipo: ${perritoServer.modules[0]?.rawModule?.type}`
-        )
-
         const pb = new ProcessBuilder({
           distroServer: perritoServer,
           vanillaManifest: versionData,

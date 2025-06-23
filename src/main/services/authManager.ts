@@ -343,7 +343,6 @@ export async function validateSelected(): Promise<boolean> {
  */
 export function getSelectedAccount(): AuthAccount | null {
   const account = ConfigManager.getSelectedAccount()
-  console.log(`[AuthManager] getSelectedAccount returning:`, account)
   return account
 }
 

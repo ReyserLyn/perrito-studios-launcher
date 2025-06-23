@@ -98,36 +98,6 @@ export const useCurrentServerStatus = () => {
   })
 }
 
-/*
-
-export const useNews = () => {
-  return useQuery({
-    queryKey: ['news'],
-    queryFn: async () => {
-      const result = await window.api.news.getNews()
-      if (!result.success) throw new Error(result.error)
-      return result.articles
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    retry: 2
-  })
-}
-
-// Hook para validar archivos durante el launch
-export const useFileValidation = () => {
-  return useMutation({
-    mutationFn: async (serverId: string) => {
-      const result = await window.api.launcher.validateFiles(serverId)
-      if (!result.success) throw new Error(result.error)
-      return result
-    },
-    onSuccess: (data) => {
-      console.log('Files validated:', data)
-    }
-  })
-}
-*/
-
 // Hook combinado para toda la información de servidores
 export const useServerData = () => {
   const distribution = useDistribution()
