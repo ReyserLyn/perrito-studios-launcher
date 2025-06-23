@@ -38,7 +38,6 @@ export default interface AuthAPI {
   // Microsoft accounts
   addMicrosoftAccount: (authCode: string) => Promise<AddMicrosoftAccountResponse>
   removeMicrosoftAccount: (uuid: string) => Promise<RemoveMicrosoftAccountResponse>
-  microsoftLogin: (authCode?: string) => Promise<any>
 
   // Account management
   getSelectedAccount: () => Promise<GetSelectedAccountResponse>
