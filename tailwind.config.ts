@@ -22,7 +22,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Outfit', 'system-ui', 'sans-serif'],
-        outfit: ['Outfit', 'sans-serif']
+        outfit: ['Outfit', 'sans-serif'],
+        acherus: ['acherus-grotesque', 'sans-serif']
       },
       borderRadius: {
         lg: 'var(--radius)',
