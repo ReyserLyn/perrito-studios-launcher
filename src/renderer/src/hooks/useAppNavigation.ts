@@ -1,15 +1,15 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useAuthStatus } from './useAuth'
 
 export enum AppScreen {
-  Splash = 'splash',
   Login = 'login',
   AccountsAvailable = 'accounts-available',
   Home = 'home'
 }
 
 export const useAppNavigation = () => {
-  const [currentScreen, setCurrentScreen] = useState<AppScreen>(AppScreen.Splash)
+  const [currentScreen, setCurrentScreen] = useState<AppScreen | null>(null)
+  const [showSplash, setShowSplash] = useState(true)
   const authStatus = useAuthStatus()
 
   const navigateToScreen = useCallback((screen: AppScreen) => {
@@ -37,6 +37,10 @@ export const useAppNavigation = () => {
   ])
 
   const handleSplashComplete = useCallback(() => {
+    setShowSplash(false)
+  }, [])
+
+  useEffect(() => {
     checkAuthenticationState()
   }, [checkAuthenticationState])
 
@@ -60,6 +64,7 @@ export const useAppNavigation = () => {
   return {
     // Estado actual
     currentScreen,
+    showSplash,
     authStatus,
 
     // Funciones de navegación

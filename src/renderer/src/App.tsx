@@ -1,37 +1,33 @@
 import { useEffect } from 'react'
 import { Toaster } from './components/ui/sonner'
 import { AppProvider } from './providers/AppProvider'
-import { AppLayout } from './components/AppLayout'
 import { AppScreens } from './components/AppScreens'
-import { useAppNavigation, AppScreen } from './hooks/useAppNavigation'
+import { SplashScreen } from './screens/SplashScreen'
+import { useAppNavigation } from './hooks/useAppNavigation'
 
 function AppContent() {
   const navigation = useAppNavigation()
-  const { checkAuthenticationState, currentScreen, authStatus } = navigation
+  const { checkAuthenticationState, currentScreen, authStatus, showSplash } = navigation
 
   useEffect(() => {
-    if (currentScreen !== AppScreen.Splash) {
-      checkAuthenticationState()
-    }
-  }, [
-    authStatus.hasAccounts,
-    authStatus.hasSelectedAccount,
-    currentScreen,
-    checkAuthenticationState
-  ])
+    checkAuthenticationState()
+  }, [authStatus.hasAccounts, authStatus.hasSelectedAccount, checkAuthenticationState])
 
   return (
-    <AppLayout>
+    <div className="min-h-screen">
+      {/* Contenido principal */}
       <AppScreens
-        currentScreen={navigation.currentScreen}
-        authStatus={navigation.authStatus}
-        onSplashComplete={navigation.handleSplashComplete}
+        currentScreen={currentScreen}
+        authStatus={authStatus}
         onLoginSuccess={navigation.handleLoginSuccess}
         onAccountSelected={navigation.handleAccountSelected}
         onAddNewAccount={navigation.handleAddNewAccount}
         onShowAccountsAvailable={navigation.handleShowAccountsAvailable}
       />
-    </AppLayout>
+
+      {/* Splash overlay */}
+      {showSplash && <SplashScreen onComplete={navigation.handleSplashComplete} />}
+    </div>
   )
 }
 

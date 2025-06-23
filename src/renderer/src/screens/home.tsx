@@ -5,6 +5,7 @@ import { LaunchButton } from '@/components/launchButton'
 import { Badge } from '@/components/ui/badge'
 import { useCurrentServerStatus, useServerData } from '@/hooks'
 import { Loader2 } from 'lucide-react'
+import fondo from '../assets/images/fondos/noche-steve-dog.webp'
 
 export function Home() {
   const { currentServer, isLoading: serverLoading } = useServerData()
@@ -23,6 +24,11 @@ export function Home() {
 
   return (
     <main className="px-12 py-24 w-full h-full">
+      <img
+        src={fondo}
+        alt="Fondo de la aplicación"
+        className="w-full h-full object-cover absolute top-0 left-0 -z-10"
+      />
       <div className="flex flex-col gap-4 justify-between h-full">
         {/* Header */}
         <div className="flex justify-between">

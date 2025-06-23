@@ -1,4 +1,3 @@
-import { SplashScreen } from '../screens/SplashScreen'
 import { Login } from '../screens/Login'
 import { AccountsAvailable } from '../screens/AccountsAvailable'
 import { Home } from '../screens/home'
@@ -6,13 +5,12 @@ import { Sidebar } from '../screens/sidebar'
 import { AppScreen } from '../hooks/useAppNavigation'
 
 interface AppScreensProps {
-  currentScreen: AppScreen
+  currentScreen: AppScreen | null
   authStatus: {
     isLoading: boolean | undefined
     hasAccounts: boolean | undefined
     accountsList: any[]
   }
-  onSplashComplete: () => void
   onLoginSuccess: () => void
   onAccountSelected: () => void
   onAddNewAccount: () => void
@@ -22,19 +20,12 @@ interface AppScreensProps {
 export function AppScreens({
   currentScreen,
   authStatus,
-  onSplashComplete,
   onLoginSuccess,
   onAccountSelected,
   onAddNewAccount,
   onShowAccountsAvailable
 }: AppScreensProps) {
-  // Pantalla de splash
-  if (currentScreen === AppScreen.Splash) {
-    return <SplashScreen onComplete={onSplashComplete} />
-  }
-
-  // Pantalla de carga si los datos de auth siguen cargando
-  if (authStatus.isLoading) {
+  if (authStatus.isLoading || !currentScreen) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-white text-xl font-acherus">Cargando...</div>

@@ -13,20 +13,18 @@ export function SplashScreen({ onComplete, duration = 2500 }: SplashScreenProps)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsExiting(true)
-      setTimeout(onComplete, 200)
+      setTimeout(onComplete, 750)
     }, duration)
 
     return () => clearTimeout(timer)
   }, [onComplete, duration])
 
-  if (isExiting) {
-    return (
-      <div className="fixed inset-0 bg-black z-50 opacity-0 transition-opacity duration-300 pointer-events-none" />
-    )
-  }
-
   return (
-    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-100 transition-opacity duration-300">
+    <div
+      className={`fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-750 ease-out ${
+        isExiting ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
       <div className="flex flex-col items-center justify-center h-full w-full px-8">
         <div className="flex flex-col items-center space-y-8 max-w-4xl w-full">
           <div className="relative flex items-center justify-center">
