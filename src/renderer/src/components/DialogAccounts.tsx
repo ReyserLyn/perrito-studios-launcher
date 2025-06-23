@@ -12,7 +12,7 @@ import {
 import { useAuthStatus, useSelectAccount, useLogout } from '@/hooks/useAuth'
 import { useAuth } from '@/stores/appStore'
 import { AuthAccount } from '@/types'
-import { Loader2, LogOut, User, UserCheck, Users } from 'lucide-react'
+import { Loader2, LogOut, User, UserCheck } from 'lucide-react'
 import { useState } from 'react'
 
 export function DialogAccounts() {
@@ -60,7 +60,7 @@ export function DialogAccounts() {
         <div className="relative flex-shrink-0">
           <Avatar className="w-12 h-12">
             <AvatarImage
-              src={`https://mc-heads.net/avatar/${account.uuid}/64`}
+              src={`https://api.mineatar.io/face/${account.uuid || account.username}?scale=16&overlay=true`}
               alt={account.displayName}
             />
             <AvatarFallback>
@@ -142,13 +142,20 @@ export function DialogAccounts() {
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          title="Cuentas"
-          className="px-8 py-5 flex items-center justify-center gap-4"
+          className="px-8 py-5 flex items-center justify-center gap-4 transition-all duration-300 hover:shadow-none group hover:bg-transparent"
         >
-          <span className="text-xl font-light">
+          <span className="text-xl font-light transition-all duration-300 group-hover:drop-shadow-[0_0_15px_rgba(168,85,247,0.9)] group-hover:text-purple-200 group-hover:filter group-hover:brightness-110">
             {user?.displayName || 'Sin cuenta seleccionada'}
           </span>
-          <Users size={40} />
+          <Avatar className="w-12 h-12 transition-all duration-300 group-hover:drop-shadow-[0_0_20px_rgba(168,85,247,1)] group-hover:scale-110 group-hover:brightness-105 group-hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]">
+            <AvatarImage
+              src={`https://api.mineatar.io/face/${user?.uuid || user?.username}?scale=16&overlay=true`}
+              alt={user?.displayName}
+            />
+            <AvatarFallback>
+              <User size={24} />
+            </AvatarFallback>
+          </Avatar>
         </Button>
       </DialogTrigger>
 

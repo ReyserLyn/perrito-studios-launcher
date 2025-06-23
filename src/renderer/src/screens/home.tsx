@@ -57,7 +57,7 @@ export function Home() {
             </Badge>
 
             <h1 className="text-5xl 2xl:text-6xl font-extrabold">
-              {currentServer?.rawServer?.name} ({currentServer?.rawServer?.minecraftVersion})
+              {currentServer?.rawServer?.name}
             </h1>
 
             <div className="flex flex-col gap-2">

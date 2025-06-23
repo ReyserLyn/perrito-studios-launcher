@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import logoImage from '../assets/images/logos/Rec_Color_LBlanco.webp'
+import { useImagePreloader } from '../hooks/useImagePreloader'
 
 interface SplashScreenProps {
   onComplete: () => void
@@ -9,6 +10,11 @@ interface SplashScreenProps {
 export function SplashScreen({ onComplete, duration = 2500 }: SplashScreenProps) {
   const [logoLoaded, setLogoLoaded] = useState(false)
   const [isExiting, setIsExiting] = useState(false)
+  const { startPreloading } = useImagePreloader()
+
+  useEffect(() => {
+    startPreloading()
+  }, [startPreloading])
 
   useEffect(() => {
     const timer = setTimeout(() => {

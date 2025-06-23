@@ -50,7 +50,7 @@ export function AccountsAvailable({
           <div className="flex-shrink-0">
             <Avatar className="w-16 h-16">
               <AvatarImage
-                src={`https://mc-heads.net/avatar/${account.uuid}/64`}
+                src={`https://api.mineatar.io/face/${account.uuid || account.username}?scale=16&overlay=true`}
                 alt={account.displayName}
               />
               <AvatarFallback>
