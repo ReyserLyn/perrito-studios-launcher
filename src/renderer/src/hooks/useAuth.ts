@@ -3,40 +3,6 @@ import { toast } from 'sonner'
 import { queryKeys } from '../lib/queryClient'
 import { useAppStore } from '../stores/appStore'
 
-// Hook para obtener el estado de autenticación
-export const useAuthStatus = () => {
-  const { setUser, setAuthenticated } = useAppStore()
-
-  return useQuery({
-    queryKey: queryKeys.auth.status,
-    queryFn: async () => {
-      console.log('[useAuthStatus] Verificando estado de autenticación...')
-      const result = await window.api.auth.checkStatus()
-      console.log('[useAuthStatus] Resultado:', result)
-      if (result.success) {
-        // Solo actualizar si hay cambios
-        if (result.user) {
-          setUser({
-            uuid: result.user.id,
-            displayName: result.user.username,
-            type: result.user.provider
-          })
-          setAuthenticated(true)
-        } else {
-          setUser(null)
-          setAuthenticated(false)
-        }
-        return result
-      }
-      throw new Error(result.error || 'Error verificando estado de autenticación')
-    },
-    refetchInterval: 60000, // Aumentar intervalo a 60 segundos para reducir conflictos
-    staleTime: 30000, // Considerar datos frescos por 30 segundos
-    refetchOnWindowFocus: false, // No revalidar al enfocar la ventana
-    refetchOnMount: false // No revalidar al montar si ya tenemos datos
-  })
-}
-
 // Hook para obtener todas las cuentas
 export const useAccounts = () => {
   const { setAccounts } = useAppStore()
@@ -46,7 +12,7 @@ export const useAccounts = () => {
     queryFn: async () => {
       const result = await window.api.auth.getAllAccounts()
       if (result.success) {
-        setAccounts(result.accounts ? Object.values(result.accounts) : [])
+        setAccounts(Object.values(result.accounts))
         return result.accounts
       }
       throw new Error(result.error || 'Error obteniendo cuentas')

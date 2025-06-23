@@ -1,9 +1,9 @@
 import { HeliosServer } from 'perrito-core/common'
 import { ModManifest, VanillaManifest } from '../../main/types/processBuilder'
-import { AuthAccount } from '../../main/services/configManager'
+import { AuthAccount } from '../../main/types/auth'
 
 type ValidateLaunchResponse =
-  | { success: true; server: HeliosServer; account: AuthAccount }
+  | { success: true; server: HeliosServer; authUser: AuthAccount }
   | { success: false; error: string }
 
 type SystemScanResponse =

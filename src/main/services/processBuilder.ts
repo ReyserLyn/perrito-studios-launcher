@@ -37,7 +37,7 @@ import {
   VanillaManifest
 } from '../types/processBuilder'
 import * as ConfigManager from './configManager'
-import { AuthAccount } from './configManager'
+import { AuthAccount } from '../types/auth'
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 

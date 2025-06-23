@@ -3,6 +3,7 @@ import * as fs from 'fs-extra'
 import * as os from 'os'
 import * as path from 'path'
 import { LoggerUtil } from 'perrito-core'
+import { AuthAccount } from '../types/auth'
 
 const logger = LoggerUtil.getLogger('ConfigManager')
 
@@ -39,20 +40,6 @@ interface NewsCache {
   date: string | null
   content: string | null
   dismissed: boolean
-}
-
-export interface AuthAccount {
-  type?: 'mojang' | 'microsoft'
-  accessToken: string
-  username: string
-  uuid: string
-  displayName: string
-  expiresAt?: Date
-  microsoft?: {
-    access_token: string
-    refresh_token: string
-    expires_at: Date
-  }
 }
 
 interface JavaConfig {

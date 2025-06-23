@@ -1,22 +1,23 @@
 import { ipcRenderer } from 'electron'
+import { AUTH_OPCODE } from '../../main/constants/ipc'
 
 export const authAPI = {
   // Mojang accounts
-  addMojangAccount: (username: string) => ipcRenderer.invoke('auth:add-mojang-account', username),
-  removeMojangAccount: (uuid: string) => ipcRenderer.invoke('auth:remove-mojang-account', uuid),
+  addMojangAccount: (username: string) =>
+    ipcRenderer.invoke(AUTH_OPCODE.ADD_MOJANG_ACCOUNT, username),
+  removeMojangAccount: (uuid: string) =>
+    ipcRenderer.invoke(AUTH_OPCODE.REMOVE_MOJANG_ACCOUNT, uuid),
 
   // Microsoft accounts
   addMicrosoftAccount: (authCode: string) =>
-    ipcRenderer.invoke('auth:add-microsoft-account', authCode),
+    ipcRenderer.invoke(AUTH_OPCODE.ADD_MICROSOFT_ACCOUNT, authCode),
   removeMicrosoftAccount: (uuid: string) =>
-    ipcRenderer.invoke('auth:remove-microsoft-account', uuid),
-  microsoftLogin: (authCode?: string) => ipcRenderer.invoke('auth:microsoft-login', authCode),
+    ipcRenderer.invoke(AUTH_OPCODE.REMOVE_MICROSOFT_ACCOUNT, uuid),
 
   // Account management
-  getSelectedAccount: () => ipcRenderer.invoke('auth:get-selected-account'),
-  getAllAccounts: () => ipcRenderer.invoke('auth:get-all-accounts'),
-  selectAccount: (uuid: string) => ipcRenderer.invoke('auth:select-account', uuid),
-  validateSelected: () => ipcRenderer.invoke('auth:validate-selected'),
-  checkStatus: () => ipcRenderer.invoke('auth:check-status'),
-  logout: () => ipcRenderer.invoke('auth:logout')
+  getSelectedAccount: () => ipcRenderer.invoke(AUTH_OPCODE.GET_SELECTED_ACCOUNT),
+  getAllAccounts: () => ipcRenderer.invoke(AUTH_OPCODE.GET_ALL_ACCOUNTS),
+  selectAccount: (uuid: string) => ipcRenderer.invoke(AUTH_OPCODE.SELECT_ACCOUNT, uuid),
+  validateSelected: () => ipcRenderer.invoke(AUTH_OPCODE.VALIDATE_SELECTED),
+  logout: () => ipcRenderer.invoke(AUTH_OPCODE.LOGOUT)
 }

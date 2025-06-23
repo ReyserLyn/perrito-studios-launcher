@@ -12,30 +12,28 @@
 import * as crypto from 'crypto'
 import { LoggerUtil } from 'perrito-core'
 import { RestResponseStatus } from 'perrito-core/common'
-import { MicrosoftAuth, MicrosoftErrorCode } from 'perrito-core/microsoft'
+import {
+  AuthorizationTokenResponse,
+  MCTokenResponse,
+  MCUserInfo,
+  MicrosoftAuth,
+  MicrosoftErrorCode,
+  XboxServiceTokenResponse
+} from 'perrito-core/microsoft'
 import { AZURE_CLIENT_ID } from '../constants/ipc'
 import * as ConfigManager from './configManager'
+import { AuthAccount } from '../types/auth'
 
 const log = LoggerUtil.getLogger('AuthManager')
 
 // Tipos e interfaces
 interface MicrosoftAuthData {
-  accessToken: {
-    access_token: string
-    refresh_token: string
-    expires_in: number
-  }
+  accessToken: AuthorizationTokenResponse
   accessTokenRaw: string
-  xbl: any
-  xsts: any
-  mcToken: {
-    access_token: string
-    expires_in: number
-  }
-  mcProfile: {
-    id: string
-    name: string
-  }
+  xbl: XboxServiceTokenResponse
+  xsts: XboxServiceTokenResponse
+  mcToken: MCTokenResponse
+  mcProfile: MCUserInfo
 }
 
 enum AUTH_MODE {
@@ -86,7 +84,7 @@ async function fullMicrosoftAuthFlow(
 ): Promise<MicrosoftAuthData> {
   try {
     let accessTokenRaw: string
-    let accessToken: any
+    let accessToken: AuthorizationTokenResponse | undefined
 
     if (authMode !== AUTH_MODE.MC_REFRESH) {
       const accessTokenResponse = await MicrosoftAuth.getAccessToken(
@@ -98,6 +96,10 @@ async function fullMicrosoftAuthFlow(
       if (accessTokenResponse.responseStatus === RestResponseStatus.ERROR) {
         const errorCode = accessTokenResponse.microsoftErrorCode || MicrosoftErrorCode.UNKNOWN
         return Promise.reject(microsoftErrorDisplayable(errorCode))
+      }
+
+      if (!accessTokenResponse.data) {
+        return Promise.reject(new Error('No se pudo obtener el token de acceso'))
       }
 
       accessToken = accessTokenResponse.data
@@ -142,13 +144,17 @@ async function fullMicrosoftAuthFlow(
       return Promise.reject(microsoftErrorDisplayable(errorCode))
     }
 
+    if (!mcProfileResponse.data) {
+      return Promise.reject(new Error('No se pudo obtener el perfil MC'))
+    }
+
     return {
-      accessToken,
+      accessToken: accessToken!,
       accessTokenRaw,
       xbl: xblResponse.data,
       xsts: xstsResponse.data,
       mcToken: mcTokenResponse.data,
-      mcProfile: mcProfileResponse.data || { id: '', name: '' }
+      mcProfile: mcProfileResponse.data
     }
   } catch (err) {
     log.error('Error en el flujo de autenticación Microsoft:', err)
@@ -163,26 +169,19 @@ async function fullMicrosoftAuthFlow(
  * servidor de autenticación de Mojang. Los datos resultantes se almacenarán
  * como una cuenta de autenticación en la base de datos de configuración.
  */
-export async function addAccount(username: string): Promise<any> {
+export async function addAccount(username: string): Promise<AuthAccount> {
   try {
-    console.log(`[AuthManager] Añadiendo cuenta Mojang para: ${username}`)
-
     const hash = crypto.createHash('md5')
     hash.update(username)
     const userId = hash.digest('hex')
 
-    console.log(`[AuthManager] UUID generado: ${userId}`)
-
     const ret = ConfigManager.addMojangAuthAccount(userId, 'sry', username, username)
-    console.log(`[AuthManager] Cuenta añadida al ConfigManager:`, ret)
 
     if (ConfigManager.getClientToken() == null) {
       ConfigManager.setClientToken('sry')
-      console.log(`[AuthManager] Client token establecido`)
     }
 
     ConfigManager.save()
-    console.log(`[AuthManager] Configuración guardada`)
 
     return ret
   } catch (err) {
@@ -196,7 +195,7 @@ export async function addAccount(username: string): Promise<any> {
  * al flujo OAuth2.0 de Mojang. Los datos resultantes se almacenarán como una cuenta
  * de autenticación en la base de datos de configuración.
  */
-export async function addMicrosoftAccount(authCode: string): Promise<any> {
+export async function addMicrosoftAccount(authCode: string): Promise<AuthAccount> {
   try {
     const fullAuth = await fullMicrosoftAuthFlow(authCode, AUTH_MODE.FULL)
 
@@ -342,7 +341,7 @@ export async function validateSelected(): Promise<boolean> {
 /**
  * Obtiene información de la cuenta seleccionada
  */
-export function getSelectedAccount(): any {
+export function getSelectedAccount(): AuthAccount | null {
   const account = ConfigManager.getSelectedAccount()
   console.log(`[AuthManager] getSelectedAccount returning:`, account)
   return account
@@ -351,18 +350,15 @@ export function getSelectedAccount(): any {
 /**
  * Obtiene todas las cuentas autenticadas
  */
-export function getAuthAccounts(): any {
+export function getAuthAccounts(): Record<string, AuthAccount> {
   return ConfigManager.getAuthAccounts()
 }
 
 /**
  * Selecciona una cuenta por UUID
  */
-export function setSelectedAccount(uuid: string): any {
-  console.log(`[AuthManager] setSelectedAccount called with UUID: ${uuid}`)
+export function setSelectedAccount(uuid: string): AuthAccount | null {
   const result = ConfigManager.setSelectedAccount(uuid)
-  console.log(`[AuthManager] setSelectedAccount result:`, result)
   ConfigManager.save()
-  console.log(`[AuthManager] Configuration saved after selecting account`)
   return result
 }
