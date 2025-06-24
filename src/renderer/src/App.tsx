@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
+import { AppScreens } from './components/app-screens'
 import { Toaster } from './components/ui/sonner'
-import { AppProvider } from './providers/AppProvider'
-import { AppScreens } from './components/AppScreens'
-import { SplashScreen } from './screens/SplashScreen'
 import { useAppNavigation } from './hooks/useAppNavigation'
+import { AppProvider } from './providers/AppProvider'
+import { SplashScreen } from './screens/splash-screen'
 
 function AppContent() {
   const navigation = useAppNavigation()

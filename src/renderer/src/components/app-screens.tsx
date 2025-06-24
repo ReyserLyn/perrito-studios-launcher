@@ -1,8 +1,8 @@
-import { Login } from '../screens/Login'
-import { AccountsAvailable } from '../screens/AccountsAvailable'
+import { Login } from '@/screens/Login'
+import { AppScreen } from '../hooks/useAppNavigation'
+import { AccountsAvailable } from '../screens/accounts-available'
 import { Home } from '../screens/home'
 import { Sidebar } from '../screens/sidebar'
-import { AppScreen } from '../hooks/useAppNavigation'
 
 interface AppScreensProps {
   currentScreen: AppScreen | null
