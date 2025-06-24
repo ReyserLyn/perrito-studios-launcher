@@ -63,17 +63,8 @@ export async function runPreloadTasks(win: BrowserWindow): Promise<void> {
     log.warn('No se pudo limpiar el directorio de nativos temporales:', error)
   }
 
-  // 5) Recargar nombre de usuario de forma periódica, si existe la función.
-  const reloadFn = (ConfigManager as any).reloadUsername as (() => void) | undefined
-  if (typeof reloadFn === 'function') {
-    try {
-      reloadFn()
-      setInterval(reloadFn, 60 * 1000) // cada minuto
-      log.info('[+] Recarga periódica del nombre de usuario habilitada')
-    } catch (error) {
-      log.warn('No se pudo iniciar la recarga de nombre de usuario:', error)
-    }
-  }
+  // 5) La recarga periódica del nombre de usuario se eliminó.
+  // Esta funcionalidad ahora se maneja a través del sistema de autenticación.
 
   log.info('[+] Pre-carga finalizada')
 }
