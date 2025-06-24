@@ -5,7 +5,7 @@ import { Cross, Square, SquareUser, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { MicrosoftLoginLoading, MojangLoginForm } from '../auth'
-import { ConfigTab } from './config-tab'
+import { ConfigTab, ConfigTabHeader } from './config-tab'
 
 type ConfigView = 'main' | 'add-perrito-account' | 'microsoft-loading'
 
@@ -90,16 +90,11 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
   return (
     <ConfigTab value="account">
       <div className="flex flex-col h-full w-full gap-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <User className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-semibold">Cuenta</h2>
-          </div>
-
-          <p className="text-muted-foreground text-sm">
-            Añada nuevas cuentas o administre las existente.
-          </p>
-        </div>
+        <ConfigTabHeader
+          title="Cuenta"
+          description="Añada nuevas cuentas o administre las existente."
+          Icon={User}
+        />
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
