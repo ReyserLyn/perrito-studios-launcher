@@ -1,3 +1,3 @@
-export { LoginSelection } from './LoginSelection'
-export { MicrosoftLoginLoading } from './MicrosoftLoginLoading'
-export { MojangLoginForm } from './MojangLoginForm'
+export { LoginSelection } from './login-selection'
+export { MicrosoftLoginLoading } from './microsoft-login-loading'
+export { MojangLoginForm } from './mojang-login-form'
