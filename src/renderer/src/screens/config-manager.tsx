@@ -1,7 +1,21 @@
+import { MojangLoginForm } from '@/components/auth'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useAuthStatus } from '@/hooks'
 import { useNavigationStore } from '@/stores/use-navigation-store'
-import { ArrowLeft, Bot, Download, Gamepad, Info, Settings, User } from 'lucide-react'
+import {
+  ArrowLeft,
+  Bot,
+  Cross,
+  Download,
+  Gamepad,
+  Info,
+  Settings,
+  Square,
+  SquareUser,
+  User
+} from 'lucide-react'
+import { useState } from 'react'
 
 const tabs = [
   {
@@ -45,11 +59,42 @@ interface ConfigManagerProps {
   tab?: string
 }
 
+type ConfigView = 'main' | 'add-perrito-account'
+
 export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
   const { backToHome } = useNavigationStore()
+  const { refetchAccounts, refetchSelectedAccount } = useAuthStatus()
+  const [currentView, setCurrentView] = useState<ConfigView>('main')
+
+  const handleAddPerritoAccount = () => {
+    setCurrentView('add-perrito-account')
+  }
+
+  const handleBackToConfig = () => {
+    setCurrentView('main')
+  }
+
+  const handleAccountSuccess = () => {
+    refetchAccounts()
+    refetchSelectedAccount()
+    setCurrentView('main')
+  }
+
+  if (currentView === 'add-perrito-account') {
+    return (
+      <MojangLoginForm
+        onBack={handleBackToConfig}
+        onSuccess={handleAccountSuccess}
+        title="Agregar Cuenta Perrito Studios"
+        description="Crea una nueva cuenta offline para Perrito Studios"
+        placeholder="Nombre de usuario"
+      />
+    )
+  }
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-[#0a0515] to-[#1a1329] text-white">
-      {/* Header con botón de retroceso */}
+      {/* Header */}
       <div className="flex items-center p-4 border-b border-[#2c1e4d]">
         <Button
           variant="ghost"
@@ -78,21 +123,53 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
               ))}
             </TabsList>
 
-            {tabs.map((tab) => (
-              <TabsContent
-                key={tab.value}
-                value={tab.value}
-                className="flex-1 mt-0 justify-center items-center border border-[#2c1e4d] rounded-lg bg-[#1d1332]/50 p-8 data-[state=active]:flex data-[state=inactive]:hidden"
-              >
-                <div className="flex flex-col items-center justify-center text-center h-full">
-                  <tab.icon className="h-20 w-20 mb-6 text-primary" />
-                  <h2 className="text-2xl font-semibold mb-4">{tab.name}</h2>
-                  <p className="text-muted-foreground text-lg">
-                    Configuración de {tab.name.toLowerCase()} próximamente disponible
+            <TabsContent
+              value="account"
+              className="flex-1 mt-0 justify-center items-center border border-[#2c1e4d] rounded-lg bg-[#1d1332]/50 p-8 data-[state=active]:flex data-[state=inactive]:hidden"
+            >
+              <div className="flex flex-col h-full w-full gap-4">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <User className="h-5 w-5 text-primary" />
+                    <h2 className="text-2xl font-semibold">Cuenta</h2>
+                  </div>
+
+                  <p className="text-muted-foreground text-sm">
+                    Añada nuevas cuentas o administre las existente.
                   </p>
                 </div>
-              </TabsContent>
-            ))}
+
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Square size={15} />
+                      <p className=" font-semibold">Microsoft</p>
+                    </div>
+                    <Button variant="ghost" className="gap-2">
+                      <Cross size={15} />
+                      <p>Añadir cuenta Microsft</p>
+                    </Button>
+                  </div>
+
+                  <div>{/* Card de cuentas Microsfot*/}</div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <SquareUser size={15} />
+                      <p className=" font-semibold">Perrito Studios</p>
+                    </div>
+                    <Button variant="ghost" className="gap-2" onClick={handleAddPerritoAccount}>
+                      <Cross size={15} />
+                      <p>Añadir cuenta Perrito Studios</p>
+                    </Button>
+                  </div>
+
+                  <div>{/* Card de cuentas Perrito Studios*/}</div>
+                </div>
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </div>
