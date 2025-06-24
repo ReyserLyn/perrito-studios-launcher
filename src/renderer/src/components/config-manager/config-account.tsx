@@ -1,11 +1,11 @@
 import { AccountsList } from '@/components/accounts'
 import { Button } from '@/components/ui/button'
-import { TabsContent } from '@/components/ui/tabs'
 import { useAddMicrosoftAccount, useAuthStatus } from '@/hooks'
 import { Cross, Square, SquareUser, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { MicrosoftLoginLoading, MojangLoginForm } from '../auth'
+import { ConfigTab } from './config-tab'
 
 type ConfigView = 'main' | 'add-perrito-account' | 'microsoft-loading'
 
@@ -88,10 +88,7 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
   }
 
   return (
-    <TabsContent
-      value="account"
-      className="flex-1 mt-0 justify-center items-center border border-[#2c1e4d] rounded-lg bg-[#1d1332]/50 p-8 data-[state=active]:flex data-[state=inactive]:hidden overflow-y-auto custom-scrollbar min-h-0"
-    >
+    <ConfigTab value="account">
       <div className="flex flex-col h-full w-full gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -142,6 +139,6 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
           />
         </div>
       </div>
-    </TabsContent>
+    </ConfigTab>
   )
 }

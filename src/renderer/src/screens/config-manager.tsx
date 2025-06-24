@@ -1,4 +1,5 @@
 import { ConfigAccount } from '@/components/config-manager/config-account'
+import { ConfigMinecraft } from '@/components/config-manager/config-minecraft'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useNavigationStore } from '@/stores/use-navigation-store'
@@ -92,6 +93,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
               ))}
             </TabsList>
             <ConfigAccount setActiveTab={setActiveTab} />
+            <ConfigMinecraft />
           </Tabs>
         </div>
       </div>
