@@ -26,18 +26,18 @@ import {
   isLibraryCompatible,
   mcVersionAtLeast
 } from 'perrito-core/common'
+import { AuthAccount } from '../types/auth'
 import {
   Library,
   ModConfigEntry,
   ModConfiguration,
   ModManifest,
   ProcessBuilderOptions,
-  RuleBasedArgument,
   Rule,
+  RuleBasedArgument,
   VanillaManifest
 } from '../types/processBuilder'
 import * as ConfigManager from './configManager'
-import { AuthAccount } from '../types/auth'
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 
@@ -436,6 +436,20 @@ export class ProcessBuilder {
   }
 
   /**
+   * Añade argumentos de resolución/fullscreen al array de argumentos
+   */
+  private addResolutionArgs(args: string[]): void {
+    if (ConfigManager.getFullscreen()) {
+      args.push('--fullscreen')
+    } else {
+      const width = Math.max(800, ConfigManager.getGameWidth())
+      const height = Math.max(600, ConfigManager.getGameHeight())
+      args.push('--width', width.toString())
+      args.push('--height', height.toString())
+    }
+  }
+
+  /**
    * Procesa argumentos de autoconexión al servidor
    */
   private processAutoConnectArg(args: string[]): void {
@@ -578,12 +592,17 @@ export class ProcessBuilder {
 
     // Argumentos específicos del mod
     if (this.modManifest.arguments?.game) {
-      for (const argStr of this.modManifest.arguments.game) {
-        if (typeof argStr === 'string') {
-          gameArgs.push(argStr)
-        }
-      }
+      const modGameArgs = await this.processGameArguments(
+        this.modManifest.arguments.game,
+        tempNativePath,
+        mods,
+        argDiscovery
+      )
+      gameArgs.push(...modGameArgs)
     }
+
+    // Configurar resolución del juego (para Fabric y versiones modernas)
+    this.addResolutionArgs(gameArgs)
 
     // Combinar argumentos JVM y del juego
     const allArgs = [...jvmArgs, ...gameArgs]
@@ -754,10 +773,10 @@ export class ProcessBuilder {
         val = this.vanillaManifest.type
         break
       case 'resolution_width':
-        val = ConfigManager.getGameWidth().toString()
+        val = Math.max(800, ConfigManager.getGameWidth()).toString()
         break
       case 'resolution_height':
-        val = ConfigManager.getGameHeight().toString()
+        val = Math.max(600, ConfigManager.getGameHeight()).toString()
         break
       case 'natives_directory':
         return arg.replace(argDiscovery, tempNativePath)
@@ -809,13 +828,8 @@ export class ProcessBuilder {
     // Autoconexión
     this.processAutoConnectArg(mcArgs)
 
-    // Configurar resolución del juego
-    if (ConfigManager.getFullscreen()) {
-      mcArgs.push('--fullscreen', 'true')
-    } else {
-      mcArgs.push('--width', ConfigManager.getGameWidth().toString())
-      mcArgs.push('--height', ConfigManager.getGameHeight().toString())
-    }
+    // Configurar resolución del juego (para Forge legacy)
+    this.addResolutionArgs(mcArgs)
 
     // Archivo de lista de mods
     mcArgs.push('--modListFile')
