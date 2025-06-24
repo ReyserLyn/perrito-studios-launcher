@@ -44,7 +44,6 @@ export function MojangLoginForm({
     addMojangAccount.mutate(username.trim(), {
       onSuccess: () => {
         console.log('[MojangLoginForm] Login successful')
-        setUsername('')
         onSuccess?.()
       },
       onError: (error) => {
