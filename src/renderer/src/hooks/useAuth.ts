@@ -210,3 +210,28 @@ export const useLogout = () => {
     }
   })
 }
+
+// Hook para eliminar cuenta
+export const useRemoveAccount = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (params: { uuid: string; type: 'microsoft' | 'mojang' }) => {
+      const { uuid, type } = params
+      if (type === 'microsoft') {
+        return await window.api.auth.removeMicrosoftAccount(uuid)
+      }
+      return await window.api.auth.removeMojangAccount(uuid)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
+
+      toast.success('Cuenta eliminada exitosamente')
+    },
+    onError: (error: Error) => {
+      console.error('[useRemoveAccount] Error completo:', error)
+      toast.error(error.message)
+    }
+  })
+}

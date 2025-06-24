@@ -51,7 +51,7 @@ export function AppScreens() {
   const screenComponent = screens[screen]
 
   return (
-    <div className="h-screen">
+    <div className="h-screen flex flex-col overflow-hidden">
       {screenComponent ?? (
         <div className="text-white text-xl font-acherus">Error: Pantalla desconocida</div>
       )}

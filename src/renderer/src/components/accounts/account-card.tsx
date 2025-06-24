@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useLogout, useSelectAccount } from '@/hooks/useAuth'
+import { useRemoveAccount, useSelectAccount } from '@/hooks/useAuth'
 import { AuthAccount } from '@/types'
 import { Loader2, LogOut, User, UserCheck } from 'lucide-react'
 
@@ -22,7 +22,7 @@ export function AccountCard({
   className = ''
 }: AccountCardProps) {
   const selectAccount = useSelectAccount()
-  const logout = useLogout()
+  const removeAccount = useRemoveAccount()
 
   const accountType = account.type === 'microsoft' ? 'Microsoft' : 'Mojang'
 
@@ -34,7 +34,10 @@ export function AccountCard({
   const handleLogout = async (event: React.MouseEvent) => {
     event.stopPropagation()
 
-    await logout.mutateAsync()
+    await removeAccount.mutateAsync({
+      uuid: account.uuid,
+      type: account.type as 'microsoft' | 'mojang'
+    })
     onLogout?.()
   }
 
@@ -116,10 +119,14 @@ export function AccountCard({
           size="sm"
           className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/20"
           onClick={handleLogout}
-          disabled={logout.isPending}
+          disabled={removeAccount.isPending}
           title="Cerrar sesión"
         >
-          {logout.isPending ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
+          {removeAccount.isPending ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <LogOut size={14} />
+          )}
         </Button>
       </div>
     </div>
