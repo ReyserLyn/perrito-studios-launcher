@@ -1,5 +1,5 @@
-import { HeliosServer } from 'perrito-core/common'
 import { AuthAccount } from '@/types'
+import { HeliosServer } from 'perrito-core/common'
 
 export const useImagePreloader = () => {
   const preloadImage = (src: string): Promise<string> => {

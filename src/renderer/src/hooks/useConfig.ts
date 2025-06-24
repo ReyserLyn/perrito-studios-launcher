@@ -22,7 +22,7 @@ export const useGameConfig = () => {
         gameHeight: height.success ? height.height : 720,
         fullscreen: fullscreen.success ? fullscreen.fullscreen : false,
         autoConnect: autoConnect.success ? autoConnect.autoConnect : true,
-        launchDetached: launchDetached.success ? launchDetached.launchDetached : true
+        launchDetached: launchDetached.success ? launchDetached.detached : true
       }
 
       updateConfig(config)
@@ -46,7 +46,7 @@ export const useJavaConfig = (serverId: string) => {
       return {
         minRAM: minRAM.success ? minRAM.minRAM : '2G',
         maxRAM: maxRAM.success ? maxRAM.maxRAM : '4G',
-        executable: executable.success ? executable.javaExecutable : null,
+        executable: executable.success ? executable.executable : null,
         jvmOptions: jvmOptions.success ? jvmOptions.jvmOptions : []
       }
     },
@@ -201,8 +201,8 @@ export const useRAMLimits = () => {
       ])
 
       return {
-        min: minRAM.success ? minRAM.absoluteMinRAM : 2,
-        max: maxRAM.success ? maxRAM.absoluteMaxRAM : 8
+        min: minRAM.success ? minRAM.minRAM : 2,
+        max: maxRAM.success ? maxRAM.maxRAM : 8
       }
     },
     staleTime: Infinity // Los límites de RAM no cambian durante la sesión
