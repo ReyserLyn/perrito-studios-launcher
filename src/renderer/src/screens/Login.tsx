@@ -29,7 +29,6 @@ export function Login() {
           },
           onError: (error) => {
             console.error('[Login] Error adding Microsoft account:', error)
-            // No mostrar toast aquí porque el hook ya lo maneja
             setMode('selection')
           }
         })
