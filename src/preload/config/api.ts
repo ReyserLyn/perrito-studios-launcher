@@ -1,58 +1,61 @@
 import { ipcRenderer } from 'electron'
+import { CONFIG_OPCODE } from '../../main/constants/ipc'
 
 export const configAPI = {
   // Directories
-  getLauncherDirectory: () => ipcRenderer.invoke('config:get-launcher-directory'),
-  getDataDirectory: (def = false) => ipcRenderer.invoke('config:get-data-directory', def),
+  getLauncherDirectory: () => ipcRenderer.invoke(CONFIG_OPCODE.GET_LAUNCHER_DIRECTORY),
+  getDataDirectory: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_DATA_DIRECTORY, def),
   setDataDirectory: (directory: string) =>
-    ipcRenderer.invoke('config:set-data-directory', directory),
-  getCommonDirectory: () => ipcRenderer.invoke('config:get-common-directory'),
-  getInstanceDirectory: () => ipcRenderer.invoke('config:get-instance-directory'),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_DATA_DIRECTORY, directory),
+  getCommonDirectory: () => ipcRenderer.invoke(CONFIG_OPCODE.GET_COMMON_DIRECTORY),
+  getInstanceDirectory: () => ipcRenderer.invoke(CONFIG_OPCODE.GET_INSTANCE_DIRECTORY),
 
   // Config operations
-  save: () => ipcRenderer.invoke('config:save'),
-  load: () => ipcRenderer.invoke('config:load'),
-  isFirstLaunch: () => ipcRenderer.invoke('config:is-first-launch'),
+  save: () => ipcRenderer.invoke(CONFIG_OPCODE.SAVE),
+  load: () => ipcRenderer.invoke(CONFIG_OPCODE.LOAD),
+  isFirstLaunch: () => ipcRenderer.invoke(CONFIG_OPCODE.IS_FIRST_LAUNCH),
 
   // Game settings
-  getGameWidth: (def = false) => ipcRenderer.invoke('config:get-game-width', def),
-  setGameWidth: (width: number) => ipcRenderer.invoke('config:set-game-width', width),
-  getGameHeight: (def = false) => ipcRenderer.invoke('config:get-game-height', def),
-  setGameHeight: (height: number) => ipcRenderer.invoke('config:set-game-height', height),
-  getFullscreen: (def = false) => ipcRenderer.invoke('config:get-fullscreen', def),
-  setFullscreen: (fullscreen: boolean) => ipcRenderer.invoke('config:set-fullscreen', fullscreen),
-  getAutoConnect: (def = false) => ipcRenderer.invoke('config:get-auto-connect', def),
+  getGameWidth: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_GAME_WIDTH, def),
+  setGameWidth: (width: number) => ipcRenderer.invoke(CONFIG_OPCODE.SET_GAME_WIDTH, width),
+  getGameHeight: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_GAME_HEIGHT, def),
+  setGameHeight: (height: number) => ipcRenderer.invoke(CONFIG_OPCODE.SET_GAME_HEIGHT, height),
+  getFullscreen: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_FULLSCREEN, def),
+  setFullscreen: (fullscreen: boolean) =>
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_FULLSCREEN, fullscreen),
+  getAutoConnect: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_AUTO_CONNECT, def),
   setAutoConnect: (autoConnect: boolean) =>
-    ipcRenderer.invoke('config:set-auto-connect', autoConnect),
-  getLaunchDetached: (def = false) => ipcRenderer.invoke('config:get-launch-detached', def),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_AUTO_CONNECT, autoConnect),
+  getLaunchDetached: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_LAUNCH_DETACHED, def),
   setLaunchDetached: (detached: boolean) =>
-    ipcRenderer.invoke('config:set-launch-detached', detached),
-  getAllowPrerelease: (def = false) => ipcRenderer.invoke('config:get-allow-prerelease', def),
-  setAllowPrerelease: (allow: boolean) => ipcRenderer.invoke('config:set-allow-prerelease', allow),
-  getSyncLanguage: (def = false) => ipcRenderer.invoke('config:get-sync-language', def),
-  setSyncLanguage: (sync: boolean) => ipcRenderer.invoke('config:set-sync-language', sync),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_LAUNCH_DETACHED, detached),
+  getAllowPrerelease: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_ALLOW_PRERELEASE, def),
+  setAllowPrerelease: (allow: boolean) =>
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_ALLOW_PRERELEASE, allow),
+  getSyncLanguage: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_SYNC_LANGUAGE, def),
+  setSyncLanguage: (sync: boolean) => ipcRenderer.invoke(CONFIG_OPCODE.SET_SYNC_LANGUAGE, sync),
 
   // Server settings
-  getSelectedServer: (def = false) => ipcRenderer.invoke('config:get-selected-server', def),
+  getSelectedServer: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_SELECTED_SERVER, def),
   setSelectedServer: (serverId: string) =>
-    ipcRenderer.invoke('config:set-selected-server', serverId),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_SELECTED_SERVER, serverId),
 
   // Java settings
-  getMinRAM: (serverId: string) => ipcRenderer.invoke('config:get-min-ram', serverId),
+  getMinRAM: (serverId: string) => ipcRenderer.invoke(CONFIG_OPCODE.GET_MIN_RAM, serverId),
   setMinRAM: (serverId: string, minRAM: string) =>
-    ipcRenderer.invoke('config:set-min-ram', serverId, minRAM),
-  getMaxRAM: (serverId: string) => ipcRenderer.invoke('config:get-max-ram', serverId),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_MIN_RAM, serverId, minRAM),
+  getMaxRAM: (serverId: string) => ipcRenderer.invoke(CONFIG_OPCODE.GET_MAX_RAM, serverId),
   setMaxRAM: (serverId: string, maxRAM: string) =>
-    ipcRenderer.invoke('config:set-max-ram', serverId, maxRAM),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_MAX_RAM, serverId, maxRAM),
   getJavaExecutable: (serverId: string) =>
-    ipcRenderer.invoke('config:get-java-executable', serverId),
+    ipcRenderer.invoke(CONFIG_OPCODE.GET_JAVA_EXECUTABLE, serverId),
   setJavaExecutable: (serverId: string, executable: string) =>
-    ipcRenderer.invoke('config:set-java-executable', serverId, executable),
-  getJVMOptions: (serverId: string) => ipcRenderer.invoke('config:get-jvm-options', serverId),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_JAVA_EXECUTABLE, serverId, executable),
+  getJVMOptions: (serverId: string) => ipcRenderer.invoke(CONFIG_OPCODE.GET_JVM_OPTIONS, serverId),
   setJVMOptions: (serverId: string, options: string[]) =>
-    ipcRenderer.invoke('config:set-jvm-options', serverId, options),
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_JVM_OPTIONS, serverId, options),
   ensureJavaConfig: (serverId: string, effectiveJavaOptions: any, ram?: any) =>
-    ipcRenderer.invoke('config:ensure-java-config', serverId, effectiveJavaOptions, ram),
-  getAbsoluteMinRAM: (ram?: any) => ipcRenderer.invoke('config:get-absolute-min-ram', ram),
-  getAbsoluteMaxRAM: () => ipcRenderer.invoke('config:get-absolute-max-ram')
+    ipcRenderer.invoke(CONFIG_OPCODE.ENSURE_JAVA_CONFIG, serverId, effectiveJavaOptions, ram),
+  getAbsoluteMinRAM: (ram?: any) => ipcRenderer.invoke(CONFIG_OPCODE.GET_ABSOLUTE_MIN_RAM, ram),
+  getAbsoluteMaxRAM: () => ipcRenderer.invoke(CONFIG_OPCODE.GET_ABSOLUTE_MAX_RAM)
 }

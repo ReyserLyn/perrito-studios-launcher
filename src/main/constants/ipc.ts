@@ -55,6 +55,8 @@ export const DISCORD_RPC = {
   SHUTDOWN: 'discord:shutdown'
 } as const
 
+// ==== Comprobado ====
+
 export const CONFIG_OPCODE = {
   GET_LAUNCHER_DIRECTORY: 'config:get-launcher-directory',
   GET_DATA_DIRECTORY: 'config:get-data-directory',
@@ -92,8 +94,6 @@ export const CONFIG_OPCODE = {
   GET_ABSOLUTE_MIN_RAM: 'config:get-absolute-min-ram',
   GET_ABSOLUTE_MAX_RAM: 'config:get-absolute-max-ram'
 } as const
-
-// ==== Comprobado ====
 
 export const DISTRIBUTION_OPCODE = {
   GET_DISTRIBUTION: 'distro:get-distribution'

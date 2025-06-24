@@ -1,7 +1,6 @@
 import { is } from '@electron-toolkit/utils'
 import { BrowserWindow, shell } from 'electron'
 import { join } from 'path'
-import icon from '../../resources/icon.png?asset'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -14,7 +13,7 @@ export function createMainWindow(): BrowserWindow {
     minHeight: 704,
     show: false,
     autoHideMenuBar: true,
-    icon: icon,
+    icon: join(__dirname, '../../resources/icon.png'),
     title: 'Perrito Studios Launcher',
     backgroundColor: '#000000',
     webPreferences: {
@@ -33,19 +32,6 @@ export function createMainWindow(): BrowserWindow {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-
-  // Interceptar requests para agregar headers necesarios solo para imágenes
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
-    { urls: ['https://perrito.reyserlyn.com/*', 'https://*.perrito.reyserlyn.com/*'] },
-    (details, callback) => {
-      // Solo para imágenes, remover el referrer
-      if (details.resourceType === 'image') {
-        delete details.requestHeaders['Referer']
-        delete details.requestHeaders['referer']
-      }
-      callback({ requestHeaders: details.requestHeaders })
-    }
-  )
 
   // Desactivar las teclas de recarga
   mainWindow.webContents.on('before-input-event', (event, input) => {

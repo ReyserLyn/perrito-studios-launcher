@@ -64,8 +64,8 @@ interface Config {
 }
 
 interface RamConfig {
-  minimum?: number
-  recommended?: number
+  minimum: number
+  recommended: number
 }
 
 interface EffectiveJavaOptions {
@@ -108,8 +108,8 @@ const configPath = path.join(getLauncherDirectory(), 'config.json')
 const configPathLEGACY = path.join(dataPath, 'config.json')
 const firstLaunch = !fs.existsSync(configPath) && !fs.existsSync(configPathLEGACY)
 
-export function getAbsoluteMinRAM(ram?: RamConfig): number {
-  if (ram?.minimum != null) {
+export function getAbsoluteMinRAM(ram: RamConfig): number {
+  if (ram.minimum != null) {
     return ram.minimum / 1024
   } else {
     // Comportamiento legacy
@@ -374,7 +374,7 @@ export function addAuthAccount(
  * @returns El ID del serverpack seleccionado.
  */
 export function getSelectedServer(def = false): string | null {
-  return !def ? config!.selectedServer : null
+  return !def ? config!.selectedServer : DEFAULT_CONFIG.clientToken
 }
 
 /**
