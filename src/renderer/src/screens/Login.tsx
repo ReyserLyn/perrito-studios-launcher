@@ -1,5 +1,4 @@
 import { LoginSelection, MicrosoftLoginLoading, MojangLoginForm } from '@/components/auth'
-import { useAuthChecker } from '@/hooks/use-auth-checker'
 import { useAddMicrosoftAccount } from '@/hooks/useAuth'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -8,7 +7,6 @@ type LoginMode = 'selection' | 'mojang' | 'microsoft-loading'
 
 export function Login() {
   const [mode, setMode] = useState<LoginMode>('selection')
-  const { refetchAccounts, refetchSelectedAccount } = useAuthChecker()
 
   // Mutations
   const addMicrosoftAccount = useAddMicrosoftAccount()
@@ -23,10 +21,6 @@ export function Login() {
       if (type === 'MSFT_AUTH_REPLY_SUCCESS') {
         // data contiene el código de Microsoft
         addMicrosoftAccount.mutate(data.code, {
-          onSuccess: () => {
-            refetchAccounts()
-            refetchSelectedAccount()
-          },
           onError: (error) => {
             console.error('[Login] Error adding Microsoft account:', error)
             setMode('selection')
@@ -48,12 +42,7 @@ export function Login() {
     return () => {
       window.api.microsoftAuth.removeLoginListener()
     }
-  }, [mode, addMicrosoftAccount, refetchAccounts, refetchSelectedAccount])
-
-  const handleMojangSuccess = () => {
-    refetchAccounts()
-    refetchSelectedAccount()
-  }
+  }, [mode, addMicrosoftAccount])
 
   const handleMicrosoftLogin = () => {
     console.log('[Login] Starting Microsoft login flow')
@@ -69,7 +58,7 @@ export function Login() {
   }
 
   if (mode === 'mojang') {
-    return <MojangLoginForm onBack={handleBackToSelection} onSuccess={handleMojangSuccess} />
+    return <MojangLoginForm onBack={handleBackToSelection} />
   }
 
   // Selection mode

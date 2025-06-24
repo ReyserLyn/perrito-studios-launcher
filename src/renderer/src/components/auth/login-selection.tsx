@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { useAuthChecker } from '@/hooks/use-auth-checker'
+import { useAuthStatus } from '@/hooks'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { AppScreen } from '@/types/navigation'
 import logoImage from '../../assets/images/logos/Rec_Color_LBlanco.webp'
@@ -11,7 +11,7 @@ interface LoginSelectionProps {
 
 export function LoginSelection({ onMicrosoftLogin, onMojangLogin }: LoginSelectionProps) {
   const { goTo } = useNavigationStore()
-  const { hasAccounts } = useAuthChecker()
+  const { hasAccounts } = useAuthStatus()
 
   return (
     <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">

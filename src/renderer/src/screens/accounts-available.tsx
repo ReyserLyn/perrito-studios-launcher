@@ -1,4 +1,3 @@
-import { useAuthChecker } from '@/hooks/use-auth-checker'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { AppScreen } from '@/types/navigation'
 import { Loader2, Plus, User, Users } from 'lucide-react'
@@ -9,14 +8,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
-import { useSelectAccount } from '../hooks/useAuth'
+import { useAuthStatus, useSelectAccount } from '../hooks/useAuth'
 import { AuthAccount } from '../types'
 
 export function AccountsAvailable() {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null)
   const selectAccount = useSelectAccount()
   const { goTo } = useNavigationStore()
-  const { accountsList, refetchAll } = useAuthChecker()
+  const { accountsList, refetchAll } = useAuthStatus()
 
   const handleAccountSelect = async (uuid: string) => {
     setSelectedAccountId(uuid)

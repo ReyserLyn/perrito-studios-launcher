@@ -1,3 +1,4 @@
+import { AccountsList } from '@/components/accounts'
 import { MojangLoginForm } from '@/components/auth'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -15,7 +16,7 @@ import {
   SquareUser,
   User
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const tabs = [
   {
@@ -63,8 +64,16 @@ type ConfigView = 'main' | 'add-perrito-account'
 
 export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
   const { backToHome } = useNavigationStore()
-  const { refetchAccounts, refetchSelectedAccount } = useAuthStatus()
+
   const [currentView, setCurrentView] = useState<ConfigView>('main')
+  const [activeTab, setActiveTab] = useState(tab) // Mantenemos el tab activo
+
+  const { accountsList, isLoading } = useAuthStatus()
+
+  // Sincronizar el activeTab cuando el prop tab cambie
+  useEffect(() => {
+    setActiveTab(tab)
+  }, [tab])
 
   const handleAddPerritoAccount = () => {
     setCurrentView('add-perrito-account')
@@ -75,9 +84,8 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
   }
 
   const handleAccountSuccess = () => {
-    refetchAccounts()
-    refetchSelectedAccount()
     setCurrentView('main')
+    setActiveTab('account')
   }
 
   if (currentView === 'add-perrito-account') {
@@ -110,7 +118,12 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
       {/* Contenido principal */}
       <div className="flex-1 p-8">
         <div className="max-w-6xl mx-auto h-full">
-          <Tabs orientation="vertical" defaultValue={tab} className="h-full flex flex-row gap-6">
+          <Tabs
+            orientation="vertical"
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="h-full flex flex-row gap-6"
+          >
             <TabsList className="h-fit flex-col min-w-48 p-1 bg-[#1d1332] border border-[#2c1e4d] py-4">
               {tabs.map((tab) => (
                 <TabsTrigger
@@ -165,8 +178,13 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
                       <p>Añadir cuenta Perrito Studios</p>
                     </Button>
                   </div>
-
-                  <div>{/* Card de cuentas Perrito Studios*/}</div>
+                  <div className="max-h-96 overflow-y-auto custom-scrollbar pr-2">
+                    <AccountsList
+                      accounts={accountsList || []}
+                      isLoading={isLoading || false}
+                      className="space-y-2"
+                    />
+                  </div>
                 </div>
               </div>
             </TabsContent>

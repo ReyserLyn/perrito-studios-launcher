@@ -1,4 +1,4 @@
-import { useAuthChecker } from '@/hooks/use-auth-checker'
+import { useAuthStatus } from '@/hooks/useAuth'
 import { AccountsAvailable } from '@/screens/accounts-available'
 import ConfigManager from '@/screens/config-manager'
 import { Home } from '@/screens/home'
@@ -6,13 +6,26 @@ import { Login } from '@/screens/login'
 import { Sidebar } from '@/screens/sidebar'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { AppScreen } from '@/types/navigation'
-import { JSX } from 'react'
+import { JSX, useEffect } from 'react'
 
 export function AppScreens() {
-  const { screen, configTab } = useNavigationStore()
-  const { isLoading } = useAuthChecker()
+  const { screen, configTab, goTo } = useNavigationStore()
+  const auth = useAuthStatus()
 
-  if (isLoading || !screen) {
+  // Lógica de navegación automática basada en estado de autenticación
+  useEffect(() => {
+    if (auth.isLoading) return
+
+    if (!auth.hasAccounts) {
+      goTo(AppScreen.Login)
+    } else if (!auth.hasSelectedAccount) {
+      goTo(AppScreen.AccountsAvailable)
+    } else {
+      goTo(AppScreen.Home)
+    }
+  }, [auth.hasAccounts, auth.hasSelectedAccount, auth.isLoading, goTo])
+
+  if (auth.isLoading || !screen) {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="text-white text-xl font-acherus">Cargando...</div>

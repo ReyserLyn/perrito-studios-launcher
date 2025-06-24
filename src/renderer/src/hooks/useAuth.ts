@@ -34,7 +34,6 @@ export const useAuthStatus = () => {
       // Si no hay cuenta seleccionada, no es un error
       return null
     },
-    enabled: !!accountsQuery.data && Object.keys(accountsQuery.data).length > 0,
     staleTime: 0,
     gcTime: 0,
     retry: 1
@@ -198,11 +197,6 @@ export const useLogout = () => {
       return result
     },
     onSuccess: () => {
-      // Limpiar todas las queries de auth
-      queryClient.removeQueries({ queryKey: queryKeys.auth.accounts })
-      queryClient.removeQueries({ queryKey: queryKeys.auth.selectedAccount })
-
-      // Forzar refetch para actualizar el estado inmediatamente
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
 
