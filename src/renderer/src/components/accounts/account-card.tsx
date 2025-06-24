@@ -27,6 +27,10 @@ export function AccountCard({
   const accountType = account.type === 'microsoft' ? 'Microsoft' : 'Mojang'
 
   const handleSelect = async () => {
+    if (isSelected) {
+      return
+    }
+
     await selectAccount.mutateAsync(account.uuid)
     onSelect?.()
   }
