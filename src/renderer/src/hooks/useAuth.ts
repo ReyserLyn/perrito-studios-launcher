@@ -68,6 +68,11 @@ export const useAuthStatus = () => {
   const hasSelectedAccount = !!selectedAccountQuery.data
   const isLoading = accountsQuery.isLoading || (hasAccounts && selectedAccountQuery.isLoading)
 
+  // Listas filtradas por tipo de cuenta
+  const accountsList = accountsQuery.data ? Object.values(accountsQuery.data) : []
+  const microsoftAccounts = accountsList.filter((account) => account.type === 'microsoft')
+  const mojangAccounts = accountsList.filter((account) => account.type === 'mojang')
+
   return {
     // Estados
     hasAccounts,
@@ -78,17 +83,15 @@ export const useAuthStatus = () => {
     // Datos
     accounts: accountsQuery.data,
     selectedAccount: selectedAccountQuery.data,
-    accountsList: accountsQuery.data ? Object.values(accountsQuery.data) : [],
+    accountsList,
+
+    // Listas filtradas por tipo
+    microsoftAccounts,
+    mojangAccounts,
 
     // Funciones de refetch
     refetchAccounts: accountsQuery.refetch,
-    refetchSelectedAccount: selectedAccountQuery.refetch,
-
-    // Función para refrescar todo el estado de auth
-    refetchAll: () => {
-      accountsQuery.refetch()
-      selectedAccountQuery.refetch()
-    }
+    refetchSelectedAccount: selectedAccountQuery.refetch
   }
 }
 

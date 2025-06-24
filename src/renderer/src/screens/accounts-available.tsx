@@ -15,14 +15,13 @@ export function AccountsAvailable() {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null)
   const selectAccount = useSelectAccount()
   const { goTo } = useNavigationStore()
-  const { accountsList, refetchAll } = useAuthStatus()
+  const { accountsList } = useAuthStatus()
 
   const handleAccountSelect = async (uuid: string) => {
     setSelectedAccountId(uuid)
     try {
       await selectAccount.mutateAsync(uuid)
       toast.success('Cuenta seleccionada exitosamente')
-      refetchAll()
     } catch (error) {
       console.error('Error seleccionando cuenta:', error)
       toast.error('Error al seleccionar la cuenta')

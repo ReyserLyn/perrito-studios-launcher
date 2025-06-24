@@ -9,6 +9,7 @@ interface AccountsListProps {
   isLoading: boolean
   onAccountSelect?: () => void
   onAccountLogout?: () => void
+  showManageButton?: boolean
   className?: string
 }
 
@@ -17,6 +18,7 @@ export function AccountsList({
   isLoading,
   onAccountSelect,
   onAccountLogout,
+  showManageButton,
   className = ''
 }: AccountsListProps) {
   const { user } = useAuth()
@@ -31,7 +33,7 @@ export function AccountsList({
   }
 
   if (accounts.length === 0) {
-    return <AccountsEmpty />
+    return <AccountsEmpty showManageButton={showManageButton} />
   }
 
   return (
