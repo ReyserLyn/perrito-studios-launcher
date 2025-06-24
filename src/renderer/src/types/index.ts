@@ -34,6 +34,8 @@ export interface ConfigState {
 export interface UIState {
   isLoading: boolean
   currentPage: string
+  currentScreen: string | null
+  configTab: string
   sidebarCollapsed: boolean
   notifications: Array<{
     id: string
@@ -63,6 +65,8 @@ export interface AppState {
   updateConfig: (config: Partial<ConfigState>) => void
   setLoading: (loading: boolean) => void
   setCurrentPage: (page: string) => void
+  setCurrentScreen: (screen: string | null) => void
+  navigateToConfig: (tab?: string) => void
   setSidebarCollapsed: (collapsed: boolean) => void
   addNotification: (notification: Omit<UIState['notifications'][0], 'id' | 'timestamp'>) => void
   removeNotification: (id: string) => void

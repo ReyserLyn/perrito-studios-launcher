@@ -1,8 +1,11 @@
 import { Download, Home, Settings } from 'lucide-react'
 import logo from '../assets/images/logos/Cua_Color_LBlanco.webp'
 import { Button } from '../components/ui/button'
+import { useNavigationStore } from '../stores/use-navigation-store'
 
 export function Sidebar() {
+  const { goToConfig } = useNavigationStore()
+
   return (
     <div className="h-screen w-20 bg-[#151126] border-r border-[#2c1e4d] flex flex-col">
       {/* Logo */}
@@ -42,7 +45,7 @@ export function Sidebar() {
             variant="ghost"
             size="icon"
             title="Configuración"
-            asChild
+            onClick={() => goToConfig('minecraft')}
             className="bg-[#1d1332] border-[#2c1e4d] border-1 p-3 h-11 w-11"
           >
             <Settings size={5} />

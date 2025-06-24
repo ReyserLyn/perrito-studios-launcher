@@ -9,10 +9,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { useAuthStatus, useSelectAccount, useLogout } from '@/hooks/useAuth'
+import { useAuthStatus, useLogout, useSelectAccount } from '@/hooks/useAuth'
 import { useAuth } from '@/stores/appStore'
+import { useNavigationStore } from '@/stores/use-navigation-store'
 import { AuthAccount } from '@/types'
-import { Loader2, LogOut, User, UserCheck } from 'lucide-react'
+import { Loader2, LogOut, Settings, User, UserCheck } from 'lucide-react'
 import { useState } from 'react'
 
 export function DialogAccounts() {
@@ -21,6 +22,7 @@ export function DialogAccounts() {
   const selectAccount = useSelectAccount()
   const logout = useLogout()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { goToConfig } = useNavigationStore()
 
   const handleAccountSelect = async (uuid: string) => {
     try {
@@ -177,11 +179,25 @@ export function DialogAccounts() {
             <div className="text-center py-8 text-muted-foreground">
               <User size={48} className="mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium">No hay cuentas disponibles</p>
-              <p className="text-sm">
+              <p className="text-sm mb-4">
                 Agrega una cuenta desde la sección de Cuentas en configuración
               </p>
             </div>
           )}
+
+          <div className="flex justify-center mt-5">
+            <Button
+              variant="outline"
+              onClick={() => {
+                goToConfig('account')
+                setIsDialogOpen(false)
+              }}
+              className="bg-[#1d1332] border-[#2c1e4d] hover:bg-[#2c1e4d]"
+            >
+              <Settings size={16} className="mr-2" />
+              Administrar Cuentas
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

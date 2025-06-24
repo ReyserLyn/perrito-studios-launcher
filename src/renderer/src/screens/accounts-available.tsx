@@ -1,34 +1,29 @@
-import { useState } from 'react'
-import { Button } from '../components/ui/button'
-import { Card, CardContent } from '../components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
-import { Badge } from '../components/ui/badge'
+import { useAuthChecker } from '@/hooks/use-auth-checker'
+import { useNavigationStore } from '@/stores/use-navigation-store'
+import { AppScreen } from '@/types/navigation'
 import { Loader2, Plus, User, Users } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import logoImage from '../assets/images/logos/Rec_Color_LBlanco.webp'
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
+import { Badge } from '../components/ui/badge'
+import { Button } from '../components/ui/button'
+import { Card, CardContent } from '../components/ui/card'
 import { useSelectAccount } from '../hooks/useAuth'
 import { AuthAccount } from '../types'
 
-interface AccountsAvailableProps {
-  accounts: AuthAccount[]
-  onAccountSelected: () => void
-  onAddNewAccount: () => void
-}
-
-export function AccountsAvailable({
-  accounts,
-  onAccountSelected,
-  onAddNewAccount
-}: AccountsAvailableProps) {
+export function AccountsAvailable() {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null)
   const selectAccount = useSelectAccount()
+  const { goTo } = useNavigationStore()
+  const { accountsList, refetchAll } = useAuthChecker()
 
   const handleAccountSelect = async (uuid: string) => {
     setSelectedAccountId(uuid)
     try {
       await selectAccount.mutateAsync(uuid)
       toast.success('Cuenta seleccionada exitosamente')
-      onAccountSelected()
+      refetchAll()
     } catch (error) {
       console.error('Error seleccionando cuenta:', error)
       toast.error('Error al seleccionar la cuenta')
@@ -108,8 +103,7 @@ export function AccountsAvailable({
 
         {/* Lista de cuentas */}
         <div className="space-y-3 mb-8 max-h-80 overflow-y-auto custom-scrollbar">
-          {accounts.map((account) => (
-            // eslint-disable-next-line react/prop-types
+          {accountsList.map((account) => (
             <AccountCard key={account.uuid} account={account} />
           ))}
         </div>
@@ -117,7 +111,7 @@ export function AccountsAvailable({
         {/* Botones de acción */}
         <div className="flex gap-4">
           <Button
-            onClick={onAddNewAccount}
+            onClick={() => goTo(AppScreen.Login)}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white py-6 text-lg font-medium"
             size="lg"
             disabled={selectAccount.isPending}
@@ -131,8 +125,8 @@ export function AccountsAvailable({
         <div className="text-center mt-6">
           <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
             <Users className="w-4 h-4" />
-            {accounts.length} cuenta{accounts.length !== 1 ? 's' : ''} disponible
-            {accounts.length !== 1 ? 's' : ''}
+            {accountsList.length} cuenta{accountsList.length !== 1 ? 's' : ''} disponible
+            {accountsList.length !== 1 ? 's' : ''}
           </p>
         </div>
       </div>

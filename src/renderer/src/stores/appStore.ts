@@ -22,6 +22,8 @@ const initialState = {
   ui: {
     isLoading: false,
     currentPage: 'home',
+    currentScreen: null,
+    configTab: 'account',
     sidebarCollapsed: false,
     notifications: []
   },
@@ -93,6 +95,24 @@ export const useAppStore = create<AppState>()(
             }),
             false,
             'setCurrentPage'
+          ),
+
+        setCurrentScreen: (screen) =>
+          set(
+            (state) => ({
+              ui: { ...state.ui, currentScreen: screen }
+            }),
+            false,
+            'setCurrentScreen'
+          ),
+
+        navigateToConfig: (tab = 'account') =>
+          set(
+            (state) => ({
+              ui: { ...state.ui, currentScreen: 'config-manager', configTab: tab }
+            }),
+            false,
+            'navigateToConfig'
           ),
 
         setSidebarCollapsed: (collapsed) =>

@@ -1,28 +1,23 @@
-import { useState, useEffect } from 'react'
-import { Button } from '../components/ui/button'
-import { Input } from '../components/ui/input'
-import { Label } from '../components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { useAuthChecker } from '@/hooks/use-auth-checker'
+import { useNavigationStore } from '@/stores/use-navigation-store'
+import { AppScreen } from '@/types/navigation'
 import { ArrowLeft, Loader2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import logoImage from '../assets/images/logos/Rec_Color_LBlanco.webp'
-import { useAddMojangAccount, useAddMicrosoftAccount } from '../hooks/useAuth'
-
-interface LoginProps {
-  onLoginSuccess: () => void
-  hasAvailableAccounts?: boolean
-  onShowAccountsAvailable?: () => void
-}
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { useAddMicrosoftAccount, useAddMojangAccount } from '../hooks/useAuth'
 
 type LoginMode = 'selection' | 'mojang' | 'microsoft-loading'
 
-export function Login({
-  onLoginSuccess,
-  hasAvailableAccounts,
-  onShowAccountsAvailable
-}: LoginProps) {
+export function Login() {
   const [mode, setMode] = useState<LoginMode>('selection')
   const [username, setUsername] = useState('')
+  const { goTo } = useNavigationStore()
+  const { refetchAccounts, refetchSelectedAccount, hasAccounts } = useAuthChecker()
 
   // Mutations
   const addMojangAccount = useAddMojangAccount()
@@ -39,7 +34,8 @@ export function Login({
         // data contiene el código de Microsoft
         addMicrosoftAccount.mutate(data.code, {
           onSuccess: () => {
-            onLoginSuccess()
+            refetchAccounts()
+            refetchSelectedAccount()
           },
           onError: (error) => {
             console.error('[Login] Error adding Microsoft account:', error)
@@ -66,7 +62,7 @@ export function Login({
     return () => {
       window.api.microsoftAuth.removeLoginListener()
     }
-  }, [mode, addMicrosoftAccount, onLoginSuccess])
+  }, [mode, addMicrosoftAccount, refetchAccounts, refetchSelectedAccount])
 
   const handleMojangLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,7 +76,8 @@ export function Login({
       onSuccess: () => {
         console.log('[Login] Mojang login successful')
         setUsername('')
-        onLoginSuccess()
+        refetchAccounts()
+        refetchSelectedAccount()
       },
       onError: (error) => {
         console.error('[Login] Mojang login error:', error)
@@ -232,9 +229,9 @@ export function Login({
           </Button>
 
           {/* Botón para mostrar cuentas disponibles si las hay */}
-          {hasAvailableAccounts && onShowAccountsAvailable && (
+          {hasAccounts && (
             <Button
-              onClick={onShowAccountsAvailable}
+              onClick={() => goTo(AppScreen.AccountsAvailable)}
               variant="outline"
               className="w-full border-blue-600 text-blue-300 hover:bg-blue-900/20 py-6 text-lg font-medium"
               size="lg"
