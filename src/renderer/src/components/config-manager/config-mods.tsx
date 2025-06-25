@@ -6,6 +6,8 @@ import {
   useToggleDropinMod,
   useToggleServerMod
 } from '../../hooks/mods'
+import { DialogServers } from '../dialog-servers'
+import { ServerTriggerConfigButton } from '../servers'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
@@ -74,18 +76,13 @@ export default function ConfigMods() {
 
         {/* Información del servidor */}
         {currentServer && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Servidor Actual</CardTitle>
-              <CardDescription>
-                {currentServer.rawServer.name} - {currentServer.rawServer.minecraftVersion}
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <DialogServers
+            trigger={<ServerTriggerConfigButton server={currentServer} className="w-full" />}
+          />
         )}
 
         {/* Mods Obligatorios */}
-        <Card>
+        <Card className="border-[#2c1e4d] rounded-lg bg-[#151126] ">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package className="w-4 h-4" />
@@ -106,14 +103,14 @@ export default function ConfigMods() {
                 {requiredMods.map((mod) => (
                   <div
                     key={mod.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-[#1d1332] transition-colors cursor-pointer"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-foreground">
                           {mod.name || 'NOMBRE VACÍO'}
                         </span>
-                        <Badge variant="default" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           Requerido
                         </Badge>
                       </div>
@@ -135,7 +132,7 @@ export default function ConfigMods() {
         </Card>
 
         {/* Mods Opcionales */}
-        <Card>
+        <Card className="border-[#2c1e4d] rounded-lg bg-[#151126] ">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Package className="w-4 h-4" />
@@ -156,7 +153,7 @@ export default function ConfigMods() {
                 {optionalMods.map((mod) => (
                   <div
                     key={mod.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-[#1d1332] transition-colors cursor-pointer"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
@@ -177,6 +174,7 @@ export default function ConfigMods() {
                         checked={mod.enabled}
                         onCheckedChange={(enabled) => handleToggleServerMod(mod.id, enabled)}
                         disabled={toggleServerMod.isPending}
+                        className="cursor-pointer"
                       />
                     </div>
                   </div>
