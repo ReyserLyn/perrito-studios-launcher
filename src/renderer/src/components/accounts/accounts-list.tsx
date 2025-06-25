@@ -1,4 +1,4 @@
-import { useAuth } from '@/stores/appStore'
+import { useCurrentUser } from '@/hooks'
 import { AuthAccount } from '@/types'
 import { Loader2 } from 'lucide-react'
 import { AccountCard } from './account-card'
@@ -21,7 +21,7 @@ export function AccountsList({
   showManageButton,
   className = ''
 }: AccountsListProps) {
-  const { user } = useAuth()
+  const user = useCurrentUser()
 
   if (isLoading) {
     return (

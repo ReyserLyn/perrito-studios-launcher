@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import logoImage from '../assets/images/logos/Rec_Color_LBlanco.webp'
-import { useImagePreloader } from '../hooks/useImagePreloader'
+import { useImagePreloader } from '../hooks/use-image-preloader'
 
 interface SplashScreenProps {
   onComplete: () => void

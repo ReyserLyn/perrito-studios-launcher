@@ -2,6 +2,7 @@ import { ConfigAccount } from '@/components/config-manager/config-account'
 import { ConfigMinecraft } from '@/components/config-manager/config-minecraft'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useConfigManager } from '@/hooks'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { ArrowLeft, Bot, Download, Gamepad, Info, Settings, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -28,7 +29,7 @@ const tabs = [
     icon: Settings
   },
   {
-    name: 'Launcher ',
+    name: 'Launcher',
     value: 'launcher',
     icon: Settings
   },
@@ -50,8 +51,8 @@ interface ConfigManagerProps {
 
 export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
   const { backToHome } = useNavigationStore()
-
   const [activeTab, setActiveTab] = useState(tab)
+  const { isLoading, isDirty, save, reset } = useConfigManager()
 
   useEffect(() => {
     setActiveTab(tab)
@@ -86,12 +87,34 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="w-full border-l-2 border-b-0 border-t-0 border-r-0 border-transparent justify-start rounded-l-none rounded-r-lg data-[state=active]:shadow-none data-[state=active]:border-primary data-[state=active]:bg-primary/20 py-3 px-4 text-whizte hover:bg-[#2c1e4d] transition-colors"
+                  className="w-full border-l-2 border-b-0 border-t-0 border-r-0 border-transparent justify-start rounded-l-none rounded-r-lg data-[state=active]:shadow-none data-[state=active]:border-primary data-[state=active]:bg-primary/20 py-3 px-4 text-white hover:bg-[#2c1e4d] transition-colors"
                 >
                   <tab.icon className="h-5 w-5 me-3" /> {tab.name}
                 </TabsTrigger>
               ))}
+              <div className="flex flex-col items-center gap-2 mt-auto pt-4 border-t border-[#2c1e4d]">
+                {isDirty && (
+                  <Button
+                    variant="outline"
+                    onClick={() => reset()}
+                    disabled={!isDirty || isLoading}
+                    className="w-full"
+                  >
+                    Descartar Cambios
+                  </Button>
+                )}
+
+                <Button
+                  variant="secondary"
+                  onClick={() => save()}
+                  disabled={!isDirty || isLoading}
+                  className="w-full"
+                >
+                  {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+                </Button>
+              </div>
             </TabsList>
+
             <ConfigAccount setActiveTab={setActiveTab} />
             <ConfigMinecraft />
           </Tabs>

@@ -60,6 +60,12 @@ type getSyncLanguageResponse =
 
 type setSyncLanguageResponse = { success: true } | { success: false; error: string }
 
+type getCurrentLanguageResponse =
+  | { success: true; language: string }
+  | { success: false; error: string }
+
+type setLanguageResponse = { success: true } | { success: false; error: string }
+
 type getSelectedServerResponse =
   | { success: true; selectedServer: string }
   | { success: false; error: string }
@@ -145,4 +151,8 @@ export default interface ConfigAPI {
   ) => Promise<ensureJavaConfigResponse>
   getAbsoluteMinRAM: (ram?: any) => Promise<getAbsoluteMinRAMResponse>
   getAbsoluteMaxRAM: () => Promise<getAbsoluteMaxRAMResponse>
+
+  // Language settings
+  getCurrentLanguage: (def?: boolean) => Promise<getCurrentLanguageResponse>
+  setLanguage: (language: string) => Promise<setLanguageResponse>
 }

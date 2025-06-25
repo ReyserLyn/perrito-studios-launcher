@@ -9,8 +9,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { useAuthStatus } from '@/hooks/useAuth'
-import { useAuth } from '@/stores/appStore'
+import { useAuthData, useCurrentUser } from '@/hooks'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { Settings, User } from 'lucide-react'
 import { useState } from 'react'
@@ -20,10 +19,11 @@ interface DialogAccountsProps {
 }
 
 export function DialogAccounts({ triggerClassName }: DialogAccountsProps) {
-  const { user } = useAuth()
-  const { accountsList, isLoading } = useAuthStatus()
+  const user = useCurrentUser()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { goToConfig } = useNavigationStore()
+
+  const { accounts, isLoading } = useAuthData()
 
   const handleAccountSelect = () => {
     setIsDialogOpen(false)
@@ -68,7 +68,7 @@ export function DialogAccounts({ triggerClassName }: DialogAccountsProps) {
 
         <div className="max-h-96 overflow-y-auto custom-scrollbar pr-2">
           <AccountsList
-            accounts={accountsList || []}
+            accounts={accounts}
             isLoading={isLoading || false}
             onAccountSelect={handleAccountSelect}
             onAccountLogout={handleAccountLogout}

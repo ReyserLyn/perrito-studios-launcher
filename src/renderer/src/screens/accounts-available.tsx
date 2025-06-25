@@ -8,14 +8,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
-import { useAuthStatus, useSelectAccount } from '../hooks/useAuth'
+import { useAuthData, useSelectAccount } from '../hooks/auth/use-auth'
 import { AuthAccount } from '../types'
 
 export function AccountsAvailable() {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null)
   const selectAccount = useSelectAccount()
   const { goTo } = useNavigationStore()
-  const { accountsList } = useAuthStatus()
+  const { accounts } = useAuthData()
 
   const handleAccountSelect = async (uuid: string) => {
     setSelectedAccountId(uuid)
@@ -101,7 +101,7 @@ export function AccountsAvailable() {
 
         {/* Lista de cuentas */}
         <div className="space-y-3 mb-8 max-h-80 overflow-y-auto custom-scrollbar">
-          {accountsList.map((account) => (
+          {accounts.map((account) => (
             <AccountCard key={account.uuid} account={account} />
           ))}
         </div>
@@ -123,8 +123,8 @@ export function AccountsAvailable() {
         <div className="text-center mt-6">
           <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
             <Users className="w-4 h-4" />
-            {accountsList.length} cuenta{accountsList.length !== 1 ? 's' : ''} disponible
-            {accountsList.length !== 1 ? 's' : ''}
+            {accounts.length} cuenta{accounts.length !== 1 ? 's' : ''} disponible
+            {accounts.length !== 1 ? 's' : ''}
           </p>
         </div>
       </div>

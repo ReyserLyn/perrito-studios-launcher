@@ -1,40 +1,23 @@
 import { AccountsList } from '@/components/accounts'
+import { MicrosoftLoginLoading, MojangLoginForm } from '@/components/auth'
 import { Button } from '@/components/ui/button'
-import { useAddMicrosoftAccount, useAuthStatus } from '@/hooks'
+import { useAddMicrosoftAccount, useAuthData } from '@/hooks'
 import { Cross, Square, SquareUser, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { MicrosoftLoginLoading, MojangLoginForm } from '../auth'
 import { ConfigTab, ConfigTabHeader } from './config-tab'
-
-type ConfigView = 'main' | 'add-perrito-account' | 'microsoft-loading'
 
 interface ConfigAccountProps {
   setActiveTab: (tab: string) => void
 }
 
+type ConfigView = 'main' | 'add-perrito-account' | 'microsoft-loading'
+
 export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
-  const { microsoftAccounts, mojangAccounts, isLoading } = useAuthStatus()
   const [currentView, setCurrentView] = useState<ConfigView>('main')
+
+  const { isLoading, microsoftAccounts, mojangAccounts } = useAuthData()
   const addMicrosoftAccount = useAddMicrosoftAccount()
-
-  const handleAddPerritoAccount = () => {
-    setCurrentView('add-perrito-account')
-  }
-
-  const handleAddMicrosoftAccount = () => {
-    console.log('[ConfigManager] Starting Microsoft login flow')
-    setCurrentView('microsoft-loading')
-  }
-
-  const handleAccountSuccess = () => {
-    setCurrentView('main')
-    setActiveTab('account')
-  }
-
-  const handleBackToConfig = () => {
-    setCurrentView('main')
-  }
 
   // Handle Microsoft Auth
   useEffect(() => {
@@ -47,7 +30,7 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
         // data contiene el código de Microsoft
         addMicrosoftAccount.mutate(data.code, {
           onError: (error) => {
-            console.error('[ConfigManager] Error adding Microsoft account:', error)
+            console.error('[ConfigAccount] Error adding Microsoft account:', error)
             setCurrentView('main')
           },
           onSuccess: () => {
@@ -55,7 +38,7 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
           }
         })
       } else if (type === 'MSFT_AUTH_REPLY_ERROR') {
-        console.error('[ConfigManager] Microsoft auth error:', data)
+        console.error('[ConfigAccount] Microsoft auth error:', data)
         toast.error(`Error de autenticación: ${data.error || 'Error desconocido'}`)
         setCurrentView('main')
       } else if (type === 'close') {
@@ -70,6 +53,24 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
       window.api.microsoftAuth.removeLoginListener()
     }
   }, [currentView, addMicrosoftAccount])
+
+  const handleAddPerritoAccount = () => {
+    setCurrentView('add-perrito-account')
+  }
+
+  const handleAddMicrosoftAccount = () => {
+    console.log('[ConfigAccount] Starting Microsoft login flow')
+    setCurrentView('microsoft-loading')
+  }
+
+  const handleBackToConfig = () => {
+    setCurrentView('main')
+  }
+
+  const handleAccountSuccess = () => {
+    setCurrentView('main')
+    setActiveTab('account')
+  }
 
   if (currentView === 'add-perrito-account') {
     return (
@@ -92,21 +93,23 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
       <div className="flex flex-col h-full w-full gap-4">
         <ConfigTabHeader
           title="Cuenta"
-          description="Añada nuevas cuentas o administre las existente."
+          description="Añada nuevas cuentas o administre las existentes"
           Icon={User}
         />
 
+        {/* Cuentas Microsoft */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Square size={15} />
-              <p className=" font-semibold">Microsoft</p>
+              <p className="font-semibold">Microsoft</p>
             </div>
             <Button variant="ghost" className="gap-2" onClick={handleAddMicrosoftAccount}>
               <Cross size={15} />
-              <p>Añadir cuenta Microsft</p>
+              <p>Añadir cuenta Microsoft</p>
             </Button>
           </div>
+
           <AccountsList
             accounts={microsoftAccounts || []}
             isLoading={isLoading || false}
@@ -115,11 +118,12 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
           />
         </div>
 
+        {/* Cuentas Perrito Studios */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <SquareUser size={15} />
-              <p className=" font-semibold">Perrito Studios</p>
+              <p className="font-semibold">Perrito Studios</p>
             </div>
             <Button variant="ghost" className="gap-2" onClick={handleAddPerritoAccount}>
               <Cross size={15} />

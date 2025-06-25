@@ -1,25 +1,15 @@
 // Auth hooks
-export * from './useAuth'
+export * from './auth'
 
 // Config hooks
-export * from './useConfig'
+export * from './config'
 
 // Game hooks
-export * from './useGameLauncher'
+export * from './use-game-launcher'
 
 // Server hooks
-export * from './useServers'
+export * from './use-servers'
 
-// Store hooks (re-export selectores del store)
-export {
-  useAppStore,
-  useAuth,
-  useConfig,
-  useGame,
-  useIsLoading,
-  useNotifications,
-  useUI
-} from '../stores/appStore'
-
-export * from './useImagePreloader'
-export * from './useTranslation'
+// UI/Image hooks
+export * from './use-image-preloader'
+export * from './use-translation'

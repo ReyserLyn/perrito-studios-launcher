@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { useGameLauncher } from '@/hooks/useGameLauncher'
+import { useGameLauncher } from '@/hooks/use-game-launcher'
 import { Loader2, Play, Square } from 'lucide-react'
 
 export const LaunchButton = () => {

@@ -80,6 +80,8 @@ export const CONFIG_OPCODE = {
   SET_ALLOW_PRERELEASE: 'config:set-allow-prerelease',
   GET_SYNC_LANGUAGE: 'config:get-sync-language',
   SET_SYNC_LANGUAGE: 'config:set-sync-language',
+  GET_CURRENT_LANGUAGE: 'config:get-current-language',
+  SET_LANGUAGE: 'config:set-language',
   GET_SELECTED_SERVER: 'config:get-selected-server',
   SET_SELECTED_SERVER: 'config:set-selected-server',
   GET_MIN_RAM: 'config:get-min-ram',

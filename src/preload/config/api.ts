@@ -35,6 +35,10 @@ export const configAPI = {
   getSyncLanguage: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_SYNC_LANGUAGE, def),
   setSyncLanguage: (sync: boolean) => ipcRenderer.invoke(CONFIG_OPCODE.SET_SYNC_LANGUAGE, sync),
 
+  // Language settings
+  getCurrentLanguage: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_CURRENT_LANGUAGE, def),
+  setLanguage: (language: string) => ipcRenderer.invoke(CONFIG_OPCODE.SET_LANGUAGE, language),
+
   // Server settings
   getSelectedServer: (def = false) => ipcRenderer.invoke(CONFIG_OPCODE.GET_SELECTED_SERVER, def),
   setSelectedServer: (serverId: string) =>

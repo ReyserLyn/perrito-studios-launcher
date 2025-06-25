@@ -191,7 +191,7 @@ export default function setupConfigHandlers(): void {
 
   ipcMain.handle(CONFIG_OPCODE.GET_LAUNCH_DETACHED, async (_event, def = false) => {
     try {
-      return { success: true, launchDetached: ConfigManager.getLaunchDetached(def) }
+      return { success: true, detached: ConfigManager.getLaunchDetached(def) }
     } catch (error) {
       return {
         success: false,
@@ -236,13 +236,19 @@ export default function setupConfigHandlers(): void {
     }
   })
 
+  // ===== SYNC LANGUAGE =====
   ipcMain.handle(CONFIG_OPCODE.GET_SYNC_LANGUAGE, async (_event, def = false) => {
     try {
-      return { success: true, syncLanguage: ConfigManager.getSyncLanguage(def) }
+      const syncLanguage = ConfigManager.getSyncLanguage(def)
+      return {
+        success: true,
+        syncLanguage
+      }
     } catch (error) {
+      console.error('Error obteniendo sincronización de idioma:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error obteniendo sincronización idioma'
+        error: error instanceof Error ? error.message : 'Error obteniendo sincronización de idioma'
       }
     }
   })
@@ -252,9 +258,41 @@ export default function setupConfigHandlers(): void {
       ConfigManager.setSyncLanguage(syncLanguage)
       return { success: true }
     } catch (error) {
+      console.error('Error estableciendo sincronización de idioma:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error estableciendo sincronización idioma'
+        error:
+          error instanceof Error ? error.message : 'Error estableciendo sincronización de idioma'
+      }
+    }
+  })
+
+  // ===== LANGUAGE =====
+  ipcMain.handle(CONFIG_OPCODE.GET_CURRENT_LANGUAGE, async (_event, def = false) => {
+    try {
+      const language = ConfigManager.getCurrentLanguage(def)
+      return {
+        success: true,
+        language
+      }
+    } catch (error) {
+      console.error('Error obteniendo idioma actual:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error obteniendo idioma actual'
+      }
+    }
+  })
+
+  ipcMain.handle(CONFIG_OPCODE.SET_LANGUAGE, async (_event, language: string) => {
+    try {
+      ConfigManager.setLanguage(language)
+      return { success: true }
+    } catch (error) {
+      console.error('Error estableciendo idioma:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error estableciendo idioma'
       }
     }
   })
@@ -399,7 +437,7 @@ export default function setupConfigHandlers(): void {
 
   ipcMain.handle(CONFIG_OPCODE.GET_ABSOLUTE_MIN_RAM, async (_event, ram?: any) => {
     try {
-      return { success: true, absoluteMinRAM: ConfigManager.getAbsoluteMinRAM(ram) }
+      return { success: true, minRAM: ConfigManager.getAbsoluteMinRAM(ram) }
     } catch (error) {
       return {
         success: false,
@@ -410,7 +448,7 @@ export default function setupConfigHandlers(): void {
 
   ipcMain.handle(CONFIG_OPCODE.GET_ABSOLUTE_MAX_RAM, async () => {
     try {
-      return { success: true, absoluteMaxRAM: ConfigManager.getAbsoluteMaxRAM() }
+      return { success: true, maxRAM: ConfigManager.getAbsoluteMaxRAM() }
     } catch (error) {
       return {
         success: false,

@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useRemoveAccount, useSelectAccount } from '@/hooks/useAuth'
+import { useRemoveAccount, useSelectAccount } from '@/hooks/auth/use-auth'
 import { AuthAccount } from '@/types'
 import { Loader2, LogOut, User, UserCheck } from 'lucide-react'
 

@@ -1,0 +1,225 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+import { queryKeys } from '../../lib/queryClient'
+import { useConfigStore, type GameConfig, type LauncherConfig } from '../../stores/config-store'
+
+// ===== HOOKS PARA CONSULTAS =====
+
+/**
+ * Hook para cargar la configuración completa desde la API
+ */
+export const useConfigQuery = () => {
+  return useQuery({
+    queryKey: queryKeys.config.all,
+    queryFn: async () => {
+      const [
+        gameWidth,
+        gameHeight,
+        fullscreen,
+        autoConnect,
+        launchDetached,
+        syncLanguage,
+        allowPrerelease
+      ] = await Promise.all([
+        window.api.config.getGameWidth(),
+        window.api.config.getGameHeight(),
+        window.api.config.getFullscreen(),
+        window.api.config.getAutoConnect(),
+        window.api.config.getLaunchDetached(),
+        window.api.config.getSyncLanguage(),
+        window.api.config.getAllowPrerelease()
+      ])
+
+      const gameConfig: GameConfig = {
+        resWidth: gameWidth.success ? gameWidth.width : 1280,
+        resHeight: gameHeight.success ? gameHeight.height : 720,
+        fullscreen: fullscreen.success ? fullscreen.fullscreen : false,
+        autoConnect: autoConnect.success ? autoConnect.autoConnect : true,
+        launchDetached: launchDetached.success ? launchDetached.detached : true,
+        syncLanguage: syncLanguage.success ? syncLanguage.syncLanguage : true
+      }
+
+      const launcherConfig: LauncherConfig = {
+        allowPrerelease: allowPrerelease.success ? allowPrerelease.allowPrerelease : false,
+        language: 'es_ES'
+      }
+
+      return {
+        game: gameConfig,
+        launcher: launcherConfig
+      }
+    },
+    staleTime: 0,
+    gcTime: 0,
+    retry: 1
+  })
+}
+
+// ===== HOOKS DE MUTACIONES =====
+
+/**
+ * Hook para guardar la configuración
+ */
+export const useSaveConfig = () => {
+  const queryClient = useQueryClient()
+  const { game, launcher, setDirty } = useConfigStore()
+
+  return useMutation({
+    mutationFn: async () => {
+      await Promise.all([
+        window.api.config.setGameWidth(game.resWidth),
+        window.api.config.setGameHeight(game.resHeight),
+        window.api.config.setFullscreen(game.fullscreen),
+        window.api.config.setAutoConnect(game.autoConnect),
+        window.api.config.setLaunchDetached(game.launchDetached),
+        window.api.config.setSyncLanguage(game.syncLanguage),
+        window.api.config.setAllowPrerelease(launcher.allowPrerelease)
+      ])
+
+      await window.api.config.save()
+    },
+    onSuccess: () => {
+      setDirty(false)
+      queryClient.invalidateQueries({ queryKey: queryKeys.config.all })
+      toast.success('Configuración guardada exitosamente')
+    },
+    onError: (error) => {
+      console.error('[useSaveConfig] Error:', error)
+      toast.error('Error al guardar la configuración')
+    }
+  })
+}
+
+/**
+ * Hook para resetear configuración
+ */
+export const useResetConfig = () => {
+  const queryClient = useQueryClient()
+  const { setGameConfig, setLauncherConfig, setDirty } = useConfigStore()
+
+  return useMutation({
+    mutationFn: async () => {
+      // Refetch la configuración desde la API
+      const result = await queryClient.fetchQuery({
+        queryKey: queryKeys.config.all,
+        queryFn: async () => {
+          const [
+            gameWidth,
+            gameHeight,
+            fullscreen,
+            autoConnect,
+            launchDetached,
+            syncLanguage,
+            allowPrerelease
+          ] = await Promise.all([
+            window.api.config.getGameWidth(),
+            window.api.config.getGameHeight(),
+            window.api.config.getFullscreen(),
+            window.api.config.getAutoConnect(),
+            window.api.config.getLaunchDetached(),
+            window.api.config.getSyncLanguage(),
+            window.api.config.getAllowPrerelease()
+          ])
+
+          const gameConfig: GameConfig = {
+            resWidth: gameWidth.success ? gameWidth.width : 1280,
+            resHeight: gameHeight.success ? gameHeight.height : 720,
+            fullscreen: fullscreen.success ? fullscreen.fullscreen : false,
+            autoConnect: autoConnect.success ? autoConnect.autoConnect : true,
+            launchDetached: launchDetached.success ? launchDetached.detached : true,
+            syncLanguage: syncLanguage.success ? syncLanguage.syncLanguage : true
+          }
+
+          const launcherConfig: LauncherConfig = {
+            allowPrerelease: allowPrerelease.success ? allowPrerelease.allowPrerelease : false,
+            language: 'es_ES'
+          }
+
+          return {
+            game: gameConfig,
+            launcher: launcherConfig
+          }
+        }
+      })
+
+      // Actualizar el store
+      setGameConfig(result.game)
+      setLauncherConfig(result.launcher)
+      setDirty(false)
+
+      return result
+    },
+    onSuccess: () => {
+      toast.success('Configuración restablecida')
+    },
+    onError: (error) => {
+      console.error('[useResetConfig] Error:', error)
+      toast.error('Error al restablecer la configuración')
+    }
+  })
+}
+
+// ===== HOOK PRINCIPAL =====
+
+/**
+ * Hook para manejar operaciones de configuración
+ */
+export const useConfigManager = () => {
+  const { isDirty, setGameConfig, setLauncherConfig, setDirty } = useConfigStore()
+  const configQuery = useConfigQuery()
+  const saveConfig = useSaveConfig()
+  const resetConfig = useResetConfig()
+
+  // Sincronizar datos de la query con el store cuando cambien
+  useEffect(() => {
+    if (configQuery.data && !configQuery.isLoading) {
+      setGameConfig(configQuery.data.game)
+      setLauncherConfig(configQuery.data.launcher)
+      setDirty(false)
+    }
+  }, [configQuery.data, configQuery.isLoading, setGameConfig, setLauncherConfig, setDirty])
+
+  // Hook para recargar manualmente
+  const reloadConfig = useMutation({
+    mutationFn: async () => {
+      const result = await configQuery.refetch()
+      return result.data
+    },
+    onSuccess: (data) => {
+      if (data) {
+        setGameConfig(data.game)
+        setLauncherConfig(data.launcher)
+        setDirty(false)
+        toast.success('Configuración recargada')
+      }
+    },
+    onError: (error) => {
+      console.error('[useConfigManager] Error reloading:', error)
+      toast.error('Error al recargar la configuración')
+    }
+  })
+
+  return {
+    // Estados
+    isLoading: configQuery.isLoading,
+    isDirty,
+    hasUnsavedChanges: isDirty,
+
+    // Estados específicos de operaciones
+    isSaving: saveConfig.isPending,
+    isResetting: resetConfig.isPending,
+    isReloading: reloadConfig.isPending,
+
+    // Datos
+    configData: configQuery.data,
+
+    // Operaciones
+    save: saveConfig.mutate,
+    reset: resetConfig.mutate,
+    reload: reloadConfig.mutate,
+
+    // Funciones de refetch
+    refetchConfig: configQuery.refetch
+  }
+}

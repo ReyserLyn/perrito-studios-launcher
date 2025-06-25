@@ -1,4 +1,4 @@
-import { useAuthStatus } from '@/hooks/useAuth'
+import { useAuthData } from '@/hooks/auth/use-auth'
 import { AccountsAvailable } from '@/screens/accounts-available'
 import ConfigManager from '@/screens/config-manager'
 import { Home } from '@/screens/home'
@@ -10,7 +10,7 @@ import { JSX, useEffect } from 'react'
 
 export function AppScreens() {
   const { screen, configTab, goTo } = useNavigationStore()
-  const auth = useAuthStatus()
+  const auth = useAuthData()
 
   // Lógica de navegación automática basada en estado de autenticación
   useEffect(() => {

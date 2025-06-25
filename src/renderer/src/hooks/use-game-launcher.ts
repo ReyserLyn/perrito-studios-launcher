@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { useCurrentServer } from './useServers'
+import { useCurrentServer } from './use-servers'
 
 export interface LaunchState {
   stage:

@@ -1,5 +1,5 @@
 import { LoginSelection, MicrosoftLoginLoading, MojangLoginForm } from '@/components/auth'
-import { useAddMicrosoftAccount } from '@/hooks/useAuth'
+import { useAddMicrosoftAccount } from '@/hooks/auth/use-auth'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTranslation } from '../../hooks/useTranslation'
+import { useTranslation } from '../../hooks/use-translation'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Input } from '../ui/input'
