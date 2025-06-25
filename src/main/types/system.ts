@@ -2,24 +2,19 @@
  * Tipos para las operaciones del sistema
  */
 
-export type ShellOperationResult =
-  | {
-      result: true
-    }
-  | {
-      result: false
-      error: string
-    }
+export interface BaseResult {
+  success: boolean
+  error?: string
+}
 
-export type FilePathResult =
-  | {
-      success: true
-      path: string
-    }
-  | {
-      success: false
-      error: string
-    }
+export interface FilePathResult extends BaseResult {
+  path?: string
+}
+
+export interface SystemMemoryInfo {
+  total: number
+  free: number
+}
 
 export type DistributionEvent =
   | {

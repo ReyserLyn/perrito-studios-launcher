@@ -1,4 +1,4 @@
-import type { FilePathResult, ShellOperationResult } from '../../main/types/system'
+import type { BaseResult, FilePathResult } from '../../main/types/system'
 
 /**
  * API del sistema disponible en el proceso de renderizado
@@ -13,6 +13,7 @@ export interface SystemApi {
     fileBuffer: ArrayBuffer
   ) => Promise<{ success: boolean; path?: string; error?: string }>
   selectJavaExecutable: () => Promise<{ success: boolean; path?: string; error?: string }>
+  getSystemMemory: () => Promise<{ total: number; free: number }>
 
   // Language
   changeLanguage: (lang: string) => void
@@ -55,4 +56,4 @@ export interface SystemApi {
   removeDistributionListener: () => void
 }
 
-export type { FilePathResult, ShellOperationResult }
+export type { BaseResult, FilePathResult }

@@ -1,9 +1,10 @@
-import { ipcMain, shell } from 'electron'
+import { dialog, ipcMain, shell } from 'electron'
 import * as fs from 'fs-extra'
 import * as os from 'os'
 import * as path from 'path'
 import { SHELL_OPCODE } from '../constants/ipc'
-import type { FilePathResult, ShellOperationResult } from '../types/system'
+import * as ConfigManager from '../services/configManager'
+import type { BaseResult, FilePathResult, SystemMemoryInfo } from '../types/system'
 
 /**
  * Configurar handlers para operaciones del sistema
@@ -11,37 +12,52 @@ import type { FilePathResult, ShellOperationResult } from '../types/system'
  */
 export default function setupSystemHandlers(): void {
   /**
+   * Handler para obtener información de memoria del sistema
+   */
+  ipcMain.handle(SHELL_OPCODE.GET_SYSTEM_MEMORY, (): SystemMemoryInfo => {
+    const BYTES_TO_GB = 1024 * 1024 * 1024
+    const totalMemory = ConfigManager.getAbsoluteMaxRAM()
+
+    // En Windows, os.freemem() puede reportar 0 cuando hay memoria disponible
+    // Calculamos un estimado basado en la memoria total y el uso actual
+    const usedMemory = Math.floor((os.totalmem() - os.freemem()) / BYTES_TO_GB)
+    const freeMemory = Math.max(totalMemory - usedMemory, 0)
+
+    return {
+      total: totalMemory,
+      free: freeMemory
+    }
+  })
+
+  /**
    * Handler para mover archivos a la papelera del sistema
    */
-  ipcMain.handle(
-    SHELL_OPCODE.TRASH_ITEM,
-    async (_event, filePath: string): Promise<ShellOperationResult> => {
-      try {
-        await shell.trashItem(filePath)
-        return { result: true }
-      } catch (error) {
-        console.error('Error al mover archivo a papelera:', error)
-        return {
-          result: false,
-          error: error instanceof Error ? error.message : 'Error desconocido'
-        }
+  ipcMain.handle(SHELL_OPCODE.TRASH_ITEM, async (_event, filePath: string): Promise<BaseResult> => {
+    try {
+      await shell.trashItem(filePath)
+      return { success: true }
+    } catch (error) {
+      console.error('Error al mover archivo a papelera:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error desconocido'
       }
     }
-  )
+  })
 
   /**
    * Handler para abrir carpetas en el explorador del sistema
    */
   ipcMain.handle(
     SHELL_OPCODE.OPEN_FOLDER,
-    async (_event, folderPath: string): Promise<ShellOperationResult> => {
+    async (_event, folderPath: string): Promise<BaseResult> => {
       try {
         await shell.openPath(folderPath)
-        return { result: true }
+        return { success: true }
       } catch (error) {
         console.error('Error al abrir carpeta:', error)
         return {
-          result: false,
+          success: false,
           error: error instanceof Error ? error.message : 'Error abriendo carpeta'
         }
       }
@@ -53,14 +69,14 @@ export default function setupSystemHandlers(): void {
    */
   ipcMain.handle(
     SHELL_OPCODE.SHOW_ITEM_IN_FOLDER,
-    async (_event, filePath: string): Promise<ShellOperationResult> => {
+    async (_event, filePath: string): Promise<BaseResult> => {
       try {
         shell.showItemInFolder(filePath)
-        return { result: true }
+        return { success: true }
       } catch (error) {
         console.error('Error al mostrar archivo:', error)
         return {
-          result: false,
+          success: false,
           error: error instanceof Error ? error.message : 'Error mostrando archivo'
         }
       }
@@ -100,4 +116,40 @@ export default function setupSystemHandlers(): void {
       }
     }
   )
+
+  // Seleccionar ejecutable de Java
+  ipcMain.handle(SHELL_OPCODE.SELECT_JAVA_EXECUTABLE, async () => {
+    try {
+      const result = await dialog.showOpenDialog({
+        title: 'Seleccionar Ejecutable de Java',
+        filters: [
+          {
+            name: 'Ejecutable de Java',
+            extensions: ['exe']
+          }
+        ],
+        properties: ['openFile']
+      })
+
+      if (result.canceled) {
+        return { success: false }
+      }
+
+      const selectedPath = result.filePaths[0]
+      if (!selectedPath.toLowerCase().endsWith('javaw.exe')) {
+        return {
+          success: false,
+          error: 'Por favor selecciona un archivo javaw.exe válido'
+        }
+      }
+
+      return { success: true, path: selectedPath }
+    } catch (error) {
+      console.error('Error seleccionando ejecutable de Java:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error seleccionando ejecutable'
+      }
+    }
+  })
 }

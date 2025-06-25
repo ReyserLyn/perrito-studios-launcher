@@ -370,7 +370,7 @@ export default function setupConfigHandlers(): void {
 
   ipcMain.handle(CONFIG_OPCODE.GET_JAVA_EXECUTABLE, async (_event, serverId: string) => {
     try {
-      return { success: true, javaExecutable: ConfigManager.getJavaExecutable(serverId) }
+      return { success: true, executable: ConfigManager.getJavaExecutable(serverId) }
     } catch (error) {
       return {
         success: false,

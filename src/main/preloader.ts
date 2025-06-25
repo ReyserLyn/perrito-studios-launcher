@@ -53,7 +53,7 @@ export async function runPreloadTasks(win: BrowserWindow): Promise<void> {
   }
 
   // Notificar al renderizador que el índice se cargó (o falló).
-  win.webContents.send(DISTRIBUTION.INDEX_DONE, distroLoaded)
+  win.webContents.send(DISTRIBUTION.DISTRIBUTION_INDEX_DONE, distroLoaded)
 
   // 4) Limpiar directorio temporal de nativos por si el launcher se cerró bruscamente antes.
   try {

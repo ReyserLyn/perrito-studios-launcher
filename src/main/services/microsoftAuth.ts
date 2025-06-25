@@ -1,7 +1,7 @@
 import { BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
 import { join } from 'path'
 import { AZURE_CLIENT_ID, MSFT_ERROR, MSFT_OPCODE, MSFT_REPLY_TYPE } from '../constants/ipc'
-import languageManager from '../utils/language'
+import { languageManager } from '../utils/language'
 
 interface QueryMap {
   [key: string]: string
@@ -63,7 +63,7 @@ class MicrosoftAuthService {
 
   private createLoginWindow(event: IpcMainEvent): void {
     this.loginWindow.window = new BrowserWindow({
-      title: languageManager.query('microsoft.loginTitle'),
+      title: languageManager.getString('microsoft.loginTitle'),
       backgroundColor: '#222222',
       width: 520,
       height: 600,
@@ -163,7 +163,7 @@ class MicrosoftAuthService {
 
   private createLogoutWindow(event: IpcMainEvent, uuid: string, isLastAccount: boolean): void {
     this.logoutWindow.window = new BrowserWindow({
-      title: languageManager.query('microsoft.logoutTitle'),
+      title: languageManager.getString('microsoft.logoutTitle'),
       backgroundColor: '#222222',
       width: 520,
       height: 600,

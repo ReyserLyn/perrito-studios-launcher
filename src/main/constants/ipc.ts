@@ -23,7 +23,8 @@ export const SHELL_OPCODE = {
   OPEN_FOLDER: 'shell:open-folder',
   SHOW_ITEM_IN_FOLDER: 'shell:show-item-in-folder',
   RESOLVE_FILE_PATH: 'shell:resolve-file-path',
-  SELECT_JAVA_EXECUTABLE: 'shell:select-java-executable'
+  SELECT_JAVA_EXECUTABLE: 'shell:select-java-executable',
+  GET_SYSTEM_MEMORY: 'shell:get-system-memory'
 } as const
 
 export const AUTO_UPDATER = {

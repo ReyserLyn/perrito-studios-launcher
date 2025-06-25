@@ -1,17 +1,17 @@
 import { ipcRenderer } from 'electron'
 import { DISCORD_RPC, LANGUAGE, SHELL_OPCODE } from '../../main/constants/ipc'
-import type { SystemApi } from './types'
+import type { BaseResult, FilePathResult, SystemApi } from './types'
 
 /**
  * API del sistema para operaciones de archivos y carpetas
  */
-export const systemApi: SystemApi = {
+export const systemAPI: SystemApi = {
   /**
    * Mueve un archivo a la papelera del sistema
    * @param filePath Ruta del archivo a eliminar
    * @returns Resultado de la operación
    */
-  trashItem: (filePath: string): Promise<ShellOperationResult> =>
+  trashItem: (filePath: string): Promise<BaseResult> =>
     ipcRenderer.invoke(SHELL_OPCODE.TRASH_ITEM, filePath),
 
   /**
@@ -19,7 +19,7 @@ export const systemApi: SystemApi = {
    * @param folderPath Ruta de la carpeta a abrir
    * @returns Resultado de la operación
    */
-  openFolder: (folderPath: string): Promise<ShellOperationResult> =>
+  openFolder: (folderPath: string): Promise<BaseResult> =>
     ipcRenderer.invoke(SHELL_OPCODE.OPEN_FOLDER, folderPath),
 
   /**
@@ -27,7 +27,7 @@ export const systemApi: SystemApi = {
    * @param filePath Ruta del archivo a mostrar
    * @returns Resultado de la operación
    */
-  showItemInFolder: (filePath: string): Promise<ShellOperationResult> =>
+  showItemInFolder: (filePath: string): Promise<BaseResult> =>
     ipcRenderer.invoke(SHELL_OPCODE.SHOW_ITEM_IN_FOLDER, filePath),
 
   /**
@@ -51,14 +51,14 @@ export const systemApi: SystemApi = {
    * @param callback Función a ejecutar cuando se complete el índice
    */
   onDistributionIndexDone: (callback: (result: boolean) => void): void => {
-    ipcRenderer.on('distributionIndexDone', (_, result) => callback(result))
+    ipcRenderer.on('distribution:index-done', (_, result) => callback(result))
   },
 
   /**
    * Remueve todos los listeners del evento de distribución
    */
   removeDistributionListener: (): void => {
-    ipcRenderer.removeAllListeners('distributionIndexDone')
+    ipcRenderer.removeAllListeners('distribution:index-done')
   },
 
   // Language
@@ -75,5 +75,8 @@ export const systemApi: SystemApi = {
   initializeDiscordRpc: () => ipcRenderer.invoke(DISCORD_RPC.INITIALIZE),
   destroyDiscordRpc: () => ipcRenderer.invoke(DISCORD_RPC.DESTROY),
   updateDiscordActivity: (activity: any) =>
-    ipcRenderer.invoke(DISCORD_RPC.UPDATE_ACTIVITY, activity)
+    ipcRenderer.invoke(DISCORD_RPC.UPDATE_ACTIVITY, activity),
+
+  // Shell operations
+  getSystemMemory: () => ipcRenderer.invoke(SHELL_OPCODE.GET_SYSTEM_MEMORY)
 }
