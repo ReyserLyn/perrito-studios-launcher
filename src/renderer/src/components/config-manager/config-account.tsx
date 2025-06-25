@@ -133,7 +133,7 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
           <AccountsList
             accounts={mojangAccounts || []}
             isLoading={isLoading || false}
-            className="space-y-2 pb-8"
+            className="space-y-2"
             showManageButton={false}
           />
         </div>

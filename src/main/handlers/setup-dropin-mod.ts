@@ -23,13 +23,32 @@ export default function setupDropinModHandlers(): void {
   // Añadir mods
   ipcMain.handle(DROPIN_MOD_OPCODE.ADD_MODS, async (_event, files: FileItem[], modsDir: string) => {
     try {
-      DropinModUtil.addDropinMods(files, modsDir)
-      return { success: true }
+      const result = DropinModUtil.addDropinMods(files, modsDir)
+
+      if (result.success) {
+        return {
+          success: true,
+          addedCount: result.addedCount,
+          skippedCount: result.skippedCount,
+          errors: result.errors
+        }
+      } else {
+        return {
+          success: false,
+          error: 'Error al añadir mods',
+          addedCount: result.addedCount,
+          skippedCount: result.skippedCount,
+          errors: result.errors
+        }
+      }
     } catch (error) {
       console.error('Error añadiendo mods:', error)
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error desconocido al añadir mods'
+        error: error instanceof Error ? error.message : 'Error desconocido al añadir mods',
+        addedCount: 0,
+        skippedCount: 0,
+        errors: []
       }
     }
   })

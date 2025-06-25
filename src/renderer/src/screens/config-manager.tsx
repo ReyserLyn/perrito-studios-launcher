@@ -76,14 +76,14 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
 
       {/* Contenido principal */}
       <div className="flex-1 p-8 overflow-hidden min-h-0">
-        <div className="max-w-6xl mx-auto h-full flex flex-col">
+        <div className="max-w-6xl mx-auto h-full">
           <Tabs
             orientation="vertical"
             value={activeTab}
             onValueChange={setActiveTab}
-            className="h-full flex flex-row gap-6 min-h-0"
+            className="h-full flex flex-row gap-6"
           >
-            <TabsList className="h-fit flex-col min-w-48 p-1 bg-[#1d1332] border border-[#2c1e4d] py-4">
+            <TabsList className="h-fit flex-col min-w-48 p-1 bg-[#1d1332] border border-[#2c1e4d] py-4 shrink-0">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.value}

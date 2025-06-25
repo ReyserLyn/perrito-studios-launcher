@@ -19,7 +19,10 @@ export const MSFT_ERROR = {
 } as const
 
 export const SHELL_OPCODE = {
-  TRASH_ITEM: 'TRASH_ITEM'
+  TRASH_ITEM: 'TRASH_ITEM',
+  OPEN_FOLDER: 'OPEN_FOLDER',
+  SHOW_ITEM_IN_FOLDER: 'SHOW_ITEM_IN_FOLDER',
+  RESOLVE_FILE_PATH: 'RESOLVE_FILE_PATH'
 } as const
 
 export const AUTO_UPDATER = {

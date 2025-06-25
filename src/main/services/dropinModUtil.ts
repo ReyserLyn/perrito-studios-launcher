@@ -111,25 +111,82 @@ export function scanForDropinMods(modsDir: string, version: string): DiscoveredM
  *
  * @param files Los archivos a añadir.
  * @param modsDir La ruta al directorio de mods.
+ * @returns Un objeto con información sobre el resultado de la operación.
  */
-export function addDropinMods(files: FileItem[], modsDir: string): void {
+export function addDropinMods(
+  files: FileItem[],
+  modsDir: string
+): {
+  success: boolean
+  addedCount: number
+  skippedCount: number
+  errors: Array<{ fileName: string; error: string }>
+} {
+  const result = {
+    success: true,
+    addedCount: 0,
+    skippedCount: 0,
+    errors: [] as Array<{ fileName: string; error: string }>
+  }
+
   try {
     validateDir(modsDir)
 
-    let addedCount = 0
     for (const file of files) {
       if (MOD_REGEX.exec(file.name) != null) {
         const targetPath = path.join(modsDir, file.name)
-        fs.moveSync(file.path, targetPath)
-        addedCount++
-        log.debug(`Mod añadido: ${file.name}`)
+
+        try {
+          // Verificar si el archivo ya existe
+          if (fs.existsSync(targetPath)) {
+            result.skippedCount++
+            result.errors.push({
+              fileName: file.name,
+              error: 'El archivo ya existe en el directorio de mods'
+            })
+            log.warn(`Mod omitido (ya existe): ${file.name}`)
+            continue
+          }
+
+          fs.moveSync(file.path, targetPath)
+          result.addedCount++
+          log.debug(`Mod añadido: ${file.name}`)
+        } catch (moveError) {
+          result.success = false
+          result.errors.push({
+            fileName: file.name,
+            error:
+              moveError instanceof Error ? moveError.message : 'Error desconocido al mover archivo'
+          })
+          log.error(`Error moviendo mod ${file.name}:`, moveError)
+        }
+      } else {
+        result.skippedCount++
+        result.errors.push({
+          fileName: file.name,
+          error: 'Archivo no válido (no es un mod reconocido)'
+        })
+        log.warn(`Archivo omitido (no es un mod válido): ${file.name}`)
       }
     }
 
-    log.info(`${addedCount} mods añadidos a ${modsDir}`)
+    if (result.addedCount > 0) {
+      log.info(`${result.addedCount} mods añadidos a ${modsDir}`)
+    }
+
+    if (result.skippedCount > 0) {
+      log.info(`${result.skippedCount} archivos omitidos`)
+    }
+
+    return result
   } catch (error) {
     log.error(`Error añadiendo mods a ${modsDir}:`, error)
-    throw error
+    result.success = false
+    result.errors.push({
+      fileName: 'General',
+      error: error instanceof Error ? error.message : 'Error desconocido'
+    })
+    return result
   }
 }
 

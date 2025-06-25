@@ -2,7 +2,20 @@ import { DiscoveredMod, DiscoveredShaderpack, FileItem, ModStats } from '../../m
 
 type scanModsResponse = { success: true; mods: DiscoveredMod[] } | { success: false; error: string }
 
-type addModsResponse = { success: true } | { success: false; error: string }
+type addModsResponse =
+  | {
+      success: true
+      addedCount: number
+      skippedCount: number
+      errors: Array<{ fileName: string; error: string }>
+    }
+  | {
+      success: false
+      error: string
+      addedCount: number
+      skippedCount: number
+      errors: Array<{ fileName: string; error: string }>
+    }
 
 type deleteModResponse = { success: true } | { success: false; error: string }
 

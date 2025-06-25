@@ -27,7 +27,12 @@ export interface ModStats {
 
 // Tipos para configuración de mods
 export interface ModConfigMods {
-  [modId: string]: boolean | { value: boolean; mods?: ModConfigMods }
+  [modId: string]: boolean | ModConfigEntry
+}
+
+export interface ModConfigEntry {
+  value: boolean
+  mods?: ModConfigMods
 }
 
 export interface ModConfiguration {
@@ -39,6 +44,65 @@ export interface ModConfiguration {
 export interface ModsData {
   requiredMods: ServerMod[]
   optionalMods: ServerMod[]
-  dropinMods: DropinMod[]
+  dropinMods: DiscoveredMod[]
   modStats: ModStats
+}
+
+// Tipos para archivos de mods
+export interface ModFile {
+  id: string
+  name: string
+  path: string
+  size: number
+  type: string
+}
+
+export interface FileValidationResult {
+  isValid: boolean
+  error?: string
+}
+
+export interface ModFileInfo {
+  name: string
+  extension: string
+  fullName: string
+  isValid: boolean
+}
+
+// Tipos para operaciones de mods
+export interface ModOperationResult {
+  success: boolean
+  addedCount?: number
+  skippedCount?: number
+  errors?: Array<{ fileName: string; error: string }>
+  error?: string
+}
+
+// Tipos para configuración de drag & drop
+export interface DndModsOptions {
+  acceptedTypes?: string[]
+  maxFiles?: number
+  maxSize?: number // en MB
+}
+
+export interface PlatformCapabilities {
+  isWindows: boolean
+  isMacOS: boolean
+  isLinux: boolean
+  isElectron: boolean
+  supportsFilePath: boolean
+}
+
+// Tipos para operaciones del sistema de archivos
+export interface ShellOperationResult {
+  result: boolean
+  error?: string
+}
+
+// Tipos importados desde el backend
+export interface DiscoveredMod {
+  fullName: string
+  name: string
+  ext: string
+  disabled: boolean
 }
