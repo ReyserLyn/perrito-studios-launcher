@@ -13,26 +13,9 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { LoggerUtil } from 'perrito-core'
 import { SHELL_OPCODE } from '../constants/ipc'
+import { DiscoveredMod, DiscoveredShaderpack, FileItem, ModStats } from '../types/mods'
 
 const log = LoggerUtil.getLogger('DropinModUtil')
-
-// Interfaces y tipos
-interface DiscoveredMod {
-  fullName: string
-  name: string
-  ext: string
-  disabled: boolean
-}
-
-interface DiscoveredShaderpack {
-  fullName: string
-  name: string
-}
-
-interface FileItem {
-  name: string
-  path: string
-}
 
 // Constantes y expresiones regulares
 // Group #1: File Name (without .disabled, if any)
@@ -369,15 +352,7 @@ export function addShaderpacks(files: FileItem[], instanceDir: string): void {
  * @param version La versión de Minecraft.
  * @returns Estadísticas de mods.
  */
-export function getModStats(
-  modsDir: string,
-  version: string
-): {
-  total: number
-  enabled: number
-  disabled: number
-  byExtension: Record<string, number>
-} {
+export function getModStats(modsDir: string, version: string): ModStats {
   const mods = scanForDropinMods(modsDir, version)
   const stats = {
     total: mods.length,

@@ -52,7 +52,9 @@ export const queryKeys = {
     list: (modsDir: string, version: string) =>
       [...queryKeys.mods.all, 'list', modsDir, version] as const,
     stats: (modsDir: string, version: string) =>
-      [...queryKeys.mods.all, 'stats', modsDir, version] as const
+      [...queryKeys.mods.all, 'stats', modsDir, version] as const,
+    serverMods: (serverId: string) => [...queryKeys.mods.all, 'server', serverId] as const,
+    dropinList: (serverId: string) => [...queryKeys.mods.all, 'dropin', serverId] as const
   },
 
   // Shaderpacks

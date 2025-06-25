@@ -37,6 +37,14 @@ export const DISTRIBUTION = {
   INDEX_DONE: 'distributionIndexDone'
 } as const
 
+export const DISCORD_RPC = {
+  INIT: 'discord:init',
+  UPDATE_DETAILS: 'discord:update-details',
+  SHUTDOWN: 'discord:shutdown'
+} as const
+
+// ==== Comprobado ====
+
 export const DROPIN_MOD_OPCODE = {
   SCAN_MODS: 'dropin:scan-mods',
   ADD_MODS: 'dropin:add-mods',
@@ -48,14 +56,6 @@ export const DROPIN_MOD_OPCODE = {
   ADD_SHADERPACKS: 'dropin:add-shaderpacks',
   GET_MOD_STATS: 'dropin:get-mod-stats'
 } as const
-
-export const DISCORD_RPC = {
-  INIT: 'discord:init',
-  UPDATE_DETAILS: 'discord:update-details',
-  SHUTDOWN: 'discord:shutdown'
-} as const
-
-// ==== Comprobado ====
 
 export const CONFIG_OPCODE = {
   GET_LAUNCHER_DIRECTORY: 'config:get-launcher-directory',
@@ -94,7 +94,9 @@ export const CONFIG_OPCODE = {
   SET_JVM_OPTIONS: 'config:set-jvm-options',
   ENSURE_JAVA_CONFIG: 'config:ensure-java-config',
   GET_ABSOLUTE_MIN_RAM: 'config:get-absolute-min-ram',
-  GET_ABSOLUTE_MAX_RAM: 'config:get-absolute-max-ram'
+  GET_ABSOLUTE_MAX_RAM: 'config:get-absolute-max-ram',
+  GET_MOD_CONFIGURATION: 'config:get-mod-configuration',
+  SET_MOD_CONFIGURATION: 'config:set-mod-configuration'
 } as const
 
 export const DISTRIBUTION_OPCODE = {

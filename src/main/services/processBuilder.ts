@@ -263,10 +263,16 @@ export class ProcessBuilder {
 
         if (!required.value) {
           const modCfg = ConfigManager.getModConfiguration(this.server.rawServer.id)
-          const modEnabled = ProcessBuilder.isModEnabled(
-            modCfg?.mods?.[module.getVersionlessMavenIdentifier()],
-            required
-          )
+
+          const moduleIdWithVersion = module.getMavenIdentifier()
+          const moduleIdWithoutVersion = module.getVersionlessMavenIdentifier()
+          let configValue = modCfg?.mods?.[moduleIdWithVersion] ?? null
+
+          if (configValue === null) {
+            configValue = modCfg?.mods?.[moduleIdWithoutVersion] ?? null
+          }
+
+          const modEnabled = ProcessBuilder.isModEnabled(configValue, required)
 
           if (modEnabled && (await fs.pathExists(module.getPath()))) {
             this.usingLiteLoader = true
@@ -298,15 +304,24 @@ export class ProcessBuilder {
       if ([Type.ForgeMod, Type.LiteMod, Type.LiteLoader, Type.FabricMod].includes(type)) {
         const required = module.getRequired()
         const isOptional = !required.value
-        const isEnabled = ProcessBuilder.isModEnabled(
-          modCfg?.[module.getVersionlessMavenIdentifier()] ?? null,
-          required
-        )
+
+        const moduleIdWithVersion = module.getMavenIdentifier()
+        const moduleIdWithoutVersion = module.getVersionlessMavenIdentifier()
+        let configValue = modCfg?.[moduleIdWithVersion] ?? null
+
+        if (configValue === null) {
+          configValue = modCfg?.[moduleIdWithoutVersion] ?? null
+        }
+
+        const isEnabled = ProcessBuilder.isModEnabled(configValue, required)
 
         if (!isOptional || (isOptional && isEnabled)) {
-          // Procesar submódulos recursivamente
           if (module.subModules.length > 0) {
-            const subModConfig = modCfg?.[module.getVersionlessMavenIdentifier()]
+            let subModConfig = modCfg?.[moduleIdWithVersion]
+            if (!subModConfig) {
+              subModConfig = modCfg?.[moduleIdWithoutVersion]
+            }
+
             const subMods = this.resolveModConfiguration(
               subModConfig && typeof subModConfig === 'object' && 'mods' in subModConfig
                 ? subModConfig.mods || {}
@@ -317,7 +332,6 @@ export class ProcessBuilder {
             lMods.push(...subMods.lMods)
           }
 
-          // Añadir el módulo actual (excepto LiteLoader que se maneja por separado)
           if (type !== Type.LiteLoader) {
             if (type === Type.ForgeMod || type === Type.FabricMod) {
               fMods.push(module)

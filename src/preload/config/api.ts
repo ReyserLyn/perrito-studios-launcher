@@ -61,5 +61,11 @@ export const configAPI = {
   ensureJavaConfig: (serverId: string, effectiveJavaOptions: any, ram?: any) =>
     ipcRenderer.invoke(CONFIG_OPCODE.ENSURE_JAVA_CONFIG, serverId, effectiveJavaOptions, ram),
   getAbsoluteMinRAM: (ram?: any) => ipcRenderer.invoke(CONFIG_OPCODE.GET_ABSOLUTE_MIN_RAM, ram),
-  getAbsoluteMaxRAM: () => ipcRenderer.invoke(CONFIG_OPCODE.GET_ABSOLUTE_MAX_RAM)
+  getAbsoluteMaxRAM: () => ipcRenderer.invoke(CONFIG_OPCODE.GET_ABSOLUTE_MAX_RAM),
+
+  // Mod configuration
+  getModConfiguration: (serverId: string) =>
+    ipcRenderer.invoke(CONFIG_OPCODE.GET_MOD_CONFIGURATION, serverId),
+  setModConfiguration: (serverId: string, configuration: any) =>
+    ipcRenderer.invoke(CONFIG_OPCODE.SET_MOD_CONFIGURATION, serverId, configuration)
 }

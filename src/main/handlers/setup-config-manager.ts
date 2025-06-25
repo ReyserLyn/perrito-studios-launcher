@@ -456,4 +456,60 @@ export default function setupConfigHandlers(): void {
       }
     }
   })
+
+  // Configuración de mods
+  ipcMain.handle(CONFIG_OPCODE.GET_MOD_CONFIGURATION, async (_event, serverId: string) => {
+    try {
+      // LIMPIEZA: Remover configuraciones duplicadas si existen
+      const allConfigs = ConfigManager.getModConfigurations()
+      const cleanedConfigs: any[] = []
+      const seenIds = new Set<string>()
+
+      for (const config of allConfigs) {
+        if (config.id && !seenIds.has(config.id)) {
+          seenIds.add(config.id)
+          cleanedConfigs.push(config)
+        } else if (!config.id) {
+          // Configuración sin ID, probablemente corrupta, ignorar
+          console.warn('Configuración de mod sin ID encontrada, ignorando:', config)
+        }
+      }
+
+      if (cleanedConfigs.length !== allConfigs.length) {
+        console.log(
+          `Limpiando configuración duplicada: ${allConfigs.length} → ${cleanedConfigs.length}`
+        )
+        ConfigManager.setModConfigurations(cleanedConfigs)
+        ConfigManager.save()
+      }
+
+      const modConfiguration = ConfigManager.getModConfiguration(serverId)
+      // Si no existe configuración, devolver estructura vacía por defecto
+      return {
+        success: true,
+        modConfiguration: modConfiguration || { mods: {} }
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error obteniendo configuración de mods'
+      }
+    }
+  })
+
+  ipcMain.handle(
+    CONFIG_OPCODE.SET_MOD_CONFIGURATION,
+    async (_event, serverId: string, configuration: any) => {
+      try {
+        ConfigManager.setModConfiguration(serverId, configuration)
+        return { success: true }
+      } catch (error) {
+        return {
+          success: false,
+          error:
+            error instanceof Error ? error.message : 'Error estableciendo configuración de mods'
+        }
+      }
+    }
+  )
 }

@@ -102,6 +102,12 @@ type getAbsoluteMaxRAMResponse =
   | { success: true; maxRAM: number }
   | { success: false; error: string }
 
+type getModConfigurationResponse =
+  | { success: true; modConfiguration: any }
+  | { success: false; error: string }
+
+type setModConfigurationResponse = { success: true } | { success: false; error: string }
+
 export default interface ConfigAPI {
   // Directories
   getLauncherDirectory: () => Promise<getLauncherResponse>
@@ -155,4 +161,11 @@ export default interface ConfigAPI {
   // Language settings
   getCurrentLanguage: (def?: boolean) => Promise<getCurrentLanguageResponse>
   setLanguage: (language: string) => Promise<setLanguageResponse>
+
+  // Mod configuration
+  getModConfiguration: (serverId: string) => Promise<getModConfigurationResponse>
+  setModConfiguration: (
+    serverId: string,
+    configuration: any
+  ) => Promise<setModConfigurationResponse>
 }

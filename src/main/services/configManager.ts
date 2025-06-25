@@ -179,7 +179,6 @@ let config: Config | null = null
  * Guarda la configuración actual en un archivo.
  */
 export function save(): void {
-  console.log(`[ConfigManager] Guardando configuración en: ${configPath}`)
   fs.writeFileSync(configPath, JSON.stringify(config, null, 4), 'utf8')
   console.log(`[ConfigManager] Configuración guardada exitosamente`)
 }
@@ -591,7 +590,9 @@ export function getModConfiguration(serverid: string): any | null {
   const cfgs = config!.modConfigurations
   for (let i = 0; i < cfgs.length; i++) {
     if (cfgs[i].id === serverid) {
-      return cfgs[i]
+      const modConfig = cfgs[i]
+
+      return modConfig
     }
   }
   return null
@@ -607,11 +608,11 @@ export function setModConfiguration(serverid: string, configuration: any): void 
   const cfgs = config!.modConfigurations
   for (let i = 0; i < cfgs.length; i++) {
     if (cfgs[i].id === serverid) {
-      cfgs[i] = configuration
+      cfgs[i] = { ...configuration, id: serverid }
       return
     }
   }
-  cfgs.push(configuration)
+  cfgs.push({ ...configuration, id: serverid })
 }
 
 // Configuraciones Configurables por el Usuario

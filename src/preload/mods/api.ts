@@ -1,24 +1,26 @@
 import { ipcRenderer } from 'electron'
+import { DROPIN_MOD_OPCODE } from '../../main/constants/ipc'
 
 export const modsAPI = {
   // Mods
   scanMods: (modsDir: string, version: string) =>
-    ipcRenderer.invoke('dropin:scan-mods', modsDir, version),
-  addMods: (files: any[], modsDir: string) => ipcRenderer.invoke('dropin:add-mods', files, modsDir),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.SCAN_MODS, modsDir, version),
+  addMods: (files: any[], modsDir: string) =>
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.ADD_MODS, files, modsDir),
   deleteMod: (modsDir: string, fullName: string) =>
-    ipcRenderer.invoke('dropin:delete-mod', modsDir, fullName),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.DELETE_MOD, modsDir, fullName),
   toggleMod: (modsDir: string, fullName: string, enable: boolean) =>
-    ipcRenderer.invoke('dropin:toggle-mod', modsDir, fullName, enable),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.TOGGLE_MOD, modsDir, fullName, enable),
   getModStats: (modsDir: string, version: string) =>
-    ipcRenderer.invoke('dropin:get-mod-stats', modsDir, version),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.GET_MOD_STATS, modsDir, version),
 
   // Shaderpacks
   scanShaderpacks: (instanceDir: string) =>
-    ipcRenderer.invoke('dropin:scan-shaderpacks', instanceDir),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.SCAN_SHADERPACKS, instanceDir),
   getEnabledShaderpack: (instanceDir: string) =>
-    ipcRenderer.invoke('dropin:get-enabled-shaderpack', instanceDir),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.GET_ENABLED_SHADERPACK, instanceDir),
   setEnabledShaderpack: (instanceDir: string, pack: string) =>
-    ipcRenderer.invoke('dropin:set-enabled-shaderpack', instanceDir, pack),
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.SET_ENABLED_SHADERPACK, instanceDir, pack),
   addShaderpacks: (files: any[], instanceDir: string) =>
-    ipcRenderer.invoke('dropin:add-shaderpacks', files, instanceDir)
+    ipcRenderer.invoke(DROPIN_MOD_OPCODE.ADD_SHADERPACKS, files, instanceDir)
 }
