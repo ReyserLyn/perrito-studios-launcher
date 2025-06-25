@@ -1,4 +1,5 @@
 import { ConfigAccount } from '@/components/config-manager/config-account'
+import { ConfigJava } from '@/components/config-manager/config-java'
 import { ConfigMinecraft } from '@/components/config-manager/config-minecraft'
 import ConfigMods from '@/components/config-manager/config-mods'
 import { Button } from '@/components/ui/button'
@@ -119,6 +120,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
             <ConfigAccount setActiveTab={setActiveTab} />
             <ConfigMinecraft />
             <ConfigMods />
+            <ConfigJava />
           </Tabs>
         </div>
       </div>

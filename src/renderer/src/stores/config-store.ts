@@ -77,6 +77,33 @@ const initialConfigState = {
   isDirty: false
 }
 
+// Helper para crear/actualizar configuración de Java
+const createOrUpdateJavaConfig = (
+  state: ConfigState,
+  serverId: string,
+  updates: Partial<JavaConfig>
+): ConfigState => {
+  const defaultJavaConfig: JavaConfig = {
+    minRAM: '',
+    maxRAM: '',
+    executable: null,
+    jvmOptions: []
+  }
+
+  return {
+    ...state,
+    java: {
+      ...state.java,
+      [serverId]: {
+        ...defaultJavaConfig,
+        ...state.java[serverId],
+        ...updates
+      }
+    },
+    isDirty: true
+  }
+}
+
 export const useConfigStore = create<ConfigState>()(
   devtools(
     persist(
@@ -187,66 +214,24 @@ export const useConfigStore = create<ConfigState>()(
 
         // Acciones para Java Config
         setJavaConfig: (serverId: string, config: Partial<JavaConfig>) =>
-          set(
-            (state) => ({
-              java: {
-                ...state.java,
-                [serverId]: { ...state.java[serverId], ...config }
-              },
-              isDirty: true
-            }),
-            false,
-            'setJavaConfig'
-          ),
+          set((state) => createOrUpdateJavaConfig(state, serverId, config), false, 'setJavaConfig'),
 
         setMinRAM: (serverId: string, minRAM: string) =>
-          set(
-            (state) => ({
-              java: {
-                ...state.java,
-                [serverId]: { ...state.java[serverId], minRAM }
-              },
-              isDirty: true
-            }),
-            false,
-            'setMinRAM'
-          ),
+          set((state) => createOrUpdateJavaConfig(state, serverId, { minRAM }), false, 'setMinRAM'),
 
         setMaxRAM: (serverId: string, maxRAM: string) =>
-          set(
-            (state) => ({
-              java: {
-                ...state.java,
-                [serverId]: { ...state.java[serverId], maxRAM }
-              },
-              isDirty: true
-            }),
-            false,
-            'setMaxRAM'
-          ),
+          set((state) => createOrUpdateJavaConfig(state, serverId, { maxRAM }), false, 'setMaxRAM'),
 
         setJavaExecutable: (serverId: string, executable: string) =>
           set(
-            (state) => ({
-              java: {
-                ...state.java,
-                [serverId]: { ...state.java[serverId], executable }
-              },
-              isDirty: true
-            }),
+            (state) => createOrUpdateJavaConfig(state, serverId, { executable }),
             false,
             'setJavaExecutable'
           ),
 
         setJVMOptions: (serverId: string, options: string[]) =>
           set(
-            (state) => ({
-              java: {
-                ...state.java,
-                [serverId]: { ...state.java[serverId], jvmOptions: options }
-              },
-              isDirty: true
-            }),
+            (state) => createOrUpdateJavaConfig(state, serverId, { jvmOptions: options }),
             false,
             'setJVMOptions'
           ),

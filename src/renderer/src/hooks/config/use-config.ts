@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { queryKeys } from '../../lib/queryClient'
 import { useConfigStore, type GameConfig, type LauncherConfig } from '../../stores/config-store'
+import { useServerData } from '../use-servers'
 
 // ===== HOOKS PARA CONSULTAS =====
 
@@ -59,14 +60,16 @@ export const useConfigQuery = () => {
 // ===== HOOKS DE MUTACIONES =====
 
 /**
- * Hook para guardar la configuración
+ * Hook para guardar la configuración completa (game, launcher y Java)
  */
 export const useSaveConfig = () => {
   const queryClient = useQueryClient()
-  const { game, launcher, setDirty } = useConfigStore()
+  const { game, launcher, java, setDirty } = useConfigStore()
+  const { currentServer } = useServerData()
 
   return useMutation({
     mutationFn: async () => {
+      // Guardar configuración del juego y launcher
       await Promise.all([
         window.api.config.setGameWidth(game.resWidth),
         window.api.config.setGameHeight(game.resHeight),
@@ -77,11 +80,30 @@ export const useSaveConfig = () => {
         window.api.config.setAllowPrerelease(launcher.allowPrerelease)
       ])
 
+      // Guardar configuración de Java si existe en el store
+      if (currentServer && java[currentServer.rawServer.id]) {
+        const javaConfig = java[currentServer.rawServer.id]
+        await Promise.all([
+          window.api.config.setMinRAM(currentServer.rawServer.id, javaConfig.minRAM),
+          window.api.config.setMaxRAM(currentServer.rawServer.id, javaConfig.maxRAM),
+          window.api.config.setJavaExecutable(
+            currentServer.rawServer.id,
+            javaConfig.executable || ''
+          ),
+          window.api.config.setJVMOptions(currentServer.rawServer.id, javaConfig.jvmOptions)
+        ])
+      }
+
       await window.api.config.save()
     },
     onSuccess: () => {
       setDirty(false)
       queryClient.invalidateQueries({ queryKey: queryKeys.config.all })
+      if (currentServer) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.javaConfig.byServer(currentServer.rawServer.id)
+        })
+      }
       toast.success('Configuración guardada exitosamente')
     },
     onError: (error) => {
@@ -96,7 +118,8 @@ export const useSaveConfig = () => {
  */
 export const useResetConfig = () => {
   const queryClient = useQueryClient()
-  const { setGameConfig, setLauncherConfig, setDirty } = useConfigStore()
+  const { setGameConfig, setLauncherConfig, setDirty, reset } = useConfigStore()
+  const { currentServer } = useServerData()
 
   return useMutation({
     mutationFn: async () => {
@@ -146,6 +169,20 @@ export const useResetConfig = () => {
       // Actualizar el store
       setGameConfig(result.game)
       setLauncherConfig(result.launcher)
+
+      // Limpiar configuraciones de Java pendientes en el store
+      // Esto fuerza a que se recarguen desde la API
+      reset()
+      setGameConfig(result.game)
+      setLauncherConfig(result.launcher)
+
+      // Refetch también la configuración de Java si hay servidor seleccionado
+      if (currentServer) {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.javaConfig.byServer(currentServer.rawServer.id)
+        })
+      }
+
       setDirty(false)
 
       return result

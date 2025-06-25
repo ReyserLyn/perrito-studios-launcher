@@ -43,7 +43,21 @@ export const queryKeys = {
     all: ['config'] as const,
     game: () => [...queryKeys.config.all, 'game'] as const,
     java: (serverId: string) => [...queryKeys.config.all, 'java', serverId] as const,
-    directories: () => [...queryKeys.config.all, 'directories'] as const
+    directories: () => [...queryKeys.config.all, 'directories'] as const,
+    general: () => [...queryKeys.config.all, 'general'] as const
+  },
+
+  // Configuración de Java por servidor
+  javaConfig: {
+    all: ['javaConfig'] as const,
+    byServer: (serverId: string) => [...queryKeys.javaConfig.all, serverId] as const
+  },
+
+  // Servidores
+  servers: {
+    all: ['servers'] as const,
+    list: () => [...queryKeys.servers.all, 'list'] as const,
+    detail: (id: string) => [...queryKeys.servers.all, 'detail', id] as const
   },
 
   // Mods
@@ -54,7 +68,8 @@ export const queryKeys = {
     stats: (modsDir: string, version: string) =>
       [...queryKeys.mods.all, 'stats', modsDir, version] as const,
     serverMods: (serverId: string) => [...queryKeys.mods.all, 'server', serverId] as const,
-    dropinList: (serverId: string) => [...queryKeys.mods.all, 'dropin', serverId] as const
+    dropinList: (serverId: string) => [...queryKeys.mods.all, 'dropin', serverId] as const,
+    byServer: (serverId: string) => [...queryKeys.mods.all, serverId] as const
   },
 
   // Shaderpacks
@@ -68,5 +83,11 @@ export const queryKeys = {
   // Process
   process: {
     status: ['process', 'status'] as const
+  },
+
+  // Sistema
+  system: {
+    all: ['system'] as const,
+    memory: () => [...queryKeys.system.all, 'memory'] as const
   }
 } as const

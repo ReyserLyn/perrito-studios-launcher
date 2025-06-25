@@ -94,7 +94,7 @@ export interface PlatformCapabilities {
 }
 
 // Tipos para operaciones del sistema de archivos
-export interface ShellOperationResult {
+export interface BaseResult {
   result: boolean
   error?: string
 }

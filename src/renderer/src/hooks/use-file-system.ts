@@ -1,19 +1,19 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import type { ShellOperationResult } from '../types/mods'
+import type { BaseResult } from '../types/mods'
 
 /**
  * Hook base para operaciones del sistema de archivos
  */
 function useSystemOperation<TVariables>(
-  operationFn: (variables: TVariables) => Promise<ShellOperationResult>,
+  operationFn: (variables: TVariables) => Promise<BaseResult>,
   options: {
     successMessage?: string
     errorMessage?: string
     showSuccessToast?: boolean
   } = {}
 ) {
-  return useMutation<ShellOperationResult, Error, TVariables>({
+  return useMutation<BaseResult, Error, TVariables>({
     mutationFn: operationFn,
     onSuccess: () => {
       if (options.showSuccessToast && options.successMessage) {
@@ -34,7 +34,7 @@ function useSystemOperation<TVariables>(
  */
 export function useOpenFolder() {
   return useSystemOperation(
-    async (folderPath: string): Promise<ShellOperationResult> => {
+    async (folderPath: string): Promise<BaseResult> => {
       const result = await window.api.system.openFolder(folderPath)
 
       if (!result.result) {
@@ -54,7 +54,7 @@ export function useOpenFolder() {
  */
 export function useShowItemInFolder() {
   return useSystemOperation(
-    async (filePath: string): Promise<ShellOperationResult> => {
+    async (filePath: string): Promise<BaseResult> => {
       const result = await window.api.system.showItemInFolder(filePath)
 
       if (!result.result) {
@@ -74,7 +74,7 @@ export function useShowItemInFolder() {
  */
 export function useTrashItem() {
   return useSystemOperation(
-    async (filePath: string): Promise<ShellOperationResult> => {
+    async (filePath: string): Promise<BaseResult> => {
       const result = await window.api.system.trashItem(filePath)
 
       if (!result.result) {
