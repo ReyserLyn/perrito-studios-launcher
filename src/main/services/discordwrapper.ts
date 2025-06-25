@@ -4,7 +4,7 @@ import { languageManager } from '../utils/language'
 
 // Estructuras de los parámetros
 export interface GeneralSettings {
-  clientId: string
+  clientId?: string
   smallImageKey?: string
   smallImageText?: string
 }
@@ -15,38 +15,60 @@ export interface ServerSettings {
   largeImageText?: string
 }
 
-const log = LoggerUtil.getLogger('DiscordWrapper')
+const logger = LoggerUtil.getLogger('DiscordRPC')
+const DEFAULT_CLIENT_ID = '1207445012345678901' // Replace with your actual client ID
 
-let client: Client | null = null
-let activity: Record<string, any> | null = null
+interface DiscordActivity {
+  state?: string
+  details?: string
+  startTimestamp?: number
+  endTimestamp?: number
+  largeImageKey?: string
+  largeImageText?: string
+  smallImageKey?: string
+  smallImageText?: string
+  partyId?: string
+  partySize?: number
+  partyMax?: number
+  matchSecret?: string
+  spectateSecret?: string
+  joinSecret?: string
+  instance?: boolean
+  buttons?: Array<{
+    label: string
+    url: string
+  }>
+}
+
+let rpc: Client | null = null
+let activity: DiscordActivity | null = null
 let isReady = false
 
 /**
  * Inicializa la Rich Presence de Discord.
  *
- * @param genSettings Configuración general con clientId e imágenes pequeñas.
- * @param servSettings Configuración específica del servidor (imágenes grandes, shortId).
- * @param initialDetails Texto inicial a mostrar. Por defecto usa la key de idioma `discord.waiting`.
+ * @param genSettings Configuración general con clientId e imágenes pequeñas (opcional).
+ * @param servSettings Configuración específica del servidor (opcional).
+ * @param initialDetails Texto inicial a mostrar (opcional).
  */
-export function initRPC(
-  genSettings: GeneralSettings,
-  servSettings: ServerSettings,
-  initialDetails: string = languageManager.query('discord.waiting')
-): void {
-  // Evitar doble inicialización.
-  if (client) {
-    log.warn('Discord RPC ya estaba inicializado, reiniciando…')
-    shutdownRPC()
+export async function initialize(
+  genSettings: GeneralSettings = {},
+  servSettings: ServerSettings = {},
+  initialDetails: string = languageManager.getString('discord.waiting')
+): Promise<void> {
+  if (rpc) {
+    throw new Error('Discord RPC ya está inicializado')
   }
 
-  // Crear cliente.
-  client = new Client({ clientId: genSettings.clientId })
+  rpc = new Client({ clientId: genSettings.clientId || DEFAULT_CLIENT_ID })
   isReady = false
 
-  // Construir actividad base.
+  // Construir actividad base
   activity = {
     details: initialDetails,
-    state: languageManager.query('discord.state', { shortId: servSettings.shortId ?? '' }),
+    state: servSettings.shortId
+      ? languageManager.getString('discord.state').replace('{shortId}', servSettings.shortId)
+      : undefined,
     largeImageKey: servSettings.largeImageKey,
     largeImageText: servSettings.largeImageText,
     smallImageKey: genSettings.smallImageKey,
@@ -55,26 +77,17 @@ export function initRPC(
     instance: false
   }
 
-  // Conexión lista.
-  client.on('ready', () => {
+  try {
+    await rpc.login()
     isReady = true
-    log.info('Discord RPC conectado')
-    updateActivity()
-  })
-
-  // Manejar errores.
-  client.on('error', (error) => {
-    log.error('Discord RPC error:', error)
-  })
-
-  // Intentar login.
-  client.login().catch((error: Error) => {
-    if (error.message.includes('ENOENT')) {
-      log.info('No se detectó cliente de Discord, Rich Presence deshabilitado.')
-    } else {
-      log.error('No se pudo iniciar Rich Presence:', error)
+    logger.info('Discord RPC conectado')
+    if (activity) {
+      await updateActivity(activity)
     }
-  })
+  } catch (error) {
+    logger.error('Error conectando Discord RPC:', error)
+    throw error
+  }
 }
 
 /**
@@ -85,38 +98,47 @@ export function initRPC(
 export function updateDetails(details: string): void {
   if (!activity) return
   activity.details = details
-  updateActivity()
+  updateActivity(activity)
 }
 
 /**
  * Actualiza completamente la actividad en Discord si el cliente está listo.
  */
-function updateActivity(): void {
-  if (!client || !activity || !isReady) return
+export async function updateActivity(newActivity: DiscordActivity): Promise<void> {
+  if (!rpc || !isReady) {
+    throw new Error('Discord RPC no está inicializado o no está listo')
+  }
+
+  activity = newActivity
 
   try {
-    client.user?.setActivity(activity)
+    await rpc.user?.setActivity(activity)
+    logger.info('Actividad de Discord RPC actualizada')
   } catch (error) {
-    log.error('Error actualizando actividad RPC:', error)
+    logger.error('Error actualizando actividad de Discord RPC:', error)
+    throw error
   }
 }
 
 /**
  * Detiene la Rich Presence y limpia recursos.
  */
-export function shutdownRPC(): void {
-  if (!client) return
+export async function destroy(): Promise<void> {
+  if (!rpc) {
+    return
+  }
 
   try {
     if (isReady) {
-      client.user?.clearActivity()
+      await rpc.user?.clearActivity()
     }
-    client.destroy()
+    await rpc.destroy()
+    rpc = null
+    activity = null
+    isReady = false
+    logger.info('Discord RPC desconectado')
   } catch (error) {
-    log.error('Error cerrando Discord RPC:', error)
+    logger.error('Error desconectando Discord RPC:', error)
+    throw error
   }
-
-  client = null
-  activity = null
-  isReady = false
 }

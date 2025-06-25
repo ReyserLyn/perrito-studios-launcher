@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron'
-import { SHELL_OPCODE } from '../../main/constants/ipc'
-import type { FilePathResult, ShellOperationResult } from './types'
+import { DISCORD_RPC, LANGUAGE, SHELL_OPCODE } from '../../main/constants/ipc'
+import type { SystemApi } from './types'
 
 /**
  * API del sistema para operaciones de archivos y carpetas
  */
-export const systemAPI = {
+export const systemApi: SystemApi = {
   /**
    * Mueve un archivo a la papelera del sistema
    * @param filePath Ruta del archivo a eliminar
@@ -40,6 +40,13 @@ export const systemAPI = {
     ipcRenderer.invoke(SHELL_OPCODE.RESOLVE_FILE_PATH, fileName, fileBuffer),
 
   /**
+   * Abre un diálogo para seleccionar el ejecutable de Java
+   * @returns Resultado con la ruta del ejecutable seleccionado
+   */
+  selectJavaExecutable: (): Promise<{ success: boolean; path?: string; error?: string }> =>
+    ipcRenderer.invoke(SHELL_OPCODE.SELECT_JAVA_EXECUTABLE),
+
+  /**
    * Escucha el evento de finalización del índice de distribución
    * @param callback Función a ejecutar cuando se complete el índice
    */
@@ -52,5 +59,21 @@ export const systemAPI = {
    */
   removeDistributionListener: (): void => {
     ipcRenderer.removeAllListeners('distributionIndexDone')
-  }
+  },
+
+  // Language
+  changeLanguage: (lang: string) => ipcRenderer.send(LANGUAGE.CHANGE, lang),
+  getCurrentLanguage: () => ipcRenderer.sendSync(LANGUAGE.GET_CURRENT),
+  getPlural: (key: string, options: any) => ipcRenderer.sendSync(LANGUAGE.PLURAL, key, options),
+  formatDate: (dateString: string, format: string) =>
+    ipcRenderer.sendSync(LANGUAGE.FORMAT_DATE, dateString, format),
+  formatNumber: (num: number) => ipcRenderer.sendSync(LANGUAGE.FORMAT_NUMBER, num),
+  onLanguageChanged: (callback: (lang: string) => void) =>
+    ipcRenderer.on(LANGUAGE.CHANGED, (_, lang) => callback(lang)),
+
+  // Discord RPC
+  initializeDiscordRpc: () => ipcRenderer.invoke(DISCORD_RPC.INITIALIZE),
+  destroyDiscordRpc: () => ipcRenderer.invoke(DISCORD_RPC.DESTROY),
+  updateDiscordActivity: (activity: any) =>
+    ipcRenderer.invoke(DISCORD_RPC.UPDATE_ACTIVITY, activity)
 }

@@ -1,5 +1,6 @@
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { app } from 'electron'
+import { LoggerUtil } from 'perrito-core'
 import { setupIpcHandlers } from './ipcHandlers'
 import { createMenu } from './menu'
 import { runPreloadTasks } from './preloader'
@@ -7,6 +8,8 @@ import { languageManager } from './utils/language'
 import { createMainWindow, getMainWindow } from './window'
 
 import './services/microsoftAuth'
+
+const logger = LoggerUtil.getLogger('Main')
 
 app.disableHardwareAcceleration()
 
@@ -18,19 +21,22 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
+  // Inicializar el sistema de idiomas
+  languageManager.initialize()
+
   setupIpcHandlers()
 
   const mainWindow = createMainWindow()
 
   // Ejecutar tareas de pre-carga
   runPreloadTasks(mainWindow).catch((err) =>
-    console.error('[PRELOADER] Error durante la pre-carga:', err)
+    logger.error('[PRELOADER] Error durante la pre-carga:', err)
   )
 
   createMenu()
 
-  console.log('[+] Perrito Studios Launcher iniciado correctamente')
-  console.log('[+] Idioma actual:', languageManager.getCurrentLanguage())
+  logger.info('[+] Perrito Studios Launcher iniciado correctamente')
+  logger.info('[+] Idioma actual:', languageManager.getCurrentLanguage())
 })
 
 // Cerrar cuando todas las ventanas estén cerradas
@@ -45,6 +51,15 @@ app.on('activate', () => {
   if (!getMainWindow()) {
     createMainWindow()
   }
+})
+
+// Manejar errores no capturados
+process.on('uncaughtException', (error) => {
+  logger.error('Error no capturado:', error)
+})
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('Promesa rechazada no manejada:', reason)
 })
 
 // Exportar para usar en otros módulos si es necesario

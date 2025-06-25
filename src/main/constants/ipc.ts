@@ -19,10 +19,11 @@ export const MSFT_ERROR = {
 } as const
 
 export const SHELL_OPCODE = {
-  TRASH_ITEM: 'TRASH_ITEM',
-  OPEN_FOLDER: 'OPEN_FOLDER',
-  SHOW_ITEM_IN_FOLDER: 'SHOW_ITEM_IN_FOLDER',
-  RESOLVE_FILE_PATH: 'RESOLVE_FILE_PATH'
+  TRASH_ITEM: 'shell:trash-item',
+  OPEN_FOLDER: 'shell:open-folder',
+  SHOW_ITEM_IN_FOLDER: 'shell:show-item-in-folder',
+  RESOLVE_FILE_PATH: 'shell:resolve-file-path',
+  SELECT_JAVA_EXECUTABLE: 'shell:select-java-executable'
 } as const
 
 export const AUTO_UPDATER = {
@@ -37,13 +38,13 @@ export const AUTO_UPDATER = {
 } as const
 
 export const DISTRIBUTION = {
-  INDEX_DONE: 'distributionIndexDone'
+  DISTRIBUTION_INDEX_DONE: 'distribution:index-done'
 } as const
 
 export const DISCORD_RPC = {
-  INIT: 'discord:init',
-  UPDATE_DETAILS: 'discord:update-details',
-  SHUTDOWN: 'discord:shutdown'
+  INITIALIZE: 'discord-rpc:initialize',
+  DESTROY: 'discord-rpc:destroy',
+  UPDATE_ACTIVITY: 'discord-rpc:update-activity'
 } as const
 
 // ==== Comprobado ====
@@ -103,7 +104,9 @@ export const CONFIG_OPCODE = {
 } as const
 
 export const DISTRIBUTION_OPCODE = {
-  GET_DISTRIBUTION: 'distro:get-distribution'
+  GET_DISTRIBUTION: 'distribution:get-distribution',
+  GET_DISTRIBUTION_INDEX: 'distribution:get-distribution-index',
+  GET_DISTRIBUTION_ASSET: 'distribution:get-distribution-asset'
 } as const
 
 export const PROCESS_BUILDER_OPCODE = {
@@ -118,7 +121,9 @@ export const PROCESS_BUILDER_OPCODE = {
 } as const
 
 export const SERVER_STATUS_OPCODE = {
-  GET_STATUS: 'server:get-status'
+  GET_STATUS: 'server:get-status',
+  GET_PLAYER_COUNT: 'server:get-player-count',
+  GET_PLAYER_LIST: 'server:get-player-list'
 } as const
 
 export const AUTH_OPCODE = {
@@ -129,6 +134,15 @@ export const AUTH_OPCODE = {
   GET_SELECTED_ACCOUNT: 'auth:get-selected-account',
   GET_ALL_ACCOUNTS: 'auth:get-all-accounts',
   SELECT_ACCOUNT: 'auth:select-account',
-  VALIDATE_SELECTED: 'auth:validate-selected',
-  LOGOUT: 'auth:logout'
-}
+  VALIDATE_SELECTED: 'auth:validate-selected'
+} as const
+
+// Language
+export const LANGUAGE = {
+  CHANGE: 'language-change',
+  GET_CURRENT: 'language-get-current',
+  PLURAL: 'language-plural',
+  FORMAT_DATE: 'language-format-date',
+  FORMAT_NUMBER: 'language-format-number',
+  CHANGED: 'language-changed'
+} as const
