@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/hooks/use-translation'
 import { Loader2, Server } from 'lucide-react'
 import { HeliosServer } from 'perrito-core/common'
 
@@ -18,6 +19,8 @@ export function ServerListingCard({
   isLoading = false,
   loadingServerId
 }: ServerListingCardProps) {
+  const { t } = useTranslation()
+
   const isMainServer = server.rawServer?.mainServer
   const isCurrentlyLoading = isLoading && loadingServerId === server.rawServer?.id
 
@@ -53,7 +56,9 @@ export function ServerListingCard({
 
       {/* Detalles del servidor */}
       <div className="flex-1 text-left space-y-1">
-        <div className="font-medium text-sm">{server.rawServer?.name || 'Servidor sin nombre'}</div>
+        <div className="font-medium text-sm">
+          {server.rawServer?.name || t('server.status.no-name')}
+        </div>
 
         {server.rawServer?.description && (
           <div className="text-xs line-clamp-2">{server.rawServer.description}</div>
@@ -80,7 +85,7 @@ export function ServerListingCard({
 
           {isSelected && (
             <Badge variant="default" className="text-xs bg-green-500 hover:bg-green-600">
-              Seleccionado
+              {t('server.status.selected')}
             </Badge>
           )}
         </div>

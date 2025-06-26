@@ -390,7 +390,12 @@
     },
     "status": {
       "online": "{{count}} jugadores conectados",
-      "offline": "Servidor no disponible"
+      "offline": "Servidor no disponible",
+      "loading": "Cargando servidores...",
+      "no-servers": "No se encontraron servidores disponibles",
+      "no-name": "Servidor sin nombre",
+      "selected": "Seleccionado",
+      "main": "Principal"
     }
   },
 

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import { Loader2 } from 'lucide-react'
 import { HeliosServer } from 'perrito-core/common'
 import { ServerListingCard } from './server-listing-card'
@@ -21,12 +22,13 @@ export function ServerList({
   selectingServerId,
   className = 'space-y-2 max-h-96 overflow-y-auto custom-scrollbar pr-2'
 }: ServerListProps) {
+  const { t } = useTranslation()
   if (isLoading) {
     return (
       <div className={className}>
         <div className="flex items-center justify-center py-8">
           <Loader2 size={24} className="animate-spin" />
-          <span className="ml-2">Cargando servidores...</span>
+          <span className="ml-2">{t('server.status.loading')}</span>
         </div>
       </div>
     )
@@ -35,7 +37,7 @@ export function ServerList({
   if (!serverList || serverList.length === 0) {
     return (
       <div className={className}>
-        <div className="text-center py-8">No se encontraron servidores disponibles</div>
+        <div className="text-center py-8">{t('server.status.no-servers')}</div>
       </div>
     )
   }

@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import { useTranslation } from '@/hooks/use-translation'
 import { Package } from 'lucide-react'
 import { HeliosServer } from 'perrito-core/common'
 
@@ -13,6 +14,8 @@ export function ServerTriggerConfigButton({
   className = '',
   onClick
 }: ServerTriggerConfigButtonProps) {
+  const { t } = useTranslation()
+
   return (
     <div
       className={`w-full p-4 border border-[#2c1e4d] rounded-lg bg-[#151126] hover:bg-[#1d1332] transition-colors cursor-pointer ${className}`}
@@ -42,7 +45,7 @@ export function ServerTriggerConfigButton({
             </h3>
             {server.rawServer?.mainServer && (
               <Badge variant="default" className="text-xs bg-yellow-500 hover:bg-yellow-600">
-                Principal
+                {t('server.status.main')}
               </Badge>
             )}
           </div>
@@ -69,7 +72,7 @@ export function ServerTriggerConfigButton({
 
         {/* Indicador de cambio */}
         <div className="flex-shrink-0 text-muted-foreground">
-          <span className="text-sm">Cambiar servidor</span>
+          <span className="text-sm">{t('server.actions.change')}</span>
         </div>
       </div>
     </div>
