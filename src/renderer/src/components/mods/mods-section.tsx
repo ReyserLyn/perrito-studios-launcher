@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import { LucideIcon, Package } from 'lucide-react'
 import type { ServerMod } from '../../types/mods'
 import { Badge } from '../ui/badge'
@@ -23,10 +24,10 @@ export function ModsSection({
   isPending = false,
   icon: Icon = Package
 }: ModsSectionProps) {
+  const { t } = useTranslation()
+
   const emptyMessage =
-    variant === 'required'
-      ? 'No hay mods obligatorios para este servidor'
-      : 'No hay mods opcionales disponibles para este servidor'
+    variant === 'required' ? t('settings.mods.required.empty') : t('settings.mods.optional.empty')
 
   return (
     <Card className="border-[#2c1e4d] rounded-lg bg-[#151126]">

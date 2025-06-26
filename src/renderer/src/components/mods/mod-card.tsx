@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks'
 import type { ServerMod } from '../../types/mods'
 import { Badge } from '../ui/badge'
 import { Switch } from '../ui/switch'
@@ -10,6 +11,7 @@ interface ModCardProps {
 }
 
 export function ModCard({ mod, onToggle, isPending = false, variant = 'optional' }: ModCardProps) {
+  const { t } = useTranslation()
   const isRequired = variant === 'required'
 
   return (
@@ -18,16 +20,18 @@ export function ModCard({ mod, onToggle, isPending = false, variant = 'optional'
         <div className="flex items-center gap-2">
           <span className="font-medium text-foreground">{mod.name || 'NOMBRE VACÍO'}</span>
           <Badge variant={isRequired ? 'secondary' : 'outline'} className="text-xs">
-            {isRequired ? 'Requerido' : 'Opcional'}
+            {isRequired ? t('settings.mods.required.badge') : t('settings.mods.optional.badge')}
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground">Versión: {mod.version}</p>
+        <p className="text-sm text-muted-foreground">
+          {t('settings.mods.version')}: {mod.version}
+        </p>
         {mod.description && <p className="text-xs text-muted-foreground mt-1">{mod.description}</p>}
       </div>
       <div className="flex items-center gap-2">
         {isRequired ? (
           <Badge variant="outline" className="text-green-600">
-            Activo
+            {t('common.status.active')}
           </Badge>
         ) : (
           <Switch

@@ -221,13 +221,21 @@
       "title": "Mods",
       "description": "Configure mods for {{serverName}}",
       "description-default": "Configure mods for the current server",
+      "version": "Version",
+      "status": {
+        "loading": "Loading mods information..."
+      },
       "required": {
         "title": "Required mods",
-        "description": "These mods are required by the server and are always active"
+        "description": "These mods are required by the server and are always active",
+        "badge": "Required",
+        "empty": "No required mods available for this server"
       },
       "optional": {
         "title": "Optional mods",
-        "description": "These mods can be enabled or disabled according to your preferences"
+        "description": "These mods can be enabled or disabled according to your preferences",
+        "badge": "Optional",
+        "empty": "No optional mods available for this server"
       },
       "local": {
         "title": "Local Mods (Drop-in)",
@@ -252,6 +260,9 @@
           "total": "Total",
           "enabled": "Active",
           "disabled": "Inactive"
+        },
+        "delete": {
+          "confirm": "Are you sure you want to delete this mod?"
         }
       }
     },

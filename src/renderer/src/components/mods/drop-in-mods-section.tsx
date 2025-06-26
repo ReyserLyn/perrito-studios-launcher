@@ -1,4 +1,4 @@
-import { useServerData } from '@/hooks'
+import { useServerData, useTranslation } from '@/hooks'
 import { DndContext } from '@dnd-kit/core'
 import { FolderOpen, Package, RefreshCw, Trash2 } from 'lucide-react'
 import { useCallback } from 'react'
@@ -13,6 +13,8 @@ import { Label } from '../ui/label'
 import { Switch } from '../ui/switch'
 
 export function DropInModsSection() {
+  const { t } = useTranslation()
+
   const { currentServer } = useServerData()
   const modsQuery = useModsData()
   const dropinMods = modsQuery.data?.dropinMods || []
@@ -39,11 +41,11 @@ export function DropInModsSection() {
 
   const handleDeleteDropinMod = useCallback(
     (fullName: string) => {
-      if (confirm('¿Estás seguro de que deseas eliminar este mod?')) {
+      if (confirm(t('settings.mods.local.delete.confirm'))) {
         deleteDropinMod.mutate(fullName)
       }
     },
-    [deleteDropinMod]
+    [deleteDropinMod, t]
   )
 
   const handleOpenModsFolder = useCallback(async () => {
@@ -53,7 +55,7 @@ export function DropInModsSection() {
       const modsDir = await getModsDirectory(currentServer.rawServer.id)
       openFolder.mutate(modsDir)
     } catch (error) {
-      console.error('Error obteniendo directorio de mods:', error)
+      console.error('[-] Error obteniendo directorio de mods:', error)
     }
   }, [currentServer, openFolder])
 
@@ -70,13 +72,13 @@ export function DropInModsSection() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
             <Package className="w-5 h-5 text-purple-400" />
-            Mods Locales (Drop-in)
+            {t('settings.mods.local.title')}
             <Badge variant="secondary" className="bg-purple-500/20 text-purple-300">
               {dropinMods.length}
             </Badge>
           </CardTitle>
           <CardDescription className="text-gray-400">
-            Administra tus mods locales arrastrando archivos .jar, .zip o .litemod
+            {t('settings.mods.local.description')}
           </CardDescription>
         </CardHeader>
 
@@ -86,15 +88,19 @@ export function DropInModsSection() {
             <div className="grid grid-cols-3 gap-4 p-3 bg-[#1d1332] rounded-lg border border-[#2c1e4d]">
               <div className="text-center">
                 <div className="text-lg font-bold text-white">{modStats.total}</div>
-                <div className="text-xs text-gray-400">Total</div>
+                <div className="text-xs text-gray-400">{t('settings.mods.local.stats.total')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-green-400">{modStats.enabled}</div>
-                <div className="text-xs text-gray-400">Activos</div>
+                <div className="text-xs text-gray-400">
+                  {t('settings.mods.local.stats.enabled')}
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-red-400">{modStats.disabled}</div>
-                <div className="text-xs text-gray-400">Inactivos</div>
+                <div className="text-xs text-gray-400">
+                  {t('settings.mods.local.stats.disabled')}
+                </div>
               </div>
             </div>
           )}
@@ -123,16 +129,18 @@ export function DropInModsSection() {
                 {isEmpty ? (
                   <>
                     <Package className="w-16 h-16 mx-auto mb-4 text-gray-500" />
-                    <p className="text-white font-medium text-lg mb-2">No hay mods instalados</p>
+                    <p className="text-white font-medium text-lg mb-2">
+                      {t('settings.mods.local.drag-drop.empty.title')}
+                    </p>
                     <p className="text-gray-400 text-sm mb-6">
-                      Arrastra archivos aquí o usa los botones para gestionar tus mods
+                      {t('settings.mods.local.drag-drop.empty.description')}
                     </p>
                   </>
                 ) : (
                   <>
                     <Package className="w-8 h-8 mx-auto mb-2 text-gray-500" />
                     <p className="text-gray-400 text-sm mb-3">
-                      Arrastra más mods aquí para añadirlos
+                      {t('settings.mods.local.installed.title')}
                     </p>
                   </>
                 )}
@@ -144,9 +152,11 @@ export function DropInModsSection() {
               >
                 <div className="text-center">
                   <Package className="w-12 h-12 mx-auto mb-3 text-purple-400" />
-                  <p className="text-purple-400 font-medium text-lg">Suelta los archivos aquí</p>
+                  <p className="text-purple-400 font-medium text-lg">
+                    {t('settings.mods.local.drag-drop.hover.title')}
+                  </p>
                   <p className="text-sm text-gray-400 mt-2">
-                    Formatos soportados: .jar, .zip, .litemod
+                    {t('settings.mods.local.drag-drop.hover.description')}
                   </p>
                 </div>
               </div>
@@ -165,7 +175,7 @@ export function DropInModsSection() {
                 className="gap-2 border-[#2c1e4d] hover:bg-[#1d1332]"
               >
                 <FolderOpen size={16} />
-                Abrir Carpeta
+                {t('common.system.open-folder')}
               </Button>
               <Button
                 variant="ghost"
@@ -174,13 +184,15 @@ export function DropInModsSection() {
                 className="gap-2 hover:bg-[#1d1332]"
               >
                 <RefreshCw size={16} className={modsQuery.isRefetching ? 'animate-spin' : ''} />
-                Refrescar
+                {t('common.system.refresh')}
               </Button>
             </div>
           ) : (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium text-gray-300">Mods Instalados</Label>
+                <Label className="text-sm font-medium text-gray-300">
+                  {t('settings.mods.local.installed.title')}
+                </Label>
                 <div className="flex  gap-2">
                   <Button
                     variant="outline"
@@ -190,7 +202,7 @@ export function DropInModsSection() {
                     className="gap-2 border-[#2c1e4d] hover:bg-[#1d1332]"
                   >
                     <FolderOpen size={14} />
-                    Abrir Carpeta
+                    {t('common.system.open-folder')}
                   </Button>
                   <Button
                     variant="ghost"
@@ -200,7 +212,7 @@ export function DropInModsSection() {
                     className="gap-2 h-8 px-3 text-xs hover:bg-[#1d1332]"
                   >
                     <RefreshCw size={12} className={modsQuery.isRefetching ? 'animate-spin' : ''} />
-                    Refrescar
+                    {t('common.system.refresh')}
                   </Button>
                 </div>
               </div>
@@ -219,7 +231,7 @@ export function DropInModsSection() {
                         </Badge>
                         {!mod.disabled && (
                           <Badge className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
-                            Activo
+                            {t('common.status.active')}
                           </Badge>
                         )}
                       </div>
