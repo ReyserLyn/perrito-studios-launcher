@@ -78,7 +78,7 @@ export function DialogAccounts({ triggerClassName }: DialogAccountsProps) {
           />
         </div>
 
-        <div className="flex justify-center mt-4 pt-4 border-t border-[#2c1e4d]">
+        <div className="flex justify-center mt-4 border-[#2c1e4d]">
           <Button
             variant="outline"
             onClick={handleManageAccounts}
