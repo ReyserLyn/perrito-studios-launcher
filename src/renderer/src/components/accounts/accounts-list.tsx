@@ -1,4 +1,4 @@
-import { useCurrentUser } from '@/hooks'
+import { useCurrentUser, useTranslation } from '@/hooks'
 import { AuthAccount } from '@/types'
 import { Loader2 } from 'lucide-react'
 import { AccountCard } from './account-card'
@@ -21,13 +21,14 @@ export function AccountsList({
   showManageButton,
   className = ''
 }: AccountsListProps) {
-  const user = useCurrentUser()
+  const { t } = useTranslation()
 
+  const user = useCurrentUser()
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 size={24} className="animate-spin" />
-        <span className="ml-2">Cargando cuentas...</span>
+        <span className="ml-2">{t('settings.account.status.loading')}</span>
       </div>
     )
   }

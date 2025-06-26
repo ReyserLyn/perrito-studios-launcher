@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/hooks'
 import { useRemoveAccount, useSelectAccount } from '@/hooks/auth/use-auth'
 import { AuthAccount } from '@/types'
 import { Loader2, LogOut, User, UserCheck } from 'lucide-react'
@@ -21,6 +22,8 @@ export function AccountCard({
   onLogout,
   className = ''
 }: AccountCardProps) {
+  const { t } = useTranslation()
+
   const selectAccount = useSelectAccount()
   const removeAccount = useRemoveAccount()
 
@@ -76,7 +79,7 @@ export function AccountCard({
               <UserCheck size={12} className="text-white" fill="currentColor" />
             </div>
             <div className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-              Cuenta Activa
+              {t('common.status.active')}
             </div>
           </div>
         )}
@@ -87,7 +90,9 @@ export function AccountCard({
         className="flex-1 text-left space-y-1 cursor-pointer hover:opacity-80 transition-opacity"
         onClick={handleSelect}
       >
-        <div className="font-medium text-sm">{account.displayName || 'Usuario sin nombre'}</div>
+        <div className="font-medium text-sm">
+          {account.displayName || t('auth.account.status.not-found')}
+        </div>
 
         <div className="text-xs text-muted-foreground">UUID: {account.uuid}</div>
 
@@ -101,7 +106,7 @@ export function AccountCard({
 
           {isSelected && (
             <Badge variant="default" className="text-xs bg-green-500 hover:bg-green-600">
-              Activa
+              {t('common.status.active')}
             </Badge>
           )}
         </div>

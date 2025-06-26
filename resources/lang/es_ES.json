@@ -32,7 +32,13 @@
     "account": {
       "title": "Seleccionar Cuenta",
       "subtitle": "Elige la cuenta con la que quieres jugar.",
-      "manage": "Administrar cuentas"
+      "manage": "Administrar cuentas",
+      "status": {
+        "active": "Cuenta Activa",
+        "loading": "Cargando cuentas...",
+        "error": "Error al cargar cuentas",
+        "not-found": "Usuario sin nombre"
+      }
     }
   },
 
@@ -159,6 +165,7 @@
       "title": "Cuenta",
       "description": "Añada nuevas cuentas o administre las existentes",
       "actions": {
+        "manage": "Administrar Cuentas",
         "add-microsoft": "Añadir cuenta Microsoft",
         "add-offline": "Añadir cuenta Perrito Studios"
       },
@@ -169,6 +176,9 @@
           "add-microsoft": "Añadir cuenta Microsoft",
           "add-offline": "Añadir cuenta Perrito Studios"
         }
+      },
+      "status": {
+        "loading": "Cargando cuentas..."
       }
     },
 

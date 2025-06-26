@@ -32,7 +32,13 @@
     "account": {
       "title": "Select Account",
       "subtitle": "Choose the account you want to play with.",
-      "manage": "Manage accounts"
+      "manage": "Manage accounts",
+      "status": {
+        "active": "Active account",
+        "loading": "Loading accounts...",
+        "error": "Error loading accounts",
+        "not-found": "User without name"
+      }
     }
   },
 
@@ -159,6 +165,7 @@
       "title": "Account",
       "description": "Add new accounts or manage existing ones",
       "actions": {
+        "manage": "Manage Accounts",
         "add-microsoft": "Add Microsoft account",
         "add-offline": "Add Perrito Studios account"
       },
@@ -169,6 +176,9 @@
           "add-microsoft": "Add Microsoft account",
           "add-offline": "Add Perrito Studios account"
         }
+      },
+      "status": {
+        "loading": "Loading accounts..."
       }
     },
 
