@@ -1,7 +1,7 @@
 import { useTranslation } from '@/hooks/use-translation'
 import { Info } from 'lucide-react'
-import { AppInfoCard } from './about/app-info-card'
-import { ReleaseNotesCard } from './about/release-notes-card'
+import { AppInfoCard } from '../about/app-info-card'
+import { ReleaseNotesCard } from '../about/release-notes-card'
 import { ConfigTab, ConfigTabHeader } from './config-tab'
 
 export const ConfigAbout = () => {
