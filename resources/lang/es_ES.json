@@ -48,7 +48,9 @@
         "active": "Cuenta Activa",
         "loading": "Cargando cuentas...",
         "error": "Error al cargar cuentas",
-        "not-found": "Usuario sin nombre"
+        "not-found": "Usuario sin nombre",
+        "no-accounts": "No hay cuentas disponibles",
+        "no-selected": "No hay cuenta seleccionada"
       }
     }
   },
@@ -105,6 +107,13 @@
     "launcher": "Launcher",
     "about": "Acerca de",
     "updates": "Actualizaciones"
+  },
+
+  "screens": {
+    "status": {
+      "loading": "Cargando...",
+      "error": "Error: Pantalla desconocida"
+    }
   },
 
   "discord": {
@@ -394,7 +403,8 @@
       "no-servers": "No se encontraron servidores disponibles",
       "no-name": "Servidor sin nombre",
       "selected": "Seleccionado",
-      "main": "Principal"
+      "main": "Principal",
+      "no-selected": "No hay servidor seleccionado"
     }
   },
 
@@ -418,6 +428,24 @@
       "kb": "{{value}} KB",
       "mb": "{{value}} MB",
       "gb": "{{value}} GB"
+    }
+  },
+
+  "game": {
+    "status": {
+      "launching": "Iniciando juego...",
+      "launching-error": "Error al iniciar el juego",
+      "launching-error-message": "{{message}}",
+      "validating": "Validando...",
+      "java-scan": "Verificando Java...",
+      "java-download": "Descargando Java...",
+      "file-validation": "Validando archivos...",
+      "file-download": "Descargando archivos...",
+      "launch-prep": "Preparando..."
+    },
+    "actions": {
+      "launch": "Jugar",
+      "terminate": "Terminar"
     }
   }
 }

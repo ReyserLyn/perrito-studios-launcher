@@ -1,20 +1,51 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 import { useUpdater } from '@/hooks/config/use-updater'
 import { useTranslation } from '@/hooks/use-translation'
 import { AlertTriangle, Download, X, Zap } from 'lucide-react'
 import { useState } from 'react'
-import { UpdateDetails } from './update-details'
-import { UpdateProgress } from './update-progress'
 
 export const UpdateNotification = () => {
   const { t } = useTranslation()
 
   const { isUpdateAvailable, updateInfo, actions, updateSeverity } = useUpdater()
+
   const [dismissed, setDismissed] = useState(false)
 
   if (dismissed || !isUpdateAvailable || !updateInfo) {
     return null
+  }
+
+  const getSeverityColor = () => {
+    switch (updateSeverity) {
+      case 'major':
+        return 'destructive'
+      case 'minor':
+        return 'default'
+      case 'patch':
+        return 'secondary'
+      case 'prerelease':
+        return 'outline'
+      default:
+        return 'secondary'
+    }
+  }
+
+  const getSeverityText = () => {
+    switch (updateSeverity) {
+      case 'major':
+        return t('settings.updates.notification.major')
+      case 'minor':
+        return t('settings.updates.notification.minor')
+      case 'patch':
+        return t('settings.updates.notification.patch')
+      case 'prerelease':
+        return t('settings.updates.notification.prerelease')
+      default:
+        return t('settings.updates.notification.update')
+    }
   }
 
   const getIcon = () => {
@@ -54,8 +85,29 @@ export const UpdateNotification = () => {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <UpdateDetails updateInfo={updateInfo} updateSeverity={updateSeverity} />
-        <UpdateProgress updateInfo={updateInfo} />
+        {/* Información de la versión */}
+        <div className="flex items-center gap-2">
+          <Badge variant={getSeverityColor()}>v{updateInfo.version}</Badge>
+          <Badge variant="outline" className="text-xs">
+            {getSeverityText()}
+          </Badge>
+        </div>
+
+        {/* Nombre del release */}
+        {updateInfo.releaseName && (
+          <p className="text-sm font-medium text-gray-700">{updateInfo.releaseName}</p>
+        )}
+
+        {/* Progreso de descarga */}
+        {updateInfo.isDownloading && (
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm text-gray-600">
+              <span>{t('settings.updates.status.downloading')}</span>
+              <span>{Math.round(updateInfo.downloadProgress ?? 0)}%</span>
+            </div>
+            <Progress value={updateInfo.downloadProgress ?? 0} className="h-2" />
+          </div>
+        )}
 
         {/* Botones de acción */}
         <div className="flex gap-2">
@@ -88,6 +140,21 @@ export const UpdateNotification = () => {
             {t('settings.updates.actions.later')}
           </Button>
         </div>
+
+        {/* Notas de la versión resumidas */}
+        {updateInfo.releaseNotes && (
+          <details className="text-sm">
+            <summary className="cursor-pointer text-blue-600 hover:text-blue-800">
+              {t('settings.updates.actions.view')}
+            </summary>
+            <div className="mt-2 p-2 bg-gray-50 rounded text-gray-700 max-h-24 overflow-y-auto">
+              <pre className="whitespace-pre-wrap font-sans text-xs">
+                {updateInfo.releaseNotes.slice(0, 200)}
+                {updateInfo.releaseNotes.length > 200 && '...'}
+              </pre>
+            </div>
+          </details>
+        )}
       </CardContent>
     </Card>
   )

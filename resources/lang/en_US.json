@@ -48,7 +48,9 @@
         "active": "Active account",
         "loading": "Loading accounts...",
         "error": "Error loading accounts",
-        "not-found": "User without name"
+        "not-found": "User without name",
+        "no-accounts": "No accounts available",
+        "no-selected": "No account selected"
       }
     }
   },
@@ -105,6 +107,13 @@
     "launcher": "Launcher",
     "about": "About",
     "updates": "Updates"
+  },
+
+  "screens": {
+    "status": {
+      "loading": "Loading...",
+      "error": "Error: Unknown screen"
+    }
   },
 
   "discord": {
@@ -394,7 +403,8 @@
       "no-servers": "No servers available",
       "no-name": "Server without name",
       "selected": "Selected",
-      "main": "Main"
+      "main": "Main",
+      "no-selected": "No server selected"
     }
   },
 
@@ -418,6 +428,24 @@
       "kb": "{{value}} KB",
       "mb": "{{value}} MB",
       "gb": "{{value}} GB"
+    }
+  },
+
+  "game": {
+    "status": {
+      "launching": "Launching game...",
+      "launching-error": "Error launching game",
+      "launching-error-message": "{{message}}",
+      "validating": "Validating...",
+      "java-scan": "Checking Java...",
+      "java-download": "Downloading Java...",
+      "file-validation": "Validating files...",
+      "file-download": "Downloading files...",
+      "launch-prep": "Preparing..."
+    },
+    "actions": {
+      "launch": "Play",
+      "terminate": "Terminate"
     }
   }
 }

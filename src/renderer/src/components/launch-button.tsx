@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useGameLauncher } from '@/hooks/use-game-launcher'
+import { useTranslation } from '@/hooks/use-translation'
 import { Loader2, Play, Square } from 'lucide-react'
 
 export const LaunchButton = () => {
+  const { t } = useTranslation()
+
   const {
     launchGame,
     killGame,
@@ -15,7 +18,6 @@ export const LaunchButton = () => {
     stageDetails,
     launchError
   } = useGameLauncher()
-
   const handleClick = () => {
     if (isGameRunning) {
       killGame()
@@ -25,28 +27,28 @@ export const LaunchButton = () => {
   }
 
   const getButtonText = () => {
-    if (isGameRunning) return 'Terminar'
+    if (isGameRunning) return t('game.actions.terminate')
     if (isLaunching) {
       switch (currentStage) {
         case 'validating':
-          return 'Validando...'
+          return t('game.status.validating')
         case 'java-scan':
-          return 'Verificando Java...'
+          return t('game.status.java-scan')
         case 'java-download':
-          return 'Descargando Java...'
+          return t('game.status.java-download')
         case 'file-validation':
-          return 'Validando archivos...'
+          return t('game.status.file-validation')
         case 'file-download':
-          return 'Descargando archivos...'
+          return t('game.status.file-download')
         case 'launch-prep':
-          return 'Preparando...'
+          return t('game.status.launch-prep')
         case 'launching':
-          return 'Iniciando...'
+          return t('game.status.launching')
         default:
-          return 'Cargando...'
+          return t('game.status.loading')
       }
     }
-    return 'Play'
+    return t('game.actions.launch')
   }
 
   const getIcon = () => {
