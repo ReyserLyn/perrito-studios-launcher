@@ -27,8 +27,14 @@ export function useTranslation(): TranslationHook {
         // Obtener el idioma desde la configuración
         const configResponse = await window.api.config.getCurrentLanguage()
         if (configResponse.success && configResponse.language) {
-          setCurrentLanguage(configResponse.language)
-          window.api.language.change(configResponse.language)
+          const newLanguage = configResponse.language
+          setCurrentLanguage(newLanguage)
+
+          // Solo cambiar idioma si es diferente al actual
+          const currentLang = window.api.language.getCurrent()
+          if (currentLang !== newLanguage) {
+            window.api.language.change(newLanguage)
+          }
         } else {
           const currentLang = window.api.language.getCurrent()
           setCurrentLanguage(currentLang)
