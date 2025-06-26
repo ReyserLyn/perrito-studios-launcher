@@ -139,6 +139,19 @@
   },
 
   "settings": {
+    "hook": {
+      "success": {
+        "save": "Configuration saved successfully",
+        "reset": "Configuration reset successfully",
+        "reload": "Configuration reloaded successfully"
+      },
+      "error": {
+        "save": "Error saving configuration",
+        "reset": "Error resetting configuration",
+        "reload": "Error reloading configuration"
+      }
+    },
+
     "account": {
       "title": "Account",
       "description": "Add new accounts or manage existing ones",
@@ -261,6 +274,11 @@
       "status": {
         "loading": "Loading configuration...",
         "empty": "No server selected"
+      },
+      "error": {
+        "no-server-selected": "No server selected",
+        "no-executable-selected": "No Java executable selected",
+        "select-executable": "Error selecting Java executable"
       }
     },
 
@@ -282,6 +300,18 @@
         "description": "Location where all launcher data is stored, including games, configurations and mods.",
         "select_placeholder": "Select a directory...",
         "warning": "⚠️ Changing the data directory will move all existing files to the new location. This process may take several minutes depending on the size of the data."
+      },
+      "error": {
+        "language_change": "Error changing language",
+        "prerelease_change": "Error enabling pre-releases",
+        "directory_set": "Error changing data directory",
+        "directory_select": "Error selecting data directory"
+      },
+      "success": {
+        "language_changed": "Language changed successfully",
+        "prerelease_enabled": "Pre-releases enabled successfully",
+        "prerelease_disabled": "Pre-releases disabled successfully",
+        "directory_selected": "Data directory selected successfully"
       }
     },
 
@@ -356,7 +386,6 @@
       "downloading": "Downloading update...",
       "downloaded": "Update downloaded",
       "notAvailable": "No updates available",
-      "error": "Error checking for updates",
       "progress": "Downloading: {{percent}}%",
       "installNow": "Install now",
       "installLater": "Install later",
@@ -403,6 +432,12 @@
         "viewFull": "View full notes",
         "unknownDate": "Unknown date",
         "view": "View release notes"
+      },
+      "error": {
+        "check": "Error checking for updates",
+        "download": "Error downloading update",
+        "install": "Error installing update",
+        "unknown": "Unknown error"
       }
     }
   },

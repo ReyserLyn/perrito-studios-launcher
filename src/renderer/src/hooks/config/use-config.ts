@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
@@ -66,7 +67,7 @@ export const useSaveConfig = () => {
   const queryClient = useQueryClient()
   const { game, launcher, java, setDirty } = useConfigStore()
   const { currentServer } = useServerData()
-
+  const { t } = useTranslation()
   return useMutation({
     mutationFn: async () => {
       // Guardar configuración del juego y launcher
@@ -104,11 +105,11 @@ export const useSaveConfig = () => {
           queryKey: queryKeys.javaConfig.byServer(currentServer.rawServer.id)
         })
       }
-      toast.success('Configuración guardada exitosamente')
+      toast.success(t('settings.hook.success.save'))
     },
     onError: (error) => {
       console.error('[useSaveConfig] Error:', error)
-      toast.error('Error al guardar la configuración')
+      toast.error(t('settings.hook.error.save'))
     }
   })
 }
@@ -120,7 +121,7 @@ export const useResetConfig = () => {
   const queryClient = useQueryClient()
   const { setGameConfig, setLauncherConfig, setDirty, reset } = useConfigStore()
   const { currentServer } = useServerData()
-
+  const { t } = useTranslation()
   return useMutation({
     mutationFn: async () => {
       // Refetch la configuración desde la API
@@ -188,11 +189,11 @@ export const useResetConfig = () => {
       return result
     },
     onSuccess: () => {
-      toast.success('Configuración restablecida')
+      toast.success(t('settings.hook.success.reset'))
     },
     onError: (error) => {
       console.error('[useResetConfig] Error:', error)
-      toast.error('Error al restablecer la configuración')
+      toast.error(t('settings.hook.error.reset'))
     }
   })
 }
@@ -207,6 +208,7 @@ export const useConfigManager = () => {
   const configQuery = useConfigQuery()
   const saveConfig = useSaveConfig()
   const resetConfig = useResetConfig()
+  const { t } = useTranslation()
 
   // Sincronizar datos de la query con el store cuando cambien
   useEffect(() => {
@@ -228,12 +230,12 @@ export const useConfigManager = () => {
         setGameConfig(data.game)
         setLauncherConfig(data.launcher)
         setDirty(false)
-        toast.success('Configuración recargada')
+        toast.success(t('settings.hook.success.reload'))
       }
     },
     onError: (error) => {
       console.error('[useConfigManager] Error reloading:', error)
-      toast.error('Error al recargar la configuración')
+      toast.error(t('settings.hook.error.reload'))
     }
   })
 

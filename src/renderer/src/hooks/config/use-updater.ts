@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import type { UpdateInfo } from '@/stores/updater-store'
 import { useUpdaterStore } from '@/stores/updater-store'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -49,6 +50,8 @@ const getUpdateSeverity = (
 }
 
 export const useUpdater = (): UseUpdaterReturn => {
+  const { t } = useTranslation()
+
   const {
     currentVersion,
     isChecking,
@@ -93,7 +96,7 @@ export const useUpdater = (): UseUpdaterReturn => {
       try {
         const result = await window.api.updater.checkForUpdate()
         if (!result.success) {
-          throw new Error(result.error || 'Error verificando actualizaciones')
+          throw new Error(result.error || t('settings.updates.error.check'))
         }
         return result
       } catch (error) {
@@ -102,7 +105,7 @@ export const useUpdater = (): UseUpdaterReturn => {
       }
     },
     onError: (error) => {
-      setError(error instanceof Error ? error.message : 'Error checking for updates')
+      setError(error instanceof Error ? error.message : t('settings.updates.error.check'))
     }
   })
 
@@ -124,7 +127,7 @@ export const useUpdater = (): UseUpdaterReturn => {
       }
     },
     onError: (error) => {
-      setError(error instanceof Error ? error.message : 'Error downloading update')
+      setError(error instanceof Error ? error.message : t('settings.updates.error.download'))
     }
   })
 
@@ -133,19 +136,19 @@ export const useUpdater = (): UseUpdaterReturn => {
     mutationFn: async () => {
       const result = await window.api.updater.installNow()
       if (!result.success) {
-        throw new Error(result.error || 'Error instalando actualización')
+        throw new Error(result.error || t('settings.updates.error.install'))
       }
       return result
     },
     onError: (error) => {
-      setError(error instanceof Error ? error.message : 'Error installing update')
+      setError(error instanceof Error ? error.message : t('settings.updates.error.install'))
     }
   })
 
   // Escuchar eventos del updater
   useEffect(() => {
     const handleUpdateNotification = (event: string, data?: any) => {
-      console.log('Update event:', event, data)
+      console.log('[useUpdater] Update event:', event, data)
 
       switch (event) {
         case 'checking-for-update':
@@ -180,7 +183,7 @@ export const useUpdater = (): UseUpdaterReturn => {
           break
 
         case 'error':
-          setError(data?.message || 'Unknown error occurred')
+          setError(data?.message || t('settings.updates.error.unknown'))
           break
 
         case 'installing-update':
@@ -194,7 +197,7 @@ export const useUpdater = (): UseUpdaterReturn => {
 
     // Inicializar el updater
     window.api.updater?.initAutoUpdater?.().catch((err) => {
-      console.error('Failed to initialize auto updater:', err)
+      console.error('[useUpdater] Failed to initialize auto updater:', err)
     })
 
     return () => {
@@ -207,7 +210,8 @@ export const useUpdater = (): UseUpdaterReturn => {
     setDownloading,
     setUpdateReady,
     setDownloadProgress,
-    setError
+    setError,
+    t
   ])
 
   // Estado derivado

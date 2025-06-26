@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
@@ -20,11 +21,12 @@ export interface JavaConfigData {
  * Hook para cargar la configuración de Java desde la API
  */
 export const useJavaConfigQuery = (serverId?: string) => {
+  const { t } = useTranslation()
   return useQuery({
     queryKey: queryKeys.javaConfig.byServer(serverId || ''),
     queryFn: async (): Promise<JavaConfigData> => {
       if (!serverId) {
-        throw new Error('No hay servidor seleccionado')
+        throw new Error(t('settings.java.error.no-server-selected'))
       }
 
       const [minRAMRes, maxRAMRes, executableRes, jvmOptionsRes] = await Promise.all([
@@ -54,7 +56,7 @@ export const useJavaConfigQuery = (serverId?: string) => {
  */
 export const useSaveJavaConfig = () => {
   const queryClient = useQueryClient()
-
+  const { t } = useTranslation()
   return useMutation({
     mutationFn: async ({ serverId, config }: { serverId: string; config: JavaConfigData }) => {
       const jvmOptionsArray = config.jvmOptions.split(' ').filter(Boolean)
@@ -73,11 +75,11 @@ export const useSaveJavaConfig = () => {
       // Invalidar las queries relacionadas
       queryClient.invalidateQueries({ queryKey: queryKeys.javaConfig.byServer(serverId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.config.all })
-      toast.success('Configuración de Java guardada exitosamente')
+      toast.success(t('settings.hook.success.save'))
     },
     onError: (error) => {
       console.error('[useSaveJavaConfig] Error:', error)
-      toast.error('Error al guardar la configuración de Java')
+      toast.error(t('settings.hook.error.save'))
     }
   })
 }
@@ -86,17 +88,18 @@ export const useSaveJavaConfig = () => {
  * Hook para seleccionar ejecutable de Java
  */
 export const useSelectJavaExecutable = () => {
+  const { t } = useTranslation()
   return useMutation({
     mutationFn: async () => {
       const result = await window.api.system.selectJavaExecutable()
       if (!result.success || !result.path) {
-        throw new Error('No se seleccionó ningún ejecutable de Java')
+        throw new Error(t('settings.java.error.no-executable-selected'))
       }
       return result.path
     },
     onError: (error) => {
       console.error('[useSelectJavaExecutable] Error:', error)
-      toast.error('Error al seleccionar el ejecutable de Java')
+      toast.error(t('settings.java.error.select-executable'))
     }
   })
 }

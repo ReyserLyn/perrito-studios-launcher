@@ -90,10 +90,10 @@ export const useLauncherConfig = (): LauncherConfigReturn => {
         queryClient.setQueryData(queryKeys.launcherConfig.language(), context.previousLanguage)
         changeLanguage(context.previousLanguage as Language)
       }
-      toast.error(t('launcher.errors.language_change', { error: error.message }))
+      toast.error(t('settings.launcher.error.language_change', { error: error.message }))
     },
     onSuccess: () => {
-      toast.success(t('launcher.success.language_changed'))
+      toast.success(t('settings.launcher.success.language_changed'))
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.launcherConfig.language() })
@@ -121,14 +121,18 @@ export const useLauncherConfig = (): LauncherConfigReturn => {
       if (context?.previousValue !== undefined) {
         queryClient.setQueryData(queryKeys.launcherConfig.prerelease(), context.previousValue)
       }
-      toast.error(t('launcher.errors.prerelease_change', { error: error.message }))
+      toast.error(t('settings.launcher.error.prerelease_change', { error: error.message }))
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.launcherConfig.prerelease() })
     },
     onSuccess: (enabled: boolean) => {
       toast.success(
-        t(enabled ? 'launcher.success.prerelease_enabled' : 'launcher.success.prerelease_disabled')
+        t(
+          enabled
+            ? 'settings.launcher.success.prerelease_enabled'
+            : 'settings.launcher.success.prerelease_disabled'
+        )
       )
     }
   })
@@ -156,10 +160,10 @@ export const useLauncherConfig = (): LauncherConfigReturn => {
           context.previousDirectory
         )
       }
-      toast.error(t('launcher.errors.directory_set', { error: error.message }))
+      toast.error(t('settings.launcher.error.directory_set', { error: error.message }))
     },
     onSuccess: () => {
-      toast.success(t('launcher.success.directory_selected'))
+      toast.success(t('settings.launcher.success.directory_selected'))
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.launcherConfig.dataDirectory() })
@@ -175,8 +179,8 @@ export const useLauncherConfig = (): LauncherConfigReturn => {
         dataDirectoryMutation.mutate(result.path)
       }
     } catch (error) {
-      console.error('Error selecting directory:', error)
-      toast.error(t('launcher.errors.directory_select'))
+      console.error('[useLauncherConfig] Error selecting directory:', error)
+      toast.error(t('settings.launcher.error.directory_select'))
     } finally {
       setIsSelectingDirectory(false)
     }
@@ -212,7 +216,7 @@ export const useLauncherConfig = (): LauncherConfigReturn => {
   useMemo(() => {
     const hasErrors = languageError || prereleaseError || dataDirectoryError
     if (hasErrors) {
-      console.error('Launcher config errors:', errors)
+      console.error('[useLauncherConfig] Errors:', errors)
     }
   }, [errors, languageError, prereleaseError, dataDirectoryError])
 

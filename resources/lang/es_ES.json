@@ -139,6 +139,19 @@
   },
 
   "settings": {
+    "hook": {
+      "success": {
+        "save": "Configuración guardada exitosamente",
+        "reset": "Configuración restablecida exitosamente",
+        "reload": "Configuración recargada exitosamente"
+      },
+      "error": {
+        "save": "Error al guardar la configuración",
+        "reset": "Error al restablecer la configuración",
+        "reload": "Error al recargar la configuración"
+      }
+    },
+
     "account": {
       "title": "Cuenta",
       "description": "Añada nuevas cuentas o administre las existentes",
@@ -261,6 +274,11 @@
       "status": {
         "loading": "Cargando configuración...",
         "empty": "No hay servidor seleccionado"
+      },
+      "error": {
+        "no-server-selected": "No hay servidor seleccionado",
+        "no-executable-selected": "No se seleccionó ningún ejecutable de Java",
+        "select-executable": "Error al seleccionar el ejecutable de Java"
       }
     },
 
@@ -282,6 +300,18 @@
         "description": "Ubicación donde se almacenan todos los datos del launcher, incluidos juegos, configuraciones y mods.",
         "select_placeholder": "Selecciona un directorio...",
         "warning": "⚠️ Cambiar el directorio de datos moverá todos los archivos existentes a la nueva ubicación. Este proceso puede tardar varios minutos dependiendo del tamaño de los datos."
+      },
+      "error": {
+        "language_change": "Error al cambiar el idioma",
+        "prerelease_change": "Error al activar las pre-releases",
+        "directory_set": "Error al cambiar el directorio de datos",
+        "directory_select": "Error al seleccionar el directorio de datos"
+      },
+      "success": {
+        "language_changed": "Idioma cambiado exitosamente",
+        "prerelease_enabled": "Pre-releases habilitadas exitosamente",
+        "prerelease_disabled": "Pre-releases deshabilitadas exitosamente",
+        "directory_selected": "Directorio de datos seleccionado exitosamente"
       }
     },
 
@@ -356,7 +386,6 @@
       "downloading": "Descargando actualización...",
       "downloaded": "Actualización descargada",
       "notAvailable": "No hay actualizaciones disponibles",
-      "error": "Error al buscar actualizaciones",
       "progress": "Descargando: {{percent}}%",
       "installNow": "Instalar ahora",
       "installLater": "Instalar después",
@@ -403,7 +432,15 @@
         "viewFull": "Ver notas completas",
         "unknownDate": "Fecha desconocida",
         "view": "Ver Notas de Versión"
-      }
+      },
+
+      "error": {
+        "check": "Error al buscar actualizaciones",
+        "download": "Error al descargar la actualización",
+        "install": "Error al instalar la actualización",
+        "unknown": "Error desconocido"
+      },
+      "success": {}
     }
   },
 
