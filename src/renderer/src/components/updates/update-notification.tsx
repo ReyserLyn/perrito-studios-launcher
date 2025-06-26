@@ -36,15 +36,15 @@ export const UpdateNotification = () => {
   const getSeverityText = () => {
     switch (updateSeverity) {
       case 'major':
-        return t('settings.updates.notification.major')
+        return t('settings.updates.types.major')
       case 'minor':
-        return t('settings.updates.notification.minor')
+        return t('settings.updates.types.minor')
       case 'patch':
-        return t('settings.updates.notification.patch')
+        return t('settings.updates.types.patch')
       case 'prerelease':
-        return t('settings.updates.notification.prerelease')
+        return t('settings.updates.types.prerelease')
       default:
-        return t('settings.updates.notification.update')
+        return t('settings.updates.notification.title')
     }
   }
 
@@ -145,7 +145,7 @@ export const UpdateNotification = () => {
         {updateInfo.releaseNotes && (
           <details className="text-sm">
             <summary className="cursor-pointer text-blue-600 hover:text-blue-800">
-              {t('settings.updates.actions.view')}
+              {t('settings.updates.releaseNotes.view')}
             </summary>
             <div className="mt-2 p-2 bg-gray-50 rounded text-gray-700 max-h-24 overflow-y-auto">
               <pre className="whitespace-pre-wrap font-sans text-xs">

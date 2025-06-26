@@ -40,8 +40,8 @@ export const UpdateStatus = () => {
 
   return (
     <ConfigCard
-      title={t('settings.updates.status.title')}
-      description={t('settings.updates.status.description')}
+      title={t('settings.updates.title')}
+      description={t('settings.updates.description')}
       icon={RefreshCw}
     >
       <div className="space-y-4">

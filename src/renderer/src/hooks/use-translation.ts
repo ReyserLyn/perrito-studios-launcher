@@ -1,3 +1,4 @@
+import type { TranslationKey, TranslationParams } from '@/types/translation-keys'
 import { useEffect, useState } from 'react'
 
 interface PluralOptions {
@@ -8,8 +9,8 @@ interface PluralOptions {
 }
 
 interface TranslationHook {
-  t: (key: string, placeholders?: Record<string, string | number>) => string
-  plural: (key: string, options: PluralOptions) => string
+  t: (key: TranslationKey, placeholders?: TranslationParams) => string
+  plural: (key: TranslationKey, options: PluralOptions) => string
   formatDate: (date: Date, format?: 'short' | 'long') => string
   formatNumber: (num: number) => string
   currentLanguage: string
@@ -72,12 +73,12 @@ export function useTranslation(): TranslationHook {
     }
   }
 
-  const t = (key: string, placeholders?: Record<string, string | number>) => {
+  const t = (key: TranslationKey, placeholders?: TranslationParams) => {
     return window.api.language.query(key, placeholders)
   }
 
   const plural = (
-    key: string,
+    key: TranslationKey,
     options: { count: number; zero?: string; one?: string; other?: string }
   ) => {
     return window.api.language.plural(key, options)

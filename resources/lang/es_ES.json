@@ -458,7 +458,8 @@
       "java-download": "Descargando Java...",
       "file-validation": "Validando archivos...",
       "file-download": "Descargando archivos...",
-      "launch-prep": "Preparando..."
+      "launch-prep": "Preparando...",
+      "loading": "Cargando..."
     },
     "actions": {
       "launch": "Jugar",

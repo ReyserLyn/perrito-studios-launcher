@@ -114,7 +114,7 @@ export const useAddMojangAccount = () => {
 
       const result = await window.api.auth.addMojangAccount(username)
       if (!result.success) {
-        throw new Error(result.error || t('auth.error.add-mojang-account'))
+        throw new Error(result.error || t('auth.offline.error.add-mojang-account'))
       }
       return result
     },
