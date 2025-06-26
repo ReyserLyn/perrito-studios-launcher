@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Label } from '../ui/label'
 import { Slider } from '../ui/slider'
@@ -23,18 +24,20 @@ export const MemoryConfig = ({
   onMinRAMChange,
   onMaxRAMChange
 }: MemoryConfigProps) => {
-  const hasEnoughMemory = freeMemory >= MIN_RECOMMENDED_RAM
-  const isMemoryLow = freeMemory < maxRAM
+  const { t } = useTranslation()
 
   return (
     <Card className="border-[#2c1e4d] rounded-lg bg-[#151126]">
       <CardHeader>
-        <CardTitle>Memoria</CardTitle>
+        <CardTitle>{t('settings.java.memory.title')}</CardTitle>
         <CardDescription>
-          Configura la memoria asignada a Minecraft
+          {t('settings.java.memory.description')}
           {!isLoadingMemory && (
             <div className="mt-1 text-sm">
-              Memoria del Sistema: {totalMemory}GB (Disponible: {freeMemory}GB)
+              {t('settings.java.memory.system', {
+                totalMemory: totalMemory,
+                freeMemory: freeMemory
+              })}
             </div>
           )}
         </CardDescription>
@@ -43,7 +46,7 @@ export const MemoryConfig = ({
         {/* Maximum RAM */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label>Memoria Máxima (RAM)</Label>
+            <Label>{t('settings.java.memory.max')}</Label>
             <span className="text-sm text-muted-foreground">{maxRAM}GB</span>
           </div>
           <Slider
@@ -59,7 +62,7 @@ export const MemoryConfig = ({
         {/* Minimum RAM */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label>Memoria Mínima (RAM)</Label>
+            <Label>{t('settings.java.memory.min')}</Label>
             <span className="text-sm text-muted-foreground">{minRAM}GB</span>
           </div>
           <Slider
@@ -75,17 +78,10 @@ export const MemoryConfig = ({
         {/* Advertencias básicas */}
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">
-            La memoria mínima recomendada es {MIN_RECOMMENDED_RAM}GB para un rendimiento óptimo.
+            {t('settings.java.memory.info', {
+              recommended: MIN_RECOMMENDED_RAM
+            })}
           </p>
-          {!hasEnoughMemory && (
-            <p className="text-sm text-yellow-500">
-              ¡Advertencia: La memoria disponible ({freeMemory}GB) es menor que la recomendada (
-              {MIN_RECOMMENDED_RAM}GB)!
-              {isMemoryLow && (
-                <span> Considera cerrar otras aplicaciones antes de iniciar el juego.</span>
-              )}
-            </p>
-          )}
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react'
+import { IconType } from 'react-icons'
 import { TabsContent } from '../ui/tabs'
 
 interface ConfigTabProps {
@@ -9,7 +10,7 @@ interface ConfigTabProps {
 interface ConfigTabHeaderProps {
   title: string
   description: string
-  Icon: LucideIcon
+  Icon: LucideIcon | IconType
 }
 
 export function ConfigTab({ value, children }: ConfigTabProps) {

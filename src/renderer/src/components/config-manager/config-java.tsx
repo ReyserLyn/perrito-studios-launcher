@@ -1,7 +1,7 @@
 import { useTranslation } from '@/hooks'
 import { formatRAMValue, parseRAMValue } from '@/utils/ram-utils'
-import { Code } from 'lucide-react'
 import { useCallback } from 'react'
+import { FaJava } from 'react-icons/fa6'
 import { useJavaConfigManager } from '../../hooks/config/use-java-config'
 import { useServerData } from '../../hooks/use-servers'
 import { useSystemMemory } from '../../hooks/use-system-memory'
@@ -89,7 +89,7 @@ export const ConfigJava = () => {
         <ConfigTabHeader
           title={t('settings.java.title')}
           description={t('settings.java.description')}
-          Icon={Code}
+          Icon={FaJava}
         />
 
         {/* Selector de Servidor */}

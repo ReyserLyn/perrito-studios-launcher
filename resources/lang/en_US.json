@@ -262,7 +262,7 @@
       "memory": {
         "title": "Memory",
         "description": "Configure memory allocated to Minecraft",
-        "system": "System Memory: {{system}} (Available: {{available}})",
+        "system": "System Memory: {{totalMemory}}GB (Available: {{freeMemory}}GB)",
         "max": "Maximum Memory (RAM)",
         "min": "Minimum Memory (RAM)",
         "info": "Recommended minimum memory is {{recommended}} for optimal performance."
@@ -270,8 +270,8 @@
       "executable": {
         "title": "Java Executable",
         "description": "Select the Java version to use",
-        "selected": "Selected: {{name}} ({{vendor}})",
-        "required": "Java executable is validated before game launch. Java 21 x64 is required.",
+        "selected": "Selected:",
+        "required": "Java executable is validated before game launch.",
         "info": "The path must end with bin\\javaw.exe"
       },
       "jvm": {
@@ -279,6 +279,10 @@
         "description": "Configure additional options for the JVM",
         "info": "Options that will be provided to the JVM at runtime. -Xms and -Xmx should not be included.",
         "recommended": "Recommended options: "
+      },
+      "status": {
+        "loading": "Loading configuration...",
+        "empty": "No server selected"
       }
     },
 
