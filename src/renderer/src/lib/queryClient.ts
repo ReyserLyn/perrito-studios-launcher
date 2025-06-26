@@ -89,5 +89,13 @@ export const queryKeys = {
   system: {
     all: ['system'] as const,
     memory: () => [...queryKeys.system.all, 'memory'] as const
+  },
+
+  // Launcher config
+  launcherConfig: {
+    all: ['launcher-config'] as const,
+    language: () => [...queryKeys.launcherConfig.all, 'language'] as const,
+    prerelease: () => [...queryKeys.launcherConfig.all, 'prerelease'] as const,
+    dataDirectory: () => [...queryKeys.launcherConfig.all, 'data-directory'] as const
   }
 } as const

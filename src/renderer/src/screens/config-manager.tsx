@@ -1,5 +1,6 @@
 import { ConfigAccount } from '@/components/config-manager/config-account'
 import { ConfigJava } from '@/components/config-manager/config-java'
+import { ConfigLauncher } from '@/components/config-manager/config-launcher'
 import { ConfigMinecraft } from '@/components/config-manager/config-minecraft'
 import ConfigMods from '@/components/config-manager/config-mods'
 import { Button } from '@/components/ui/button'
@@ -121,6 +122,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
             <ConfigMinecraft />
             <ConfigMods />
             <ConfigJava />
+            <ConfigLauncher />
           </Tabs>
         </div>
       </div>
