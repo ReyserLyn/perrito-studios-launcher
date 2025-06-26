@@ -21,9 +21,9 @@ files:
   - '!{dist,.gitignore,.vscode,docs,.nvmrc}'
 
 extraResources:
-  - from: "resources/lang"
-    to: "lang"
-    filter: "**/*"
+  - from: 'resources/lang'
+    to: 'lang'
+    filter: '**/*'
 
 asarUnpack:
   - resources/**
