@@ -1,3 +1,4 @@
+import logoImage from '@/assets/images/logos/Rec_Color_LBlanco.webp'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/hooks'
@@ -23,7 +24,7 @@ export const AppInfoCard = () => {
         {/* Version Info */}
         <div className="flex items-center space-x-3">
           <img
-            src="/src/assets/images/logos/Rec_Color_LBlanco.webp"
+            src={logoImage}
             alt="Perrito Studios Launcher"
             className="w-40 rounded-lg object-contain p-1"
           />

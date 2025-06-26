@@ -503,7 +503,7 @@
       "change": "Change server"
     },
     "status": {
-      "online": "{{count}} players connected",
+      "online": "Players connected",
       "offline": "Server not available",
       "loading": "Loading servers...",
       "no-servers": "No servers available",

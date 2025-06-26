@@ -33,7 +33,7 @@ export const SocialButtons = () => {
           variant="ghost"
           size="icon"
           title="Facebook"
-          onClick={() => openSocialLink('https://x.com/PerritoStudios')}
+          onClick={() => openSocialLink('https://facebook.com/PerritoStudios')}
           className="bg-[#1d1332] border-[#2c1e4d] border-1 p-3 h-11 w-11"
         >
           <FaFacebook size={5} />

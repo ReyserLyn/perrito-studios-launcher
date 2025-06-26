@@ -12,44 +12,6 @@ import { useNavigationStore } from '@/stores/use-navigation-store'
 import { ArrowLeft, Bot, Download, Gamepad, Info, Settings, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-const tabs = [
-  {
-    name: 'Cuenta',
-    value: 'account',
-    icon: User
-  },
-  {
-    name: 'Minecraft',
-    value: 'minecraft',
-    icon: Gamepad
-  },
-  {
-    name: 'Mods',
-    value: 'mods',
-    icon: Bot
-  },
-  {
-    name: 'Java',
-    value: 'java',
-    icon: Settings
-  },
-  {
-    name: 'Launcher',
-    value: 'launcher',
-    icon: Settings
-  },
-  {
-    name: 'Acerca de',
-    value: 'about',
-    icon: Info
-  },
-  {
-    name: 'Actualizaciones',
-    value: 'updates',
-    icon: Download
-  }
-]
-
 interface ConfigManagerProps {
   tab?: string
 }
@@ -59,6 +21,44 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
   const [activeTab, setActiveTab] = useState(tab)
   const { isLoading, isDirty, save, reset } = useConfigManager()
   const { t } = useTranslation()
+
+  const tabs = [
+    {
+      name: t('settings.account.title'),
+      value: 'account',
+      icon: User
+    },
+    {
+      name: t('settings.minecraft.title'),
+      value: 'minecraft',
+      icon: Gamepad
+    },
+    {
+      name: t('settings.mods.title'),
+      value: 'mods',
+      icon: Bot
+    },
+    {
+      name: t('settings.java.title'),
+      value: 'java',
+      icon: Settings
+    },
+    {
+      name: t('settings.launcher.title'),
+      value: 'launcher',
+      icon: Settings
+    },
+    {
+      name: t('settings.about.title'),
+      value: 'about',
+      icon: Info
+    },
+    {
+      name: t('settings.updates.title'),
+      value: 'updates',
+      icon: Download
+    }
+  ]
 
   useEffect(() => {
     setActiveTab(tab)
