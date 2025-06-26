@@ -1,4 +1,4 @@
-import { LoginSelection, MicrosoftLoginLoading, MojangLoginForm } from '@/components/auth'
+import { LoginSelection, MicrosoftLoginLoading, OfflineLoginForm } from '@/components/auth'
 import { useAddMicrosoftAccount } from '@/hooks/auth/use-auth'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -58,7 +58,7 @@ export function Login() {
   }
 
   if (mode === 'mojang') {
-    return <MojangLoginForm onBack={handleBackToSelection} />
+    return <OfflineLoginForm onBack={handleBackToSelection} />
   }
 
   // Selection mode

@@ -14,16 +14,27 @@
       "subtitle": "Para continuar, debes iniciar sesión con una cuenta",
       "microsoft": "Iniciar sesión con Microsoft",
       "offline": "Iniciar sesión sin conexión",
-      "footer": "Es obligatorio tener una cuenta para usar el launcher"
+      "footer": "Es obligatorio tener una cuenta para usar el launcher",
+      "view-accounts": "Ver cuentas disponibles"
     },
     "offline": {
-      "title": "Iniciar sesión en Perrito Launcher",
-      "subtitle": "Ingresa tu nombre de usuario",
+      "add-account": {
+        "title": "Agregar Cuenta Perrito Studios",
+        "description": "Crea una nueva cuenta offline para Perrito Studios"
+      },
+      "login": {
+        "title": "Iniciar sesión en Perrito Launcher",
+        "subtitle": "Ingresa tu nombre de usuario"
+      },
       "form": {
         "label": "Nombre de usuario",
-        "placeholder": "Ingresa tu nombre de usuario"
+        "placeholder": "Ingresa tu nombre de usuario",
+        "login": "Iniciar sesión"
       },
-      "login": "Iniciar sesión"
+      "status": {
+        "loading": "Iniciando sesión...",
+        "error": "Por favor ingresa un nombre de usuario"
+      }
     },
     "microsoft": {
       "title": "Iniciando sesión con Microsoft...",

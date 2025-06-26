@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks'
 import { Loader2 } from 'lucide-react'
 import logoImage from '../../assets/images/logos/Rec_Color_LBlanco.webp'
 
@@ -8,10 +9,15 @@ interface MicrosoftLoginLoadingProps {
 }
 
 export function MicrosoftLoginLoading({
-  title = 'Iniciando sesión con Microsoft...',
-  description = 'Se abrirá una ventana para iniciar sesión. Una vez que completes el proceso, esta ventana se cerrará automáticamente.',
+  title,
+  description,
   className = ''
 }: MicrosoftLoginLoadingProps) {
+  const { t } = useTranslation()
+
+  const finalTitle = title || t('auth.microsoft.title')
+  const finalDescription = description || t('auth.microsoft.subtitle')
+
   return (
     <div className={`fixed inset-0 bg-black/90 z-50 flex items-center justify-center ${className}`}>
       <div className="text-center">
@@ -22,9 +28,9 @@ export function MicrosoftLoginLoading({
         />
         <div className="flex items-center justify-center space-x-3">
           <Loader2 className="w-6 h-6 animate-spin text-white" />
-          <span className="text-white text-lg font-acherus">{title}</span>
+          <span className="text-white text-lg font-acherus">{finalTitle}</span>
         </div>
-        <p className="text-gray-400 mt-3 text-sm">{description}</p>
+        <p className="text-gray-400 mt-3 text-sm">{finalDescription}</p>
       </div>
     </div>
   )

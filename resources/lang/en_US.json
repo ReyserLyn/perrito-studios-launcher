@@ -14,16 +14,27 @@
       "subtitle": "To continue, you must sign in with an account",
       "microsoft": "Sign in with Microsoft",
       "offline": "Sign in offline",
-      "footer": "Having an account is required to use the launcher"
+      "footer": "Having an account is required to use the launcher",
+      "view-accounts": "View available accounts"
     },
     "offline": {
-      "title": "Sign in to Perrito Launcher",
-      "subtitle": "Enter your username",
+      "add-account": {
+        "title": "Add Perrito Studios account",
+        "description": "Create a new offline account for Perrito Studios"
+      },
+      "login": {
+        "title": "Sign in to Perrito Launcher",
+        "subtitle": "Enter your username"
+      },
       "form": {
         "label": "Username",
-        "placeholder": "Enter your username"
+        "placeholder": "Enter your username",
+        "login": "Sign in"
       },
-      "login": "Sign in"
+      "status": {
+        "loading": "Signing in...",
+        "error": "Please enter a username"
+      }
     },
     "microsoft": {
       "title": "Signing in with Microsoft...",

@@ -1,7 +1,7 @@
 import { AccountsList } from '@/components/accounts'
-import { MicrosoftLoginLoading, MojangLoginForm } from '@/components/auth'
+import { MicrosoftLoginLoading, OfflineLoginForm } from '@/components/auth'
 import { Button } from '@/components/ui/button'
-import { useAddMicrosoftAccount, useAuthData } from '@/hooks'
+import { useAddMicrosoftAccount, useAuthData, useTranslation } from '@/hooks'
 import { Cross, Square, SquareUser, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -14,6 +14,8 @@ interface ConfigAccountProps {
 type ConfigView = 'main' | 'add-perrito-account' | 'microsoft-loading'
 
 export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
+  const { t } = useTranslation()
+
   const [currentView, setCurrentView] = useState<ConfigView>('main')
 
   const { isLoading, microsoftAccounts, mojangAccounts } = useAuthData()
@@ -74,12 +76,12 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
 
   if (currentView === 'add-perrito-account') {
     return (
-      <MojangLoginForm
+      <OfflineLoginForm
         onBack={handleBackToConfig}
         onSuccess={handleAccountSuccess}
-        title="Agregar Cuenta Perrito Studios"
-        description="Crea una nueva cuenta offline para Perrito Studios"
-        placeholder="Nombre de usuario"
+        title={t('auth.offline.add-account.title')}
+        description={t('auth.offline.add-account.description')}
+        placeholder={t('auth.offline.form.placeholder')}
       />
     )
   }
@@ -92,8 +94,8 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
     <ConfigTab value="account">
       <div className="flex flex-col h-full w-full gap-4">
         <ConfigTabHeader
-          title="Cuenta"
-          description="Añada nuevas cuentas o administre las existentes"
+          title={t('settings.account.title')}
+          description={t('settings.account.description')}
           Icon={User}
         />
 
@@ -106,7 +108,7 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
             </div>
             <Button variant="ghost" className="gap-2" onClick={handleAddMicrosoftAccount}>
               <Cross size={15} />
-              <p>Añadir cuenta Microsoft</p>
+              <p>{t('settings.account.actions.add-microsoft')}</p>
             </Button>
           </div>
 
@@ -127,7 +129,7 @@ export function ConfigAccount({ setActiveTab }: ConfigAccountProps) {
             </div>
             <Button variant="ghost" className="gap-2" onClick={handleAddPerritoAccount}>
               <Cross size={15} />
-              <p>Añadir cuenta Perrito Studios</p>
+              <p>{t('settings.account.actions.add-offline')}</p>
             </Button>
           </div>
           <AccountsList

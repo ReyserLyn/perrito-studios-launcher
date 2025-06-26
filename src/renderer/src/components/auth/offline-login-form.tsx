@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useTranslation } from '@/hooks'
 import { useAddMojangAccount } from '@/hooks/auth/use-auth'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useState } from 'react'
@@ -9,7 +10,7 @@ import { toast } from 'sonner'
 import formImage from '../../assets/images/fondos/noche-steve-dog.webp'
 import logoImage from '../../assets/images/logos/Cua_Color_LBlanco.webp'
 
-interface MojangLoginFormProps {
+interface OfflineLoginFormProps {
   onBack?: () => void
   onSuccess?: () => void
   onError?: (error: Error) => void
@@ -20,16 +21,22 @@ interface MojangLoginFormProps {
   className?: string
 }
 
-export function MojangLoginForm({
+export function OfflineLoginForm({
   onBack,
   onSuccess,
   onError,
   showLogo = true,
-  title = 'Perrito Launcher Login',
-  description = 'Ingresa tu nombre de usuario offline',
-  placeholder = 'Ingresa tu username',
+  title,
+  description,
+  placeholder,
   className = ''
-}: MojangLoginFormProps) {
+}: OfflineLoginFormProps) {
+  const { t } = useTranslation()
+
+  const finalTitle = title || t('auth.offline.login.title')
+  const finalDescription = description || t('auth.offline.login.subtitle')
+  const finalPlaceholder = placeholder || t('auth.offline.login.form.placeholder')
+
   const [username, setUsername] = useState('')
   const addMojangAccount = useAddMojangAccount()
 
@@ -37,17 +44,15 @@ export function MojangLoginForm({
     e.preventDefault()
 
     if (!username.trim()) {
-      toast.error('Por favor ingresa un nombre de usuario')
+      toast.error(t('auth.offline.status.error'))
       return
     }
 
     addMojangAccount.mutate(username.trim(), {
       onSuccess: () => {
-        console.log('[MojangLoginForm] Login successful')
         onSuccess?.()
       },
       onError: (error) => {
-        console.error('[MojangLoginForm] Login error:', error)
         onError?.(error)
       }
     })
@@ -76,21 +81,21 @@ export function MojangLoginForm({
       <div className={`${showLogo ? 'flex-1' : 'w-full'} flex items-center justify-center `}>
         <Card className="w-full max-w-md mx-8 bg-gray-950/80 ">
           <CardHeader className="text-center pb-3">
-            <CardTitle className="text-2xl font-acherus text-white">{title}</CardTitle>
-            <p className="text-gray-400 text-sm">{description}</p>
+            <CardTitle className="text-2xl font-acherus text-white">{finalTitle}</CardTitle>
+            <p className="text-gray-400 text-sm">{finalDescription}</p>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="username" className="text-gray-300">
-                  Nombre de Usuario
+                  {t('auth.offline.form.label')}
                 </Label>
                 <Input
                   id="username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder={placeholder}
+                  placeholder={finalPlaceholder}
                   className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
                   disabled={addMojangAccount.isPending}
                   autoFocus
@@ -107,7 +112,7 @@ export function MojangLoginForm({
                     disabled={addMojangAccount.isPending}
                   >
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    Volver
+                    {t('common.actions.back')}
                   </Button>
                 )}
 
@@ -119,10 +124,10 @@ export function MojangLoginForm({
                   {addMojangAccount.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Cargando...
+                      {t('auth.offline.status.loading')}
                     </>
                   ) : (
-                    'Iniciar Sesión'
+                    t('auth.offline.form.login')
                   )}
                 </Button>
               </div>

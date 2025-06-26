@@ -12,8 +12,8 @@ export const ConfigAbout = () => {
       <div className="flex flex-col h-full w-full gap-6">
         <ConfigTabHeader
           Icon={Info}
-          title={t('settings.tabs.about.title')}
-          description={t('settings.tabs.about.description')}
+          title={t('settings.about.title')}
+          description={t('settings.about.description')}
         />
 
         <div className="space-y-6 flex-1 overflow-y-auto">
