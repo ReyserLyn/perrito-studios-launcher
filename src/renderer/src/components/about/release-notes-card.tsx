@@ -41,7 +41,7 @@ export const ReleaseNotesCard = () => {
             className="flex items-center gap-2 text-sm w-full"
           >
             <FaGithub size={14} />
-            {t('settings.about.changelog.actions.view-release')}
+            {t('settings.about.changelog.release.actions.view-release')}
           </Button>
         </div>
       )

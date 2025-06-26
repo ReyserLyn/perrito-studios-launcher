@@ -35,7 +35,7 @@ export function OfflineLoginForm({
 
   const finalTitle = title || t('auth.offline.login.title')
   const finalDescription = description || t('auth.offline.login.subtitle')
-  const finalPlaceholder = placeholder || t('auth.offline.login.form.placeholder')
+  const finalPlaceholder = placeholder || t('auth.offline.form.placeholder')
 
   const [username, setUsername] = useState('')
   const addMojangAccount = useAddMojangAccount()

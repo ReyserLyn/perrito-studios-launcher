@@ -1,2 +1,2 @@
 export { updaterAPI } from './api'
-export type { default as UpdaterAPI } from './types'
+export type { UpdaterAPI } from './types'
