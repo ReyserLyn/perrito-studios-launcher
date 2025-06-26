@@ -13,6 +13,7 @@ export interface SystemApi {
     fileBuffer: ArrayBuffer
   ) => Promise<{ success: boolean; path?: string; error?: string }>
   selectJavaExecutable: () => Promise<{ success: boolean; path?: string; error?: string }>
+  selectFolder: () => Promise<{ success: boolean; path?: string; error?: string }>
   getSystemMemory: () => Promise<{ total: number; free: number }>
 
   // Language

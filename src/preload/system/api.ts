@@ -47,6 +47,13 @@ export const systemAPI: SystemApi = {
     ipcRenderer.invoke(SHELL_OPCODE.SELECT_JAVA_EXECUTABLE),
 
   /**
+   * Abre un diálogo para seleccionar una carpeta
+   * @returns Resultado con la ruta de la carpeta seleccionada
+   */
+  selectFolder: (): Promise<{ success: boolean; path?: string; error?: string }> =>
+    ipcRenderer.invoke(SHELL_OPCODE.SELECT_FOLDER),
+
+  /**
    * Escucha el evento de finalización del índice de distribución
    * @param callback Función a ejecutar cuando se complete el índice
    */
