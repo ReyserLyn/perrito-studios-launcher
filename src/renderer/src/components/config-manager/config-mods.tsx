@@ -1,5 +1,5 @@
 import { Package } from 'lucide-react'
-import { useServerData } from '../../hooks'
+import { useServerData, useTranslation } from '../../hooks'
 import { useModsData, useToggleServerMod } from '../../hooks/mods'
 import { DialogServers } from '../dialog-servers'
 import { ModsLoading, ModsSection } from '../mods'
@@ -8,6 +8,8 @@ import { ServerTriggerConfigButton } from '../servers'
 import { ConfigTab, ConfigTabHeader } from './config-tab'
 
 export default function ConfigMods() {
+  const { t } = useTranslation()
+
   const { currentServer } = useServerData()
   const modsQuery = useModsData()
 
@@ -15,6 +17,12 @@ export default function ConfigMods() {
   const optionalMods = modsQuery.data?.optionalMods || []
   const isLoading = modsQuery.isLoading
   const toggleServerMod = useToggleServerMod()
+
+  const description = currentServer
+    ? t('settings.mods.description', {
+        serverName: currentServer?.rawServer.name
+      })
+    : t('settings.mods.description-default')
 
   const handleToggleServerMod = (modId: string, enabled: boolean) => {
     toggleServerMod.mutate({ modId, enabled })
@@ -28,8 +36,8 @@ export default function ConfigMods() {
     <ConfigTab value="mods">
       <div className="flex flex-col gap-6">
         <ConfigTabHeader
-          title="Mods"
-          description={`Configura los mods para ${currentServer?.rawServer.name || 'el servidor actual'}`}
+          title={t('settings.mods.title')}
+          description={description}
           Icon={Package}
         />
         {/* Información del servidor */}
@@ -40,15 +48,15 @@ export default function ConfigMods() {
         )}
         {/* Mods Obligatorios */}
         <ModsSection
-          title="Mods Obligatorios"
-          description="Estos mods son requeridos por el servidor y siempre están activos"
+          title={t('settings.mods.required.title')}
+          description={t('settings.mods.required.description')}
           mods={requiredMods}
           variant="required"
         />
         {/* Mods Opcionales */}
         <ModsSection
-          title="Mods Opcionales"
-          description="Estos mods pueden activarse o desactivarse según tus preferencias"
+          title={t('settings.mods.optional.title')}
+          description={t('settings.mods.optional.description')}
           mods={optionalMods}
           variant="optional"
           onToggle={handleToggleServerMod}

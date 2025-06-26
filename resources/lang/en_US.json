@@ -220,15 +220,16 @@
     "mods": {
       "title": "Mods",
       "description": "Configure mods for {{serverName}}",
-      "mods-required": {
+      "description-default": "Configure mods for the current server",
+      "required": {
         "title": "Required mods",
         "description": "These mods are required by the server and are always active"
       },
-      "mods-optional": {
+      "optional": {
         "title": "Optional mods",
         "description": "These mods can be enabled or disabled according to your preferences"
       },
-      "mods-local": {
+      "local": {
         "title": "Local Mods (Drop-in)",
         "description": "Manage your local mods by dragging .jar, .zip or .litemod files",
         "drag-drop": {

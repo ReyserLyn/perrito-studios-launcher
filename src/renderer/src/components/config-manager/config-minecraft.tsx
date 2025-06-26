@@ -1,4 +1,4 @@
-import { useGameActions, useGameConfig } from '@/hooks'
+import { useGameActions, useGameConfig, useTranslation } from '@/hooks'
 import { Gamepad, Wifi } from 'lucide-react'
 import { useCallback } from 'react'
 import { Input } from '../ui/input'
@@ -7,6 +7,8 @@ import { Switch } from '../ui/switch'
 import { ConfigTab, ConfigTabHeader } from './config-tab'
 
 export function ConfigMinecraft() {
+  const { t } = useTranslation()
+
   const gameConfig = useGameConfig()
 
   const {
@@ -42,8 +44,8 @@ export function ConfigMinecraft() {
     <ConfigTab value="minecraft">
       <div className="flex flex-col h-full w-full gap-4">
         <ConfigTabHeader
-          title="Minecraft"
-          description="Configura las opciones de lanzamiento de Minecraft"
+          title={t('settings.minecraft.title')}
+          description={t('settings.minecraft.description')}
           Icon={Gamepad}
         />
 
@@ -51,13 +53,13 @@ export function ConfigMinecraft() {
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <Gamepad size={15} />
-            <Label className="font-semibold">Resolución del Juego</Label>
+            <Label className="font-semibold">{t('settings.minecraft.resolution.title')}</Label>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="flex flex-col gap-1">
               <Label htmlFor="width" className="text-sm text-muted-foreground">
-                Ancho
+                {t('common.size.width')}
               </Label>
               <Input
                 id="width"
@@ -73,7 +75,7 @@ export function ConfigMinecraft() {
             <span className="text-muted-foreground mt-6">×</span>
             <div className="flex flex-col gap-1">
               <Label htmlFor="height" className="text-sm text-muted-foreground">
-                Alto
+                {t('common.size.height')}
               </Label>
               <Input
                 id="height"
@@ -92,9 +94,9 @@ export function ConfigMinecraft() {
         {/* Pantalla Completa */}
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="fullscreen">Pantalla Completa</Label>
+            <Label htmlFor="fullscreen">{t('settings.minecraft.fullscreen.title')}</Label>
             <p className="text-sm text-muted-foreground">
-              Lanza Minecraft en modo pantalla completa
+              {t('settings.minecraft.fullscreen.description')}
             </p>
           </div>
           <Switch id="fullscreen" checked={gameConfig.fullscreen} onCheckedChange={setFullscreen} />
@@ -105,10 +107,10 @@ export function ConfigMinecraft() {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <Wifi size={15} />
-              <Label htmlFor="autoConnect">Autoconexión al Servidor</Label>
+              <Label htmlFor="autoConnect">{t('settings.minecraft.autoconnect.title')}</Label>
             </div>
             <p className="text-sm text-muted-foreground">
-              Conecta automáticamente al servidor cuando inicie el juego
+              {t('settings.minecraft.autoconnect.description')}
             </p>
           </div>
           <Switch
@@ -121,9 +123,9 @@ export function ConfigMinecraft() {
         {/* Sincronizar Idioma */}
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="syncLanguage">Sincronizar Idioma</Label>
+            <Label htmlFor="syncLanguage">{t('settings.minecraft.sync-language.title')}</Label>
             <p className="text-sm text-muted-foreground">
-              Usa el mismo idioma del launcher en el juego
+              {t('settings.minecraft.sync-language.description')}
             </p>
           </div>
           <Switch
@@ -136,9 +138,11 @@ export function ConfigMinecraft() {
         {/* Proceso Independiente */}
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="launchDetached">Proceso Independiente</Label>
+            <Label htmlFor="launchDetached">
+              {t('settings.minecraft.process-independent.title')}
+            </Label>
             <p className="text-sm text-muted-foreground">
-              Permite cerrar el launcher después de iniciar el juego
+              {t('settings.minecraft.process-independent.description')}
             </p>
           </div>
           <Switch
