@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks'
 import { formatRAMValue, parseRAMValue } from '@/utils/ram-utils'
 import { Code } from 'lucide-react'
 import { useCallback } from 'react'
@@ -18,6 +19,8 @@ import { ConfigTab, ConfigTabHeader } from './config-tab'
 const DEFAULT_MAX_RAM = 16
 
 export const ConfigJava = () => {
+  const { t } = useTranslation()
+
   const { currentServer } = useServerData()
   const { memoryInfo, isLoading: isLoadingMemory } = useSystemMemory()
 
@@ -84,8 +87,8 @@ export const ConfigJava = () => {
     <ConfigTab value="java">
       <div className="flex flex-col gap-6">
         <ConfigTabHeader
-          title="Java"
-          description="Configura las opciones de Java para Minecraft"
+          title={t('settings.java.title')}
+          description={t('settings.java.description')}
           Icon={Code}
         />
 

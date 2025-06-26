@@ -278,26 +278,27 @@
         "description": "Configura opciones adicionales para la JVM",
         "info": "Opciones que serán proporcionadas a la JVM en tiempo de ejecución. -Xms y -Xmx no deben incluirse.",
         "recommended": "Opciones recomendadas: "
+      }
+    },
+
+    "launcher": {
+      "title": "Launcher",
+      "description": "Configura las opciones generales del launcher",
+      "language": {
+        "title": "Idioma del Launcher",
+        "description": "Puedes cambiar el idioma en la lista de abajo. Los cambios se aplicarán inmediatamente.",
+        "select_placeholder": "Selecciona un idioma"
       },
-      "launcher": {
-        "title": "Launcher",
-        "description": "Configura las opciones generales del launcher",
-        "language": {
-          "title": "Idioma del Launcher",
-          "description": "Puedes cambiar el idioma en la lista de abajo. Los cambios se aplicarán inmediatamente.",
-          "select_placeholder": "Selecciona un idioma"
-        },
-        "prerelease": {
-          "title": "Permitir Actualizaciones Pre-Release",
-          "description": "Las pre-releases incluyen nuevas características que pueden no haber sido completamente probadas o integradas. Esto siempre será verdadero si estás usando una versión pre-release.",
-          "label": "Permitir Pre-Releases"
-        },
-        "data_directory": {
-          "title": "Directorio de Datos",
-          "description": "Ubicación donde se almacenan todos los datos del launcher, incluidos juegos, configuraciones y mods.",
-          "select_placeholder": "Selecciona un directorio...",
-          "warning": "⚠️ Cambiar el directorio de datos moverá todos los archivos existentes a la nueva ubicación. Este proceso puede tardar varios minutos dependiendo del tamaño de los datos."
-        }
+      "prerelease": {
+        "title": "Permitir Actualizaciones Pre-Release",
+        "description": "Las pre-releases incluyen nuevas características que pueden no haber sido completamente probadas o integradas. Esto siempre será verdadero si estás usando una versión pre-release.",
+        "label": "Permitir Pre-Releases"
+      },
+      "data_directory": {
+        "title": "Directorio de Datos",
+        "description": "Ubicación donde se almacenan todos los datos del launcher, incluidos juegos, configuraciones y mods.",
+        "select_placeholder": "Selecciona un directorio...",
+        "warning": "⚠️ Cambiar el directorio de datos moverá todos los archivos existentes a la nueva ubicación. Este proceso puede tardar varios minutos dependiendo del tamaño de los datos."
       }
     },
 

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks'
 import { useLauncherConfig } from '@/hooks/config/use-launcher-config'
 import { Settings } from 'lucide-react'
 import { DataDirectorySection } from '../launcher/DataDirectorySection'
@@ -6,6 +7,8 @@ import { PrereleaseSection } from '../launcher/PrereleaseSection'
 import { ConfigTab, ConfigTabHeader } from './config-tab'
 
 export const ConfigLauncher = () => {
+  const { t } = useTranslation()
+
   const {
     currentLanguage,
     allowPrerelease,
@@ -20,8 +23,8 @@ export const ConfigLauncher = () => {
     <ConfigTab value="launcher">
       <div className="flex flex-col h-full w-full gap-6">
         <ConfigTabHeader
-          title="Launcher"
-          description="Configura las opciones generales del launcher"
+          title={t('settings.launcher.title')}
+          description={t('settings.launcher.description')}
           Icon={Settings}
         />
 
