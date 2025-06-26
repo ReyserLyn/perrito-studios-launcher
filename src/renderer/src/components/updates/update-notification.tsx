@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useUpdater } from '@/hooks/config/use-updater'
+import { useTranslation } from '@/hooks/use-translation'
 import { AlertTriangle, Download, X, Zap } from 'lucide-react'
 import { useState } from 'react'
 import { UpdateDetails } from './update-details'
 import { UpdateProgress } from './update-progress'
 
 export const UpdateNotification = () => {
+  const { t } = useTranslation()
+
   const { isUpdateAvailable, updateInfo, actions, updateSeverity } = useUpdater()
   const [dismissed, setDismissed] = useState(false)
 
@@ -28,12 +31,14 @@ export const UpdateNotification = () => {
             {getIcon()}
             <div>
               <CardTitle className="text-lg">
-                {updateInfo.isUpdateReady ? 'Actualización Lista' : 'Nueva Actualización'}
+                {updateInfo.isUpdateReady
+                  ? t('settings.updates.notification.titleReady')
+                  : t('settings.updates.notification.title')}
               </CardTitle>
               <CardDescription>
                 {updateInfo.isUpdateReady
-                  ? 'La actualización se ha descargado correctamente'
-                  : 'Una nueva versión está disponible'}
+                  ? t('settings.updates.notification.descriptionReady')
+                  : t('settings.updates.notification.description')}
               </CardDescription>
             </div>
           </div>
@@ -57,7 +62,7 @@ export const UpdateNotification = () => {
           {updateInfo.isUpdateReady ? (
             <Button onClick={actions.installUpdate} className="flex-1">
               <Zap className="h-4 w-4 mr-2" />
-              Instalar y Reiniciar
+              {t('settings.updates.actions.install')}
             </Button>
           ) : (
             <Button
@@ -68,19 +73,19 @@ export const UpdateNotification = () => {
               {updateInfo.isDownloading ? (
                 <>
                   <Download className="h-4 w-4 mr-2 animate-pulse" />
-                  Descargando...
+                  {t('settings.updates.actions.downloading')}
                 </>
               ) : (
                 <>
                   <Download className="h-4 w-4 mr-2" />
-                  Descargar
+                  {t('settings.updates.actions.download')}
                 </>
               )}
             </Button>
           )}
 
           <Button variant="outline" onClick={() => setDismissed(true)}>
-            Más tarde
+            {t('settings.updates.actions.later')}
           </Button>
         </div>
       </CardContent>

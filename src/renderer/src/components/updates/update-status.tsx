@@ -2,10 +2,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useUpdater } from '@/hooks/config/use-updater'
+import { useTranslation } from '@/hooks/use-translation'
 import { AlertCircle, Download, RefreshCw, Zap } from 'lucide-react'
 import { ConfigCard } from '../config-manager/config-card'
 
 export const UpdateStatus = () => {
+  const { t } = useTranslation()
+
   const {
     isChecking,
     isDownloading,
@@ -26,18 +29,19 @@ export const UpdateStatus = () => {
   }
 
   const getStatusText = () => {
-    if (error) return 'Error al verificar actualizaciones'
-    if (isUpdateReady) return 'Actualización lista para instalar'
-    if (isDownloading) return 'Descargando actualización...'
-    if (isUpdateAvailable) return `Nueva versión disponible: ${updateInfo?.version}`
-    if (isChecking) return 'Verificando actualizaciones...'
-    return 'Estado desconocido'
+    if (error) return t('settings.updates.status.error')
+    if (isUpdateReady) return t('settings.updates.status.ready')
+    if (isDownloading) return t('settings.updates.status.downloading')
+    if (isUpdateAvailable)
+      return t('settings.updates.status.updateAvailable', { version: updateInfo?.version ?? '' })
+    if (isChecking) return t('settings.updates.status.checking')
+    return t('settings.updates.status.unknown')
   }
 
   return (
     <ConfigCard
-      title="Estado del Launcher"
-      description="Información sobre la versión actual y actualizaciones"
+      title={t('settings.updates.status.title')}
+      description={t('settings.updates.status.description')}
       icon={RefreshCw}
     >
       <div className="space-y-4">
@@ -45,7 +49,9 @@ export const UpdateStatus = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Versión Actual</span>
+              <span className="text-sm font-medium">
+                {t('settings.updates.status.currentVersion')}
+              </span>
               <Badge variant={currentVersion.includes('-') ? 'outline' : 'secondary'}>
                 v{currentVersion}
               </Badge>
@@ -72,7 +78,7 @@ export const UpdateStatus = () => {
             ) : (
               <RefreshCw className="h-4 w-4 mr-2" />
             )}
-            Verificar
+            {t('settings.updates.actions.check')}
           </Button>
         </div>
 
@@ -93,7 +99,7 @@ export const UpdateStatus = () => {
         {isDownloading && (
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span>Descargando actualización...</span>
+              <span>{t('settings.updates.status.downloading')}</span>
               <span>{Math.round(downloadProgress)}%</span>
             </div>
             <Progress value={downloadProgress} className="h-2" />

@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import { useTranslation } from '@/hooks/use-translation'
 import type { UpdateInfo } from '@/stores/updater-store'
 
 interface UpdateDetailsProps {
@@ -7,6 +8,8 @@ interface UpdateDetailsProps {
 }
 
 export const UpdateDetails = ({ updateInfo, updateSeverity }: UpdateDetailsProps) => {
+  const { t } = useTranslation()
+
   const getSeverityColor = () => {
     switch (updateSeverity) {
       case 'major':
@@ -25,15 +28,15 @@ export const UpdateDetails = ({ updateInfo, updateSeverity }: UpdateDetailsProps
   const getSeverityText = () => {
     switch (updateSeverity) {
       case 'major':
-        return 'Actualización Mayor'
+        return t('settings.updates.types.major')
       case 'minor':
-        return 'Actualización Menor'
+        return t('settings.updates.types.minor')
       case 'patch':
-        return 'Parche de Corrección'
+        return t('settings.updates.types.patch')
       case 'prerelease':
-        return 'Pre-lanzamiento'
+        return t('settings.updates.types.prerelease')
       default:
-        return 'Actualización'
+        return t('settings.updates.types.major')
     }
   }
 
@@ -46,7 +49,7 @@ export const UpdateDetails = ({ updateInfo, updateSeverity }: UpdateDetailsProps
         day: 'numeric'
       })
     } catch {
-      return 'Fecha desconocida'
+      return t('settings.updates.releaseNotes.unknownDate')
     }
   }
 
@@ -67,14 +70,14 @@ export const UpdateDetails = ({ updateInfo, updateSeverity }: UpdateDetailsProps
 
       {updateInfo.releaseDate && (
         <p className="text-sm text-muted-foreground">
-          Publicado el {formatReleaseDate(updateInfo.releaseDate)}
+          {t('settings.updates.releaseNotes.published')} {formatReleaseDate(updateInfo.releaseDate)}
         </p>
       )}
 
       {updateInfo.releaseNotes && (
         <details className="text-sm">
           <summary className="cursor-pointer text-blue-600 hover:text-blue-800">
-            Ver notas de la versión
+            {t('settings.updates.releaseNotes.view')}
           </summary>
           <div className="mt-2 p-2 bg-gray-50 rounded text-gray-700 max-h-24 overflow-y-auto">
             <pre className="whitespace-pre-wrap font-sans text-xs">

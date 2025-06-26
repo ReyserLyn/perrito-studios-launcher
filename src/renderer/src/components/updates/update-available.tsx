@@ -2,10 +2,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useUpdater } from '@/hooks/config/use-updater'
+import { useTranslation } from '@/hooks/use-translation'
 import { Download, ExternalLink, RefreshCw, Zap } from 'lucide-react'
 import { ConfigCard } from '../config-manager/config-card'
 
 export const UpdateAvailable = () => {
+  const { t } = useTranslation()
+
   const { isDownloading, isUpdateReady, updateInfo, actions } = useUpdater()
   const { downloadUpdate, installUpdate } = actions
   const { version, severity, releaseName, releaseDate, releaseNotes, downloadURL } =
@@ -28,10 +31,10 @@ export const UpdateAvailable = () => {
 
   const formatUpdateType = (type: string) => {
     const types = {
-      major: 'Actualización Mayor',
-      minor: 'Actualización Menor',
-      patch: 'Parche',
-      prerelease: 'Pre-lanzamiento'
+      major: t('settings.updates.types.major'),
+      minor: t('settings.updates.types.minor'),
+      patch: t('settings.updates.types.patch'),
+      prerelease: t('settings.updates.types.prerelease')
     }
     return types[type] || type
   }
@@ -45,14 +48,14 @@ export const UpdateAvailable = () => {
         day: 'numeric'
       })
     } catch {
-      return 'Fecha desconocida'
+      return t('settings.updates.releaseNotes.unknownDate')
     }
   }
 
   return (
     <ConfigCard
-      title="Nueva Actualización Disponible"
-      description="Se ha encontrado una nueva versión del launcher"
+      title={t('settings.updates.notification.title')}
+      description={t('settings.updates.notification.description')}
       icon={Download}
     >
       <div className="space-y-4">
@@ -73,13 +76,13 @@ export const UpdateAvailable = () => {
 
           {releaseDate && (
             <p className="text-sm text-muted-foreground">
-              Publicado el {formatReleaseDate(releaseDate)}
+              {t('settings.updates.releaseNotes.published')} {formatReleaseDate(releaseDate)}
             </p>
           )}
 
           {releaseNotes && (
             <div className="space-y-2">
-              <h5 className="text-sm font-medium">Notas de la versión:</h5>
+              <h5 className="text-sm font-medium">{t('settings.updates.releaseNotes.title')}</h5>
               <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md max-h-32 overflow-y-auto">
                 <pre className="whitespace-pre-wrap font-sans">{releaseNotes}</pre>
               </div>
@@ -94,19 +97,19 @@ export const UpdateAvailable = () => {
           {isUpdateReady ? (
             <Button onClick={installUpdate} className="flex-1">
               <Zap className="h-4 w-4 mr-2" />
-              Instalar y Reiniciar
+              {t('settings.updates.actions.install')}
             </Button>
           ) : (
             <Button onClick={downloadUpdate} disabled={isDownloading} className="flex-1">
               {isDownloading ? (
                 <>
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Descargando...
+                  {t('settings.updates.actions.downloading')}
                 </>
               ) : (
                 <>
                   <Download className="h-4 w-4 mr-2" />
-                  Descargar Actualización
+                  {t('settings.updates.actions.download')}
                 </>
               )}
             </Button>
@@ -116,7 +119,7 @@ export const UpdateAvailable = () => {
             <Button variant="outline" asChild>
               <a href={downloadURL} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Ver en GitHub
+                {t('settings.updates.actions.viewGitHub')}
               </a>
             </Button>
           )}
