@@ -47,7 +47,52 @@
     "error": "Error checking for updates",
     "progress": "Downloading: {{percent}}%",
     "installNow": "Install now",
-    "installLater": "Install later"
+    "installLater": "Install later",
+    "status": {
+      "checking": "Checking for updates...",
+      "upToDate": "You are running the latest version",
+      "updateAvailable": "New version available: {{version}}",
+      "downloading": "Downloading update...",
+      "ready": "Update ready to install",
+      "error": "Error checking for updates"
+    },
+    "types": {
+      "major": "Major Update",
+      "minor": "Minor Update",
+      "patch": "Bug Fix",
+      "prerelease": "Pre-release"
+    },
+    "actions": {
+      "check": "Check",
+      "download": "Download Update",
+      "downloading": "Downloading...",
+      "install": "Install and Restart",
+      "viewGitHub": "View on GitHub",
+      "later": "Later"
+    },
+    "config": {
+      "title": "Update Settings",
+      "description": "Customize how updates are handled",
+      "allowPrerelease": {
+        "title": "Allow pre-release versions",
+        "description": "Receive updates for beta and pre-release versions"
+      },
+      "autoCheck": {
+        "title": "Automatic checking",
+        "description": "The launcher automatically checks for updates on startup"
+      }
+    },
+    "notification": {
+      "title": "New Update",
+      "titleReady": "Update Ready",
+      "description": "A new version is available",
+      "descriptionReady": "The update has been downloaded successfully"
+    },
+    "releaseNotes": {
+      "title": "Release notes:",
+      "published": "Published on {{date}}",
+      "viewFull": "View full notes"
+    }
   },
   "general": {
     "error": "Error",

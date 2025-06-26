@@ -1,6 +1,7 @@
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { app } from 'electron'
 import { LoggerUtil } from 'perrito-core'
+import { setupAutoUpdater, startAutoUpdateCheck } from './handlers/setup-auto-updater'
 import { setupIpcHandlers } from './ipcHandlers'
 import { createMenu } from './menu'
 import { runPreloadTasks } from './preloader'
@@ -35,6 +36,9 @@ app.whenReady().then(async () => {
     logger.error('Error cargando configuración:', error)
   }
 
+  // Configurar auto updater
+  setupAutoUpdater()
+
   setupIpcHandlers()
 
   const mainWindow = createMainWindow()
@@ -43,6 +47,9 @@ app.whenReady().then(async () => {
   runPreloadTasks(mainWindow).catch((err) =>
     logger.error('[PRELOADER] Error durante la pre-carga:', err)
   )
+
+  // Iniciar verificación automática de actualizaciones
+  startAutoUpdateCheck()
 
   createMenu()
 })

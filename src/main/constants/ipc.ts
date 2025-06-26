@@ -38,7 +38,9 @@ export const AUTO_UPDATER = {
     INIT_AUTO_UPDATER: 'initAutoUpdater',
     CHECK_FOR_UPDATE: 'checkForUpdate',
     ALLOW_PRERELEASE_CHANGE: 'allowPrereleaseChange',
-    INSTALL_UPDATE_NOW: 'installUpdateNow'
+    ALLOW_NOTIFICATIONS_CHANGE: 'allowNotificationsChange',
+    INSTALL_UPDATE_NOW: 'installUpdateNow',
+    DOWNLOAD_UPDATE: 'downloadUpdate'
   }
 } as const
 
@@ -152,4 +154,13 @@ export const LANGUAGE = {
   FORMAT_DATE: 'language-format-date',
   FORMAT_NUMBER: 'language-format-number',
   CHANGED: 'language-changed'
+} as const
+
+export const IPC_UPDATER = {
+  INIT_AUTO_UPDATER: 'initAutoUpdater',
+  CHECK_FOR_UPDATE: 'checkForUpdate',
+  DOWNLOAD_UPDATE: 'downloadUpdate',
+  INSTALL_NOW: 'installNow',
+  ALLOW_PRERELEASE_CHANGE: 'allowPrereleaseChange',
+  NOTIFICATION: 'updaterNotification'
 } as const

@@ -10,7 +10,7 @@ import type ModsAPI from './mods/types'
 import type ProcessAPI from './process/types'
 import type ServerAPI from './server/types'
 import type SystemAPI from './system/types'
-import type UpdaterAPI from './updater/types'
+import type { UpdaterAPI } from './updater/types'
 
 interface API {
   auth: AuthAPI
@@ -31,5 +31,8 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: API
+    updater: UpdaterAPI
   }
 }
+
+export {}

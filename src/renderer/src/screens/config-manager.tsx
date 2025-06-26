@@ -4,6 +4,7 @@ import { ConfigJava } from '@/components/config-manager/config-java'
 import { ConfigLauncher } from '@/components/config-manager/config-launcher'
 import { ConfigMinecraft } from '@/components/config-manager/config-minecraft'
 import ConfigMods from '@/components/config-manager/config-mods'
+import { ConfigUpdates } from '@/components/config-manager/config-updates'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useConfigManager } from '@/hooks'
@@ -125,6 +126,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
             <ConfigJava />
             <ConfigLauncher />
             <ConfigAbout />
+            <ConfigUpdates />
           </Tabs>
         </div>
       </div>

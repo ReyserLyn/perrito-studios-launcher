@@ -1,5 +1,6 @@
 import { AppScreens } from './components/app-screens'
 import { Toaster } from './components/ui/sonner'
+import { UpdateNotification } from './components/update-notification'
 import { AppProvider } from './providers/app-provider'
 import { SplashScreen } from './screens/splash-screen'
 import { useNavigationStore } from './stores/use-navigation-store'
@@ -12,6 +13,7 @@ function App() {
       {showSplash && <SplashScreen onComplete={hideSplash} />}
 
       <AppScreens />
+      <UpdateNotification />
       <Toaster richColors />
     </AppProvider>
   )

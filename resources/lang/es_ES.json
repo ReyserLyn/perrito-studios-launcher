@@ -47,7 +47,54 @@
     "error": "Error al buscar actualizaciones",
     "progress": "Descargando: {{percent}}%",
     "installNow": "Instalar ahora",
-    "installLater": "Instalar después"
+    "installLater": "Instalar después",
+    "status": {
+      "checking": "Verificando actualizaciones...",
+      "upToDate": "Estás usando la versión más reciente",
+      "updateAvailable": "Nueva versión disponible: {{version}}",
+      "downloading": "Descargando actualización...",
+      "ready": "Actualización lista para instalar",
+      "error": "Error al verificar actualizaciones"
+    },
+    "types": {
+      "major": "Actualización Mayor",
+      "minor": "Actualización Menor",
+      "patch": "Parche de Corrección",
+      "prerelease": "Pre-lanzamiento"
+    },
+    "actions": {
+      "check": "Verificar",
+      "download": "Descargar Actualización",
+      "downloading": "Descargando...",
+      "install": "Instalar y Reiniciar",
+      "viewGitHub": "Ver en GitHub",
+      "later": "Más tarde"
+    },
+    "config": {
+      "title": "Configuración de Actualizaciones",
+      "description": "Personaliza cómo se manejan las actualizaciones",
+      "updates": {
+        "allowPrerelease": {
+          "title": "Permitir versiones preliminares",
+          "description": "Recibir actualizaciones de versiones beta y preliminares"
+        }
+      },
+      "autoCheck": {
+        "title": "Verificación automática",
+        "description": "El launcher verifica automáticamente actualizaciones al iniciar"
+      }
+    },
+    "notification": {
+      "title": "Nueva Actualización",
+      "titleReady": "Actualización Lista",
+      "description": "Una nueva versión está disponible",
+      "descriptionReady": "La actualización se ha descargado correctamente"
+    },
+    "releaseNotes": {
+      "title": "Notas de la versión:",
+      "published": "Publicado el {{date}}",
+      "viewFull": "Ver notas completas"
+    }
   },
   "general": {
     "error": "Error",
