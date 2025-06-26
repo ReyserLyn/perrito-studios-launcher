@@ -112,7 +112,21 @@
     },
     "system": {
       "open-folder": "Open folder",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "error": {
+        "opening-folder": "Error opening folder",
+        "open-folder": "Failed to open folder",
+        "showing-file": "Error showing file",
+        "show-file": "Failed to show file",
+        "moving-file": "Error moving file",
+        "move-file": "Failed to move file"
+      },
+      "success": {
+        "moving-file": "File moved to trash successfully"
+      }
+    },
+    "error": {
+      "saving-language": "Error saving language in configuration"
     }
   },
 
@@ -233,6 +247,13 @@
             "title": "Drag more mods here to add them"
           }
         },
+        "error": {
+          "files-rejected": "Files rejected",
+          "processing-files": "Error processing files"
+        },
+        "success": {
+          "mods-installed": "Mods installed successfully"
+        },
         "installed": {
           "title": "Installed mods"
         },
@@ -244,6 +265,24 @@
         "delete": {
           "confirm": "Are you sure you want to delete this mod?"
         }
+      },
+      "error": {
+        "mod-toggled": "Mod status updated",
+        "mod-deleted": "Error deleting mod",
+        "no-server-selected": "No server selected",
+        "getting-mod-configuration": "Error getting mod configuration",
+        "mod-configuration-updated": "Error updating mod configuration",
+        "adding-mods": "Error adding mods",
+        "file-already-exists": "The file {{fileName}} already exists and was skipped",
+        "files-already-exist": "{{count}} files already exist and were skipped",
+        "processing-files": "Error processing files:\n{{errorMessages}}{{otherErrors}}"
+      },
+      "success": {
+        "mod-toggled": "Mod status updated",
+        "mod-deleted": "Mod deleted successfully",
+        "mod-configuration-updated": "Mod configuration updated",
+        "mods-added": "{{count}} mods added successfully",
+        "mod-added": "{{count}} mod added successfully"
       }
     },
 
@@ -456,7 +495,19 @@
       "no-name": "Server without name",
       "selected": "Selected",
       "main": "Main",
-      "no-selected": "No server selected"
+      "no-selected": "No server selected",
+      "unknown": "Unknown",
+      "connection-lost": "Connection lost",
+      "connection-error": "Connection error"
+    },
+    "error": {
+      "get-distribution": "Error getting distribution",
+      "no-servers": "No servers available",
+      "no-selected": "Error getting selected server",
+      "set-selected": "Error setting selected server"
+    },
+    "success": {
+      "get-distribution": "Distribution obtained successfully"
     }
   },
 
@@ -499,6 +550,21 @@
     "actions": {
       "launch": "Play",
       "terminate": "Terminate"
+    },
+    "error": {
+      "validating": "Error validating initial",
+      "no-server-selected": "No server selected. Please select a server.",
+      "scanning-java": "Error scanning Java",
+      "downloading-java": "Error downloading Java",
+      "validating-and-downloading-files": "Error validating and downloading files",
+      "preparing-launch": "Error preparing launch",
+      "launching-game": "Error launching game",
+      "unknown": "Unknown error",
+      "terminating-process": "Error terminating process"
+    },
+    "success": {
+      "launching-game": "Game launched successfully",
+      "terminating-process": "Process terminated successfully"
     }
   }
 }

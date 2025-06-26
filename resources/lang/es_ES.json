@@ -112,7 +112,21 @@
     },
     "system": {
       "open-folder": "Abrir carpeta",
-      "refresh": "Refrescar"
+      "refresh": "Refrescar",
+      "error": {
+        "opening-folder": "Error abriendo la carpeta",
+        "open-folder": "No se pudo abrir la carpeta",
+        "showing-file": "Error mostrando el archivo",
+        "show-file": "No se pudo mostrar el archivo",
+        "moving-file": "Error moviendo el archivo",
+        "move-file": "No se pudo mover el archivo"
+      },
+      "success": {
+        "moving-file": "Archivo movido a la papelera exitosamente"
+      }
+    },
+    "error": {
+      "saving-language": "Error guardando idioma en configuración"
     }
   },
 
@@ -233,6 +247,13 @@
             "title": "Arrastra más mods aquí para añadirlos"
           }
         },
+        "error": {
+          "files-rejected": "Archivos rechazados",
+          "processing-files": "Error al procesar los archivos"
+        },
+        "success": {
+          "mods-installed": "Mods instalados exitosamente"
+        },
         "installed": {
           "title": "Mods instalados"
         },
@@ -244,6 +265,24 @@
         "delete": {
           "confirm": "¿Estás seguro de que deseas eliminar este mod?"
         }
+      },
+      "error": {
+        "no-server-selected": "No hay servidor seleccionado",
+        "getting-mod-configuration": "Error al obtener la configuración de mods",
+        "mod-configuration-updated": "Error al actualizar la configuración de mods",
+        "mod-deleted": "Error al eliminar el mod",
+        "mod-toggled": "Estado del mod actualizado",
+        "adding-mods": "Error al añadir mods",
+        "file-already-exists": "El archivo {{fileName}} ya existe y fue omitido",
+        "files-already-exist": "{{count}} archivos ya existen y fueron omitidos",
+        "processing-files": "Errores al procesar archivos:\n{{errorMessages}}{{otherErrors}}"
+      },
+      "success": {
+        "mod-toggled": "Estado del mod actualizado",
+        "mod-deleted": "Mod eliminado exitosamente",
+        "mod-configuration-updated": "Configuración de mod actualizada",
+        "mods-added": "{{count}} mods añadidos exitosamente",
+        "mod-added": "{{count}} mod añadido exitosamente"
       }
     },
 
@@ -458,7 +497,19 @@
       "no-name": "Servidor sin nombre",
       "selected": "Seleccionado",
       "main": "Principal",
-      "no-selected": "No hay servidor seleccionado"
+      "no-selected": "No hay servidor seleccionado",
+      "unknown": "Desconocido",
+      "connection-lost": "Conexión perdida",
+      "connection-error": "Error de conexión temporal"
+    },
+    "error": {
+      "get-distribution": "Error al obtener la distribución",
+      "no-servers": "No se encontraron servidores disponibles",
+      "no-selected": "Error obteniendo servidor seleccionado",
+      "set-selected": "Error estableciendo servidor seleccionado"
+    },
+    "success": {
+      "get-distribution": "Distribución obtenida exitosamente"
     }
   },
 
@@ -501,6 +552,21 @@
     "actions": {
       "launch": "Jugar",
       "terminate": "Terminar"
+    },
+    "error": {
+      "validating": "Error al validar el inicial",
+      "no-server-selected": "No hay servidor seleccionado. Por favor selecciona un servidor.",
+      "scanning-java": "Error al escanear Java",
+      "downloading-java": "Error al descargar Java",
+      "validating-and-downloading-files": "Error al validar y descargar archivos",
+      "preparing-launch": "Error al preparar el lanzamiento",
+      "launching-game": "Error al iniciar el juego",
+      "unknown": "Error desconocido",
+      "terminating-process": "Error al terminar el proceso"
+    },
+    "success": {
+      "launching-game": "Minecraft iniciado exitosamente",
+      "terminating-process": "Proceso terminado exitosamente"
     }
   }
 }

@@ -9,6 +9,7 @@ import {
 } from '../../utils/mods'
 import { useAddMods } from '../mods/use-mods-mutations'
 import { useServerData } from '../use-servers'
+import { useTranslation } from '../use-translation'
 
 /**
  * Hook específico para drag & drop de mods
@@ -21,6 +22,8 @@ export const useModsDragDrop = (options: DndModsOptions = {}) => {
   const { currentServer } = useServerData()
   const addModsMutation = useAddMods()
 
+  const { t } = useTranslation()
+
   // Detectar capacidades de la plataforma
   const platformCapabilities = useMemo<PlatformCapabilities>(() => {
     return detectPlatformCapabilities()
@@ -32,7 +35,7 @@ export const useModsDragDrop = (options: DndModsOptions = {}) => {
 
     if (errors.length > 0) {
       toast.warning(
-        `Archivos rechazados:\n${errors.slice(0, 3).join('\n')}${errors.length > 3 ? '\n...' : ''}`
+        `${t('settings.mods.local.error.files-rejected')}:\n${errors.slice(0, 3).join('\n')}${errors.length > 3 ? '\n...' : ''}`
       )
     }
 
@@ -62,8 +65,8 @@ export const useModsDragDrop = (options: DndModsOptions = {}) => {
           }
         }
       } catch (error) {
-        console.error('Error procesando archivos:', error)
-        toast.error('Error al procesar los archivos')
+        console.error('[useModsDragDrop] Error processing files:', error)
+        toast.error(t('settings.mods.local.error.processing-files'))
       }
     }
 

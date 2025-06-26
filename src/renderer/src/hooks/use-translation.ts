@@ -42,7 +42,7 @@ export function useTranslation(): TranslationHook {
         }
         setIsReady(true)
       } catch (error) {
-        console.error('Error inicializando idioma:', error)
+        console.error('[useTranslation] Error inicializando idioma:', error)
         setCurrentLanguage('es_ES')
         setIsReady(true)
       }
@@ -65,11 +65,11 @@ export function useTranslation(): TranslationHook {
       window.api.language.change(lang)
       const response = await window.api.config.setLanguage(lang)
       if (!response.success) {
-        throw new Error(response.error || 'Error guardando idioma en configuración')
+        throw new Error(response.error || t('common.error.saving-language'))
       }
       await window.api.config.save()
     } catch (error) {
-      console.error('Error cambiando idioma:', error)
+      console.error('[useTranslation] Error cambiando idioma:', error)
     }
   }
 

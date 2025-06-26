@@ -24,10 +24,10 @@ export function useSystemMemory() {
             free: currentMemory.free
           })
         } else {
-          console.error('Error obteniendo RAM máxima:', maxRAM.error)
+          console.error('[useSystemMemory] Error obteniendo RAM máxima:', maxRAM.error)
         }
       } catch (error) {
-        console.error('Error obteniendo información de memoria:', error)
+        console.error('[useSystemMemory] Error obteniendo información de memoria:', error)
       } finally {
         setIsLoading(false)
       }

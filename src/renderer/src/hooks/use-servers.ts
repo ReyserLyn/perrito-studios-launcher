@@ -1,14 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from './use-translation'
 
 // Hook para obtener la distribución de servidores
 export const useDistribution = () => {
+  const { t } = useTranslation()
+
   return useQuery({
     queryKey: ['distribution'],
     queryFn: async () => {
       const result = await window.api.distribution.getDistribution()
 
       if (!result.success) {
-        throw new Error(result.error || 'Error obteniendo distribución')
+        throw new Error(result.error || t('server.error.get-distribution'))
       }
 
       return result.distribution
@@ -20,13 +23,15 @@ export const useDistribution = () => {
 
 // Hook para obtener todos los servidores
 export const useAllServers = () => {
+  const { t } = useTranslation()
+
   return useQuery({
     queryKey: ['servers'],
     queryFn: async () => {
       const result = await window.api.distribution.getDistribution()
 
       if (!result.success) {
-        throw new Error(result.error || 'No se encontraron servidores')
+        throw new Error(result.error || t('server.error.no-servers'))
       }
 
       return result.distribution.servers || []
@@ -36,13 +41,15 @@ export const useAllServers = () => {
 
 // Hook para obtener el ID del servidor seleccionado
 export const useGetIdSelectedServer = () => {
+  const { t } = useTranslation()
+
   return useQuery({
     queryKey: ['selectedServer'],
     queryFn: async () => {
       const result = await window.api.config.getSelectedServer()
 
       if (!result.success) {
-        throw new Error(result.error || 'Error obteniendo servidor seleccionado')
+        throw new Error(result.error || t('server.error.no-selected'))
       }
 
       return result.selectedServer
@@ -71,6 +78,7 @@ export const useCurrentServer = () => {
 // Hook para obtener el estado del servidor actual
 export const useCurrentServerStatus = () => {
   const currentServer = useCurrentServer()
+  const { t } = useTranslation()
 
   return useQuery({
     queryKey: ['currentServerStatus', currentServer?.rawServer?.id],
@@ -78,9 +86,9 @@ export const useCurrentServerStatus = () => {
       if (!currentServer?.rawServer) {
         return {
           status: 'offline' as const,
-          players: { online: 0, max: 0, label: 'Sin servidor' },
-          version: 'Desconocido',
-          motd: 'No hay servidor seleccionado'
+          players: { online: 0, max: 0, label: t('server.status.no-selected') },
+          version: t('server.status.unknown'),
+          motd: t('server.status.no-selected')
         }
       }
 
@@ -92,12 +100,12 @@ export const useCurrentServerStatus = () => {
         return result.status
       } catch (error) {
         // Si hay error de conexión, devolver estado offline sin hacer throw
-        console.warn('Error obteniendo estado del servidor:', error)
+        console.warn('[useCurrentServerStatus] Error obteniendo estado del servidor:', error)
         return {
           status: 'offline' as const,
-          players: { online: 0, max: 0, label: 'Conexión perdida' },
-          version: 'Desconocido',
-          motd: 'Error de conexión temporal'
+          players: { online: 0, max: 0, label: t('server.status.connection-lost') },
+          version: t('server.status.unknown'),
+          motd: t('server.status.connection-error')
         }
       }
     },
@@ -143,13 +151,14 @@ export const useServerData = () => {
 
 export const useSetSelectedServer = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   return useMutation({
     mutationFn: async (serverId: string) => {
       const result = await window.api.config.setSelectedServer(serverId)
 
       if (!result.success) {
-        throw new Error(result.error || 'Error estableciendo servidor seleccionado')
+        throw new Error(result.error || t('server.error.set-selected'))
       }
 
       return result

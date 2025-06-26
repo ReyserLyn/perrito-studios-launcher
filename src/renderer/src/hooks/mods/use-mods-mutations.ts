@@ -4,6 +4,7 @@ import { queryKeys } from '../../lib/queryClient'
 import type { ModConfiguration } from '../../types/mods'
 import { getModsDirectory } from '../../utils/mods'
 import { useServerData } from '../use-servers'
+import { useTranslation } from '../use-translation'
 
 /**
  * Hook base para mutaciones de mods que incluye invalidación automática de queries
@@ -51,11 +52,12 @@ export function useModsMutation<TData, TVariables>(
  */
 export const useToggleDropinMod = () => {
   const { currentServer } = useServerData()
+  const { t } = useTranslation()
 
   return useModsMutation(
     async ({ fullName, enable }: { fullName: string; enable: boolean }) => {
       if (!currentServer) {
-        throw new Error('No hay servidor seleccionado')
+        throw new Error(t('settings.mods.error.no-server-selected'))
       }
 
       const modsDir = await getModsDirectory(currentServer.rawServer.id)
@@ -66,8 +68,8 @@ export const useToggleDropinMod = () => {
       }
     },
     {
-      successMessage: 'Estado del mod actualizado',
-      errorMessage: 'Error al cambiar el estado del mod'
+      successMessage: t('settings.mods.success.mod-toggled'),
+      errorMessage: t('settings.mods.error.mod-toggled')
     }
   )
 }
@@ -77,11 +79,12 @@ export const useToggleDropinMod = () => {
  */
 export const useDeleteDropinMod = () => {
   const { currentServer } = useServerData()
+  const { t } = useTranslation()
 
   return useModsMutation(
     async (fullName: string) => {
       if (!currentServer) {
-        throw new Error('No hay servidor seleccionado')
+        throw new Error(t('settings.mods.error.no-server-selected'))
       }
 
       const modsDir = await getModsDirectory(currentServer.rawServer.id)
@@ -92,8 +95,8 @@ export const useDeleteDropinMod = () => {
       }
     },
     {
-      successMessage: 'Mod eliminado exitosamente',
-      errorMessage: 'Error al eliminar el mod'
+      successMessage: t('settings.mods.success.mod-deleted'),
+      errorMessage: t('settings.mods.error.mod-deleted')
     }
   )
 }
@@ -103,17 +106,18 @@ export const useDeleteDropinMod = () => {
  */
 export const useToggleServerMod = () => {
   const { currentServer } = useServerData()
+  const { t } = useTranslation()
 
   return useModsMutation(
     async ({ modId, enabled }: { modId: string; enabled: boolean }) => {
       if (!currentServer) {
-        throw new Error('No hay servidor seleccionado')
+        throw new Error(t('settings.mods.error.no-server-selected'))
       }
 
       // Obtener configuración actual
       const configResult = await window.api.config.getModConfiguration(currentServer.rawServer.id)
       if (!configResult.success) {
-        throw new Error(configResult.error || 'Error obteniendo configuración de mods')
+        throw new Error(configResult.error || t('settings.mods.error.getting-mod-configuration'))
       }
 
       // Preparar configuración de mods
@@ -143,8 +147,8 @@ export const useToggleServerMod = () => {
       await window.api.config.save()
     },
     {
-      successMessage: 'Configuración de mod actualizada',
-      errorMessage: 'Error al cambiar la configuración del mod'
+      successMessage: t('settings.mods.success.mod-configuration-updated'),
+      errorMessage: t('settings.mods.error.mod-configuration-updated')
     }
   )
 }
@@ -153,6 +157,8 @@ export const useToggleServerMod = () => {
  * Hook para añadir mods drop-in
  */
 export const useAddMods = () => {
+  const { t } = useTranslation()
+
   return useModsMutation(
     async ({
       files,
@@ -164,7 +170,7 @@ export const useAddMods = () => {
       const result = await window.api.mods.addMods(files, modsDir)
 
       if (!result.success) {
-        throw new Error(result.error || 'Error añadiendo mods')
+        throw new Error(result.error || t('settings.mods.error.adding-mods'))
       }
 
       return result
@@ -174,9 +180,9 @@ export const useAddMods = () => {
         // Mostrar mensajes específicos según el resultado
         if (result.addedCount && result.addedCount > 0) {
           if (result.addedCount === 1) {
-            toast.success(`${result.addedCount} mod añadido exitosamente`)
+            toast.success(t('settings.mods.success.mod-added', { count: result.addedCount }))
           } else {
-            toast.success(`${result.addedCount} mods añadidos exitosamente`)
+            toast.success(t('settings.mods.success.mods-added', { count: result.addedCount }))
           }
         }
 
@@ -187,9 +193,13 @@ export const useAddMods = () => {
 
           if (skippedFiles && skippedFiles.length > 0) {
             if (skippedFiles.length === 1) {
-              toast.warning(`${skippedFiles[0]} ya existe y fue omitido`)
+              toast.warning(
+                t('settings.mods.error.file-already-exists', { fileName: skippedFiles[0] })
+              )
             } else {
-              toast.warning(`${skippedFiles.length} archivos ya existen y fueron omitidos`)
+              toast.warning(
+                t('settings.mods.error.files-already-exist', { count: skippedFiles.length })
+              )
             }
           }
 
@@ -205,12 +215,15 @@ export const useAddMods = () => {
               .join('\n')
 
             toast.error(
-              `Errores al procesar archivos:\n${errorMessages}${otherErrors.length > 3 ? '\n...' : ''}`
+              t('settings.mods.error.processing-files', {
+                errorMessages: errorMessages,
+                otherErrors: otherErrors.length > 3 ? '\n...' : ''
+              })
             )
           }
         }
       },
-      errorMessage: 'Error al añadir mods'
+      errorMessage: t('settings.mods.error.adding-mods')
     }
   )
 }

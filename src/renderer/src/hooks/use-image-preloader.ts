@@ -22,7 +22,7 @@ export const useImagePreloader = () => {
         await preloadImage(url)
         return url
       } catch {
-        console.warn(`Failed to preload image: ${url}`)
+        console.warn(`[useImagePreloader] Failed to preload image: ${url}`)
         return null
       }
     })
@@ -41,7 +41,7 @@ export const useImagePreloader = () => {
         serverImages = servers.map((server: HeliosServer) => server.rawServer.icon).filter(Boolean)
       }
     } catch (error) {
-      console.warn('No se pudieron obtener imágenes de servidores:', error)
+      console.warn('[useImagePreloader] No se pudieron obtener imágenes de servidores:', error)
     }
 
     // Obtener avatares de Minecraft de las cuentas
@@ -58,7 +58,7 @@ export const useImagePreloader = () => {
           .filter(Boolean)
       }
     } catch (error) {
-      console.warn('No se pudieron obtener avatares de cuentas:', error)
+      console.warn('[useImagePreloader] No se pudieron obtener avatares de cuentas:', error)
     }
 
     return [...serverImages, ...avatarImages]
