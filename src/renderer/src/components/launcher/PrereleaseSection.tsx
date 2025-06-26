@@ -18,11 +18,11 @@ export const PrereleaseSection = ({
   return (
     <ConfigCard
       icon={Upload}
-      title={t('launcher.prerelease.title')}
-      description={t('launcher.prerelease.description')}
+      title={t('settings.launcher.prerelease.title')}
+      description={t('settings.launcher.prerelease.description')}
     >
       <div className="flex items-center justify-between">
-        <Label htmlFor="allowPrerelease">{t('launcher.prerelease.label')}</Label>
+        <Label htmlFor="allowPrerelease">{t('settings.launcher.prerelease.label')}</Label>
         <Switch
           id="allowPrerelease"
           checked={allowPrerelease}

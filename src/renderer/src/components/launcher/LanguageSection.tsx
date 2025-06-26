@@ -21,12 +21,12 @@ export const LanguageSection = ({ currentLanguage, onLanguageChange }: LanguageS
   return (
     <ConfigCard
       icon={Globe}
-      title={t('launcher.language.title')}
-      description={t('launcher.language.description')}
+      title={t('settings.launcher.language.title')}
+      description={t('settings.launcher.language.description')}
     >
       <Select value={currentLanguage} onValueChange={onLanguageChange}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder={t('launcher.language.select_placeholder')} />
+          <SelectValue placeholder={t('settings.launcher.language.select_placeholder')} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="es_ES">🇪🇸 Español</SelectItem>

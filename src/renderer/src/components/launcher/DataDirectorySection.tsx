@@ -20,8 +20,8 @@ export const DataDirectorySection = ({
   return (
     <ConfigCard
       icon={FolderOpen}
-      title={t('launcher.data_directory.title')}
-      description={t('launcher.data_directory.description')}
+      title={t('settings.launcher.data_directory.title')}
+      description={t('settings.launcher.data_directory.description')}
     >
       <div className="space-y-4">
         <div className="flex gap-2">
@@ -29,7 +29,7 @@ export const DataDirectorySection = ({
             value={dataDirectory}
             readOnly
             className="flex-1 font-mono text-sm"
-            placeholder={t('launcher.data_directory.select_placeholder')}
+            placeholder={t('settings.launcher.data_directory.select_placeholder')}
           />
           <Button
             variant="outline"
@@ -41,7 +41,9 @@ export const DataDirectorySection = ({
           </Button>
         </div>
 
-        <p className="text-sm text-muted-foreground">{t('launcher.data_directory.warning')}</p>
+        <p className="text-sm text-muted-foreground">
+          {t('settings.launcher.data_directory.warning')}
+        </p>
       </div>
     </ConfigCard>
   )
