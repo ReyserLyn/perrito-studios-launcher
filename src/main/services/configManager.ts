@@ -199,6 +199,7 @@ export function load(): void {
     } else {
       doLoad = false
       config = DEFAULT_CONFIG
+      logger.info('Usando configuración por defecto')
       save()
     }
   }
@@ -206,7 +207,11 @@ export function load(): void {
   if (doLoad) {
     let doValidate = false
     try {
-      config = JSON.parse(fs.readFileSync(configPath, 'utf8'))
+      const rawConfig = fs.readFileSync(configPath, 'utf8')
+      logger.info('Configuración leída:', rawConfig)
+      const parsedConfig = JSON.parse(rawConfig)
+      config = parsedConfig
+      logger.info('Idioma en configuración:', parsedConfig.settings?.launcher?.language)
       doValidate = true
     } catch (err) {
       logger.error(err)
@@ -216,8 +221,9 @@ export function load(): void {
       config = DEFAULT_CONFIG
       save()
     }
-    if (doValidate) {
-      config = validateKeySet(DEFAULT_CONFIG, config!)
+    if (doValidate && config) {
+      config = validateKeySet(DEFAULT_CONFIG, config)
+
       save()
     }
   }
@@ -245,19 +251,23 @@ function validateKeySet(srcObj: any, destObj: any): any {
   }
   const validationBlacklist = ['authenticationDatabase', 'javaConfig']
   const keys = Object.keys(srcObj)
+  logger.info('Validando configuración, keys:', keys)
 
   for (let i = 0; i < keys.length; i++) {
     if (typeof destObj[keys[i]] === 'undefined') {
+      logger.info('Campo faltante, usando valor por defecto:', keys[i])
       destObj[keys[i]] = srcObj[keys[i]]
     } else if (
       typeof srcObj[keys[i]] === 'object' &&
-      srcObj[keys[i]] != null &&
-      !(srcObj[keys[i]] instanceof Array) &&
-      validationBlacklist.indexOf(keys[i]) === -1
+      !Array.isArray(srcObj[keys[i]]) &&
+      srcObj[keys[i]] !== null &&
+      !validationBlacklist.includes(keys[i])
     ) {
+      logger.info('Validando objeto anidado:', keys[i])
       destObj[keys[i]] = validateKeySet(srcObj[keys[i]], destObj[keys[i]])
     }
   }
+
   return destObj
 }
 
@@ -910,52 +920,80 @@ export function getAllowPrerelease(def = false): boolean {
  * @param allowPrerelease Si el launcher debería descargar versiones prerelease o no.
  */
 export function setAllowPrerelease(allowPrerelease: boolean): void {
-  config!.settings.launcher.allowPrerelease = allowPrerelease
-}
-
-export function getCurrentLanguage(def = false): string {
-  return !def ? config!.settings.launcher.language : DEFAULT_CONFIG.settings.launcher.language
-}
-
-/**
- * Convierte el código de idioma a minúsculas para la sincronización de idioma del launcher y juego.
- */
-export function getCurrentLanguageLowercase(def = false): string {
-  const language = !def
-    ? config!.settings.launcher.language
-    : DEFAULT_CONFIG.settings.launcher.language
-  return language.toLowerCase()
+  if (!config) return
+  config.settings.launcher.allowPrerelease = allowPrerelease
+  save()
 }
 
 /**
- * Cambia el estado de si el juego debería sincronizar el idioma.
- *
- * @param syncLanguage Si el juego debería sincronizar el idioma o no.
- */
-export function setSyncLanguage(syncLanguage: boolean): void {
-  config!.settings.game.SyncLanguage = syncLanguage
-}
-
-/**
- * Verifica si el juego debería sincronizar el idioma.
- *
- * @param def Opcional. Si es true, se retornará el valor por defecto.
- * @returns Si el juego debería sincronizar el idioma o no.
+ * Obtiene el estado de sincronización de idioma.
+ * @param def Si es true, retorna el valor por defecto
+ * @returns true si la sincronización de idioma está habilitada, false si no
  */
 export function getSyncLanguage(def = false): boolean {
-  return !def ? config!.settings.game.SyncLanguage : DEFAULT_CONFIG.settings.game.SyncLanguage
+  return !def && config
+    ? config.settings.game.SyncLanguage
+    : DEFAULT_CONFIG.settings.game.SyncLanguage
 }
 
 /**
- * Cambia el idioma actual
- *
- * @param lang El idioma que debería ser seleccionado
+ * Establece el estado de sincronización de idioma.
+ * @param syncLanguage El nuevo estado de sincronización
+ */
+export function setSyncLanguage(syncLanguage: boolean): void {
+  if (!config) return
+  config.settings.game.SyncLanguage = syncLanguage
+  save()
+}
+
+/**
+ * Verifica si el idioma es válido.
+ * @param lang El código de idioma a verificar
+ * @returns true si el idioma es válido
+ */
+export function isValidLanguage(lang: string): boolean {
+  const validLanguages = ['es_ES', 'en_US']
+  return validLanguages.includes(lang)
+}
+
+/**
+ * Obtiene el idioma actual.
+ * @param def Si es true, retorna el valor por defecto
+ * @returns El código de idioma actual
+ */
+export function getCurrentLanguage(def = false): string {
+  if (!def && config && config.settings.launcher.language) {
+    const lang = config.settings.launcher.language
+    return isValidLanguage(lang) ? lang : DEFAULT_CONFIG.settings.launcher.language
+  }
+  return DEFAULT_CONFIG.settings.launcher.language
+}
+
+/**
+ * Obtiene el idioma actual en minúsculas.
+ * @param def Si es true, retorna el valor por defecto
+ * @returns El código de idioma actual en minúsculas
+ */
+export function getCurrentLanguageLowercase(def = false): string {
+  const lang = getCurrentLanguage(def)
+  return lang.toLowerCase()
+}
+
+/**
+ * Establece el idioma del launcher.
+ * @param lang El nuevo código de idioma
  */
 export function setLanguage(lang: string): void {
-  config!.settings.launcher.language = lang
+  if (!config) {
+    config = DEFAULT_CONFIG
+  }
+
+  if (!isValidLanguage(lang)) {
+    throw new Error(`Idioma no soportado: ${lang}`)
+  }
+
+  config.settings.launcher.language = lang
   save()
-  app.relaunch()
-  app.quit()
 }
 
 /**

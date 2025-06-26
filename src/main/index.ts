@@ -4,6 +4,7 @@ import { LoggerUtil } from 'perrito-core'
 import { setupIpcHandlers } from './ipcHandlers'
 import { createMenu } from './menu'
 import { runPreloadTasks } from './preloader'
+import * as ConfigManager from './services/configManager'
 import { languageManager } from './utils/language'
 import { createMainWindow, getMainWindow } from './window'
 
@@ -14,15 +15,25 @@ const logger = LoggerUtil.getLogger('Main')
 app.disableHardwareAcceleration()
 
 // Inicialización de la aplicación
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.perrito-studios.launcher')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // Inicializar el sistema de idiomas
-  languageManager.initialize()
+  // Cargar configuración antes de inicializar otros sistemas
+  try {
+    ConfigManager.load()
+
+    // Sincronizar idioma con la configuración
+    const configLang = ConfigManager.getCurrentLanguage()
+    if (configLang) {
+      languageManager.setLanguage(configLang)
+    }
+  } catch (error) {
+    logger.error('Error cargando configuración:', error)
+  }
 
   setupIpcHandlers()
 
@@ -34,12 +45,9 @@ app.whenReady().then(() => {
   )
 
   createMenu()
-
-  logger.info('[+] Perrito Studios Launcher iniciado correctamente')
-  logger.info('[+] Idioma actual:', languageManager.getCurrentLanguage())
 })
 
-// Cerrar cuando todas las ventanas estén cerradas
+// Manejar cierre de la aplicación
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()

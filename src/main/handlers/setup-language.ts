@@ -1,10 +1,33 @@
 import { BrowserWindow, ipcMain } from 'electron'
+import { LANGUAGE } from '../constants/ipc'
 import { languageManager } from '../utils/language'
 
 export default function setupLanguageHandlers(): void {
+  // Obtener traducción simple
+  ipcMain.on(
+    LANGUAGE.QUERY,
+    (event, key: string, placeholders?: Record<string, string | number>) => {
+      try {
+        let translation = languageManager.getString(key)
+
+        // Reemplazar placeholders si existen
+        if (placeholders) {
+          Object.entries(placeholders).forEach(([key, value]) => {
+            translation = translation.replace(new RegExp(`{{${key}}}`, 'g'), String(value))
+          })
+        }
+
+        event.returnValue = translation
+      } catch (error) {
+        console.error('Error getting translation:', error)
+        event.returnValue = key
+      }
+    }
+  )
+
   // Obtener traducción con pluralización
   ipcMain.on(
-    'language-plural',
+    LANGUAGE.PLURAL,
     (
       event,
       key: string,
@@ -21,7 +44,7 @@ export default function setupLanguageHandlers(): void {
   )
 
   // Formatear fecha
-  ipcMain.on('language-format-date', (event, dateString: string, format: 'short' | 'long') => {
+  ipcMain.on(LANGUAGE.FORMAT_DATE, (event, dateString: string, format: 'short' | 'long') => {
     try {
       const date = new Date(dateString)
       const formatted = languageManager.formatDate(date, format)
@@ -33,7 +56,7 @@ export default function setupLanguageHandlers(): void {
   })
 
   // Formatear número
-  ipcMain.on('language-format-number', (event, num: number) => {
+  ipcMain.on(LANGUAGE.FORMAT_NUMBER, (event, num: number) => {
     try {
       const formatted = languageManager.formatNumber(num)
       event.returnValue = formatted
@@ -44,12 +67,12 @@ export default function setupLanguageHandlers(): void {
   })
 
   // Cambiar idioma
-  ipcMain.on('language-change', (_event, lang: string) => {
+  ipcMain.on(LANGUAGE.CHANGE, (_event, lang: string) => {
     try {
       languageManager.setLanguage(lang)
       // Notificar a todos los renderers sobre el cambio
       BrowserWindow.getAllWindows().forEach((window) => {
-        window.webContents.send('language-changed', lang)
+        window.webContents.send(LANGUAGE.CHANGED, lang)
       })
       console.log('[+] Idioma cambiado a:', lang)
     } catch (error) {
@@ -58,7 +81,7 @@ export default function setupLanguageHandlers(): void {
   })
 
   // Obtener idioma actual
-  ipcMain.on('language-get-current', (event) => {
+  ipcMain.on(LANGUAGE.GET_CURRENT, (event) => {
     try {
       const currentLang = languageManager.getCurrentLanguage()
       event.returnValue = currentLang

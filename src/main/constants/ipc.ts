@@ -24,6 +24,7 @@ export const SHELL_OPCODE = {
   SHOW_ITEM_IN_FOLDER: 'shell:show-item-in-folder',
   RESOLVE_FILE_PATH: 'shell:resolve-file-path',
   SELECT_JAVA_EXECUTABLE: 'shell:select-java-executable',
+  SELECT_FOLDER: 'shell:select-folder',
   GET_SYSTEM_MEMORY: 'shell:get-system-memory'
 } as const
 
@@ -135,13 +136,15 @@ export const AUTH_OPCODE = {
   GET_SELECTED_ACCOUNT: 'auth:get-selected-account',
   GET_ALL_ACCOUNTS: 'auth:get-all-accounts',
   SELECT_ACCOUNT: 'auth:select-account',
-  VALIDATE_SELECTED: 'auth:validate-selected'
+  VALIDATE_SELECTED: 'auth:validate-selected',
+  LOGOUT: 'auth:logout'
 } as const
 
 // Language
 export const LANGUAGE = {
   CHANGE: 'language-change',
   GET_CURRENT: 'language-get-current',
+  QUERY: 'language-query',
   PLURAL: 'language-plural',
   FORMAT_DATE: 'language-format-date',
   FORMAT_NUMBER: 'language-format-number',

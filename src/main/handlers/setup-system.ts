@@ -152,4 +152,27 @@ export default function setupSystemHandlers(): void {
       }
     }
   })
+
+  // Seleccionar carpeta
+  ipcMain.handle(SHELL_OPCODE.SELECT_FOLDER, async () => {
+    try {
+      const result = await dialog.showOpenDialog({
+        title: 'Seleccionar Carpeta',
+        properties: ['openDirectory']
+      })
+
+      if (result.canceled) {
+        return { success: false }
+      }
+
+      const selectedPath = result.filePaths[0]
+      return { success: true, path: selectedPath }
+    } catch (error) {
+      console.error('Error seleccionando carpeta:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error seleccionando carpeta'
+      }
+    }
+  })
 }
