@@ -294,8 +294,12 @@
           "source-code": "Código Fuente",
           "report-issue": "Reportar Problema",
           "open-dev-tools": "Herramientas de Desarrollo"
+        },
+        "status": {
+          "loading": "Cargando versión..."
         }
       },
+
       "changelog": {
         "title": "Notas de Versión",
         "empty": {
@@ -309,24 +313,33 @@
         "release": {
           "description": "Información de la versión",
           "actions": {
-            "view-release": "Ver Notas de Versión en GitHub"
-          }
-        }
-      },
-
-      "updates": {
-        "title": "Estado del Launcher",
-        "description": "Información sobre la versión actual y actualizaciones",
-        "version-status": {
-          "active": "Versión actual: {{version}}",
-          "latest": "Versión más reciente: {{version}}",
-          "prerelease": "Versión pre-release: {{version}}",
-          "stable": "Versión estable: {{version}}"
+            "view-release": "Ver Notas de Versión en GitHub",
+            "view-all": "Ver Todos los Releases"
+          },
+          "info": "Publicado el {{date}}",
+          "name": "Versión {{name}}"
         },
-        "latest": "Tu estás usando la versión más reciente",
-        "actions": {
-          "verify": "Verificar"
+        "status": {
+          "not-found": "Notas de release no encontradas para la versión actual",
+          "loading": "Cargando información de releases...",
+          "error": "Error al conectar con GitHub",
+          "last-release": "Información del último release"
         }
+      }
+    },
+
+    "updates": {
+      "title": "Estado del Launcher",
+      "description": "Información sobre la versión actual y actualizaciones",
+      "version-status": {
+        "active": "Versión actual: {{version}}",
+        "latest": "Versión más reciente: {{version}}",
+        "prerelease": "Versión pre-release: {{version}}",
+        "stable": "Versión estable: {{version}}"
+      },
+      "latest": "Tu estás usando la versión más reciente",
+      "actions": {
+        "verify": "Verificar"
       }
     }
   },

@@ -1,17 +1,21 @@
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/hooks'
 import { useAppInfo } from '@/hooks/config/about/use-app-info'
-import { Clock, ExternalLink, Github, Loader2, ScrollText } from 'lucide-react'
+import { Clock, ExternalLink, Loader2, ScrollText } from 'lucide-react'
+import { FaGithub } from 'react-icons/fa6'
 import { ConfigCard } from '../config-manager/config-card'
 
 export const ReleaseNotesCard = () => {
+  const { t } = useTranslation()
+
   const { isLoading, error, releaseInfo, actions } = useAppInfo()
   const { openReleaseNotes } = actions
 
   const getDescription = () => {
-    if (isLoading) return 'Cargando información de releases...'
-    if (error) return 'Error al conectar con GitHub'
-    if (!releaseInfo.hasReleases) return 'Información de release disponible una vez publicada'
-    return 'Información del último release'
+    if (isLoading) return t('settings.about.changelog.status.loading')
+    if (error) return t('settings.about.changelog.status.error')
+    if (!releaseInfo.hasReleases) return t('settings.about.changelog.empty.description')
+    return t('settings.about.changelog.status.last-release')
   }
 
   const renderContent = () => {
@@ -19,7 +23,7 @@ export const ReleaseNotesCard = () => {
       return (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 size={14} className="animate-spin" />
-          Cargando información de releases...
+          {t('settings.about.changelog.status.loading')}
         </div>
       )
     }
@@ -28,7 +32,7 @@ export const ReleaseNotesCard = () => {
       return (
         <div className="space-y-3">
           <div className="text-sm text-muted-foreground">
-            No se pudo conectar con GitHub: {error}
+            {t('settings.about.changelog.status.error')}: {error}
           </div>
           <Button
             variant="outline"
@@ -36,8 +40,8 @@ export const ReleaseNotesCard = () => {
             onClick={openReleaseNotes}
             className="flex items-center gap-2 text-sm w-full"
           >
-            <Github size={14} />
-            Ver en GitHub
+            <FaGithub size={14} />
+            {t('settings.about.changelog.actions.view-release')}
           </Button>
         </div>
       )
@@ -48,11 +52,10 @@ export const ReleaseNotesCard = () => {
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock size={14} />
-            Aún no se han publicado releases
+            {t('settings.about.changelog.empty.message')}
           </div>
           <p className="text-sm text-muted-foreground">
-            Este launcher está actualmente en desarrollo. Las notas de release estarán disponibles
-            una vez que se publique la primera versión oficial.
+            {t('settings.about.changelog.empty.info')}
           </p>
           <Button
             variant="outline"
@@ -60,8 +63,8 @@ export const ReleaseNotesCard = () => {
             onClick={openReleaseNotes}
             className="flex items-center gap-2 text-sm w-full"
           >
-            <Github size={14} />
-            Ver Progreso de Desarrollo
+            <FaGithub size={14} />
+            {t('settings.about.changelog.empty.actions.view-release')}
           </Button>
         </div>
       )
@@ -72,16 +75,20 @@ export const ReleaseNotesCard = () => {
         {releaseInfo.currentRelease ? (
           <div className="space-y-2">
             <p className="text-sm font-medium">
-              {releaseInfo.currentRelease.name || `Versión ${releaseInfo.currentRelease.tag_name}`}
+              {releaseInfo.currentRelease.name ||
+                t('settings.about.changelog.release.name', {
+                  name: releaseInfo.currentRelease.tag_name
+                })}
             </p>
             <p className="text-sm text-muted-foreground">
-              Publicado el{' '}
-              {new Date(releaseInfo.currentRelease.published_at).toLocaleDateString('es-ES')}
+              {t('settings.about.changelog.release.info', {
+                date: new Date(releaseInfo.currentRelease.published_at).toLocaleDateString('es-ES')
+              })}
             </p>
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Notas de release no encontradas para la versión actual
+            {t('settings.about.changelog.status.not-found')}
           </p>
         )}
 
@@ -92,14 +99,20 @@ export const ReleaseNotesCard = () => {
           className="flex items-center gap-2 text-sm w-full"
         >
           <ExternalLink size={14} />
-          {releaseInfo.currentRelease ? 'Ver Notas de Release' : 'Ver Todos los Releases'}
+          {releaseInfo.currentRelease
+            ? t('settings.about.changelog.release.actions.view-release')
+            : t('settings.about.changelog.release.actions.view-all')}
         </Button>
       </div>
     )
   }
 
   return (
-    <ConfigCard icon={ScrollText} title="Notas de Release" description={getDescription()}>
+    <ConfigCard
+      icon={ScrollText}
+      title={t('settings.about.changelog.title')}
+      description={getDescription()}
+    >
       {renderContent()}
     </ConfigCard>
   )

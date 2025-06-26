@@ -294,8 +294,12 @@
           "source-code": "Source Code",
           "report-issue": "Report Issue",
           "open-dev-tools": "Development Tools"
+        },
+        "status": {
+          "loading": "Loading version..."
         }
       },
+
       "changelog": {
         "title": "Release Notes",
         "empty": {
@@ -309,24 +313,33 @@
         "release": {
           "description": "Version information",
           "actions": {
-            "view-release": "View Release Notes on GitHub"
-          }
-        }
-      },
-
-      "updates": {
-        "title": "Launcher Status",
-        "description": "Information about current version and updates",
-        "version-status": {
-          "active": "Current version: {{version}}",
-          "latest": "Latest version: {{version}}",
-          "prerelease": "Pre-release version: {{version}}",
-          "stable": "Stable version: {{version}}"
+            "view-release": "View Release Notes on GitHub",
+            "view-all": "View All Releases"
+          },
+          "info": "Published on {{date}}",
+          "name": "Version {{name}}"
         },
-        "latest": "You are using the latest version",
-        "actions": {
-          "verify": "Verify"
+        "status": {
+          "not-found": "Release notes not found for the current version",
+          "loading": "Loading release information...",
+          "error": "Error connecting to GitHub",
+          "last-release": "Last release information"
         }
+      }
+    },
+
+    "updates": {
+      "title": "Launcher Status",
+      "description": "Information about current version and updates",
+      "version-status": {
+        "active": "Current version: {{version}}",
+        "latest": "Latest version: {{version}}",
+        "prerelease": "Pre-release version: {{version}}",
+        "stable": "Stable version: {{version}}"
+      },
+      "latest": "You are using the latest version",
+      "actions": {
+        "verify": "Verify"
       }
     }
   },

@@ -1,10 +1,14 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/hooks'
 import { useAppInfo } from '@/hooks/config/about/use-app-info'
-import { CheckCircle, ExternalLink, Github, Info, Loader2, Settings } from 'lucide-react'
+import { CheckCircle, ExternalLink, Info, Loader2, Settings } from 'lucide-react'
+import { FaGithub } from 'react-icons/fa6'
 import { ConfigCard } from '../config-manager/config-card'
 
 export const AppInfoCard = () => {
+  const { t } = useTranslation()
+
   const { appInfo, isLoading, error, actions } = useAppInfo()
   const { version, isStable } = appInfo
   const { openGithub, openSupport, openDevTools } = actions
@@ -12,8 +16,8 @@ export const AppInfoCard = () => {
   return (
     <ConfigCard
       icon={Info}
-      title="Perrito Studios Launcher"
-      description="Launcher oficial para los servidores de Perrito Studios"
+      title={t('settings.about.info.title')}
+      description={t('settings.about.info.description')}
     >
       <div className="space-y-4">
         {/* Version Info */}
@@ -28,10 +32,10 @@ export const AppInfoCard = () => {
               {isLoading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Cargando versión...
+                  {t('settings.about.info.status.loading')}
                 </>
               ) : error ? (
-                `v${version} (Error: ${error})`
+                `v${version} (${t('common.status.error')}: ${error})`
               ) : (
                 `v${version}`
               )}
@@ -39,7 +43,9 @@ export const AppInfoCard = () => {
             {!isLoading && !error && (
               <Badge variant={isStable ? 'default' : 'secondary'} className="text-xs">
                 <CheckCircle size={12} className="mr-1" />
-                {isStable ? 'Versión Estable' : 'Pre-release'}
+                {isStable
+                  ? t('settings.about.info.versions.stable')
+                  : t('settings.about.info.versions.prerelease')}
               </Badge>
             )}
           </div>
@@ -53,8 +59,8 @@ export const AppInfoCard = () => {
             onClick={openGithub}
             className="flex items-center gap-2 text-sm"
           >
-            <Github size={14} />
-            Código Fuente
+            <FaGithub size={14} />
+            {t('settings.about.info.actions.source-code')}
           </Button>
           <Button
             variant="outline"
@@ -63,7 +69,7 @@ export const AppInfoCard = () => {
             className="flex items-center gap-2 text-sm"
           >
             <ExternalLink size={14} />
-            Reportar Issues
+            {t('settings.about.info.actions.report-issue')}
           </Button>
           <Button
             variant="outline"
@@ -72,7 +78,7 @@ export const AppInfoCard = () => {
             className="flex items-center gap-2 text-sm"
           >
             <Settings size={14} />
-            Herramientas de Desarrollo
+            {t('settings.about.info.actions.open-dev-tools')}
           </Button>
         </div>
       </div>
