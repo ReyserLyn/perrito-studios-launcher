@@ -33,12 +33,22 @@
       },
       "status": {
         "loading": "Signing in...",
-        "error": "Please enter a username"
+        "error": "Please enter a username",
+        "added-mojang": "Mojang account added successfully"
+      },
+      "error": {
+        "add-mojang-account": "Error adding Mojang account"
       }
     },
     "microsoft": {
       "title": "Signing in with Microsoft...",
-      "subtitle": "A window will open for sign in. Once you complete the process, this window will close automatically."
+      "subtitle": "A window will open for sign in. Once you complete the process, this window will close automatically.",
+      "status": {
+        "added-microsoft": "Microsoft account added successfully"
+      },
+      "error": {
+        "add-microsoft-account": "Error adding Microsoft account"
+      }
     },
     "account": {
       "title": "Select Account",
@@ -50,8 +60,15 @@
         "error": "Error loading accounts",
         "not-found": "User without name",
         "no-accounts": "No accounts available",
-        "no-selected": "No account selected"
+        "no-selected": "No account selected",
+        "selected": "Account selected successfully",
+        "removed": "Account removed successfully"
       }
+    },
+    "error": {
+      "no-accounts": "Error loading accounts",
+      "duplicate-username": "The username \"{{username}}\" is already in use. Please enter another name or check the loaded accounts.",
+      "select-account": "Error selecting account"
     }
   },
 

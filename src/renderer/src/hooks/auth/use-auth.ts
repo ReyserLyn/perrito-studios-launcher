@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { queryKeys } from '../../lib/queryClient'
+import { useTranslation } from '../use-translation'
 
 // ===== HOOKS PARA CONSULTAS =====
 
@@ -8,7 +9,10 @@ import { queryKeys } from '../../lib/queryClient'
  * Hook para obtener todas las cuentas desde la API
  * No actualiza el store, solo retorna los datos
  */
+
 export const useAccountsQuery = () => {
+  const { t } = useTranslation()
+
   return useQuery({
     queryKey: queryKeys.auth.accounts,
     queryFn: async () => {
@@ -16,7 +20,7 @@ export const useAccountsQuery = () => {
       if (result.success) {
         return result.accounts
       }
-      throw new Error(result.error || 'Error obteniendo cuentas')
+      throw new Error(result.error || t('auth.error.no-accounts'))
     },
     staleTime: 0,
     gcTime: 0,
@@ -90,6 +94,7 @@ export const useAuthData = () => {
  * Hook para añadir cuenta Mojang
  */
 export const useAddMojangAccount = () => {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -103,22 +108,20 @@ export const useAddMojangAccount = () => {
         )
 
         if (duplicateAccount) {
-          throw new Error(
-            `El nombre de usuario "${username}" ya está en uso. Por favor ingresa otro nombre o revisa las cuentas cargadas.`
-          )
+          throw new Error(t('auth.error.duplicate-username', { username }))
         }
       }
 
       const result = await window.api.auth.addMojangAccount(username)
       if (!result.success) {
-        throw new Error(result.error || 'Error añadiendo cuenta Mojang')
+        throw new Error(result.error || t('auth.error.add-mojang-account'))
       }
       return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      toast.success('Cuenta Mojang añadida exitosamente')
+      toast.success(t('auth.offline.status.added-mojang'))
     },
     onError: (error: Error) => {
       console.error(`[useAddMojangAccount] Error:`, error)
@@ -131,20 +134,21 @@ export const useAddMojangAccount = () => {
  * Hook para añadir cuenta Microsoft
  */
 export const useAddMicrosoftAccount = () => {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (authCode: string) => {
       const result = await window.api.auth.addMicrosoftAccount(authCode)
       if (!result.success) {
-        throw new Error(result.error || 'Error añadiendo cuenta Microsoft')
+        throw new Error(result.error || t('auth.microsoft.error.add-microsoft-account'))
       }
       return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      toast.success('Cuenta Microsoft añadida exitosamente')
+      toast.success(t('auth.microsoft.status.added-microsoft'))
     },
     onError: (error: Error) => {
       console.error('[useAddMicrosoftAccount] Error:', error)
@@ -157,20 +161,21 @@ export const useAddMicrosoftAccount = () => {
  * Hook para seleccionar cuenta
  */
 export const useSelectAccount = () => {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (uuid: string) => {
       const result = await window.api.auth.selectAccount(uuid)
       if (!result.success) {
-        throw new Error(result.error || 'Error seleccionando cuenta')
+        throw new Error(result.error || t('auth.error.select-account'))
       }
       return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
-      toast.success('Cuenta seleccionada exitosamente')
+      toast.success(t('auth.account.status.selected'))
     },
     onError: (error: Error) => {
       console.error(`[useSelectAccount] Error:`, error)
@@ -180,34 +185,10 @@ export const useSelectAccount = () => {
 }
 
 /**
- * Hook para cerrar sesión
- */
-export const useLogout = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async () => {
-      const result = await window.api.auth.logout()
-      if (!result.success) {
-        throw new Error(result.error || 'Error cerrando sesión')
-      }
-      return result
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      toast.success('Sesión cerrada exitosamente')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message)
-    }
-  })
-}
-
-/**
  * Hook para eliminar cuenta
  */
 export const useRemoveAccount = () => {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -221,7 +202,7 @@ export const useRemoveAccount = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.accounts })
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.selectedAccount })
-      toast.success('Cuenta eliminada exitosamente')
+      toast.success(t('auth.account.status.removed'))
     },
     onError: (error: Error) => {
       console.error('[useRemoveAccount] Error:', error)

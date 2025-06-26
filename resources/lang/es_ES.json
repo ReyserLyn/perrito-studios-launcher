@@ -33,12 +33,22 @@
       },
       "status": {
         "loading": "Iniciando sesión...",
-        "error": "Por favor ingresa un nombre de usuario"
+        "error": "Por favor ingresa un nombre de usuario",
+        "added-mojang": "Cuenta Mojang añadida exitosamente"
+      },
+      "error": {
+        "add-mojang-account": "Error al añadir cuenta Mojang"
       }
     },
     "microsoft": {
       "title": "Iniciando sesión con Microsoft...",
-      "subtitle": "Se abrirá una ventana para iniciar sesión. Una vez que completes el proceso, esta ventana se cerrará automáticamente."
+      "subtitle": "Se abrirá una ventana para iniciar sesión. Una vez que completes el proceso, esta ventana se cerrará automáticamente.",
+      "status": {
+        "added-microsoft": "Cuenta Microsoft añadida exitosamente"
+      },
+      "error": {
+        "add-microsoft-account": "Error al añadir cuenta Microsoft"
+      }
     },
     "account": {
       "title": "Seleccionar Cuenta",
@@ -50,8 +60,15 @@
         "error": "Error al cargar cuentas",
         "not-found": "Usuario sin nombre",
         "no-accounts": "No hay cuentas disponibles",
-        "no-selected": "No hay cuenta seleccionada"
+        "no-selected": "No hay cuenta seleccionada",
+        "selected": "Cuenta seleccionada exitosamente",
+        "removed": "Cuenta eliminada exitosamente"
       }
+    },
+    "error": {
+      "no-accounts": "Error al cargar cuentas",
+      "duplicate-username": "El nombre de usuario \"{{username}}\" ya está en uso. Por favor ingresa otro nombre o revisa las cuentas cargadas.",
+      "select-account": "Error al seleccionar cuenta"
     }
   },
 
