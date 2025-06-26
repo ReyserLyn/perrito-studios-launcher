@@ -1,43 +1,85 @@
 {
-  "loginOptions": {
-    "loginOptionsTitle": "Iniciar Sesión",
-    "loginWithMicrosoft": "Continuar con Microsoft",
-    "loginWithMojang": "Continuar con Mojang",
-    "cancelButton": "Cancelar"
+  "_meta": {
+    "name": "Español (España)",
+    "code": "es_ES",
+    "flag": "🇪🇸",
+    "completion": 100,
+    "contributors": ["Reyserlyn"],
+    "lastUpdated": "2025-06-26"
   },
-  "test": {
-    "title": "🧪 Pruebas del Sistema de Idiomas",
-    "subtitle": "Ejemplos de uso y funcionalidades",
-    "simple": "Texto simple en español",
-    "withVariable": "Hola {{name}}, bienvenido al launcher",
-    "withNumber": "Tienes {{count}} juegos instalados",
-    "progress": "Progreso: {{percent}}%",
-    "games": {
-      "zero": "No tienes juegos",
-      "one": "Tienes {{count}} juego",
-      "other": "Tienes {{count}} juegos"
+
+  "auth": {
+    "login": {
+      "title": "Bienvenido a Perrito Launcher",
+      "subtitle": "Para continuar, debes iniciar sesión con una cuenta",
+      "microsoft": "Iniciar sesión con Microsoft",
+      "offline": "Iniciar sesión sin conexión",
+      "footer": "Es obligatorio tener una cuenta para usar el launcher"
     },
-    "users": {
-      "zero": "No hay usuarios conectados",
-      "one": "{{count}} usuario conectado",
-      "other": "{{count}} usuarios conectados"
+    "offline": {
+      "title": "Iniciar sesión en Perrito Launcher",
+      "subtitle": "Ingresa tu nombre de usuario",
+      "form": {
+        "label": "Nombre de usuario",
+        "placeholder": "Ingresa tu nombre de usuario"
+      },
+      "login": "Iniciar sesión"
     },
-    "lastSeen": "Última vez visto: {{date}}",
-    "fileSize": "Tamaño del archivo: {{size}} bytes",
-    "sections": {
-      "basic": "Uso Básico",
-      "variables": "Variables",
-      "pluralization": "Pluralización",
-      "formatting": "Formateo"
+    "microsoft": {
+      "title": "Iniciando sesión con Microsoft...",
+      "subtitle": "Se abrirá una ventana para iniciar sesión. Una vez que completes el proceso, esta ventana se cerrará automáticamente."
+    },
+    "account": {
+      "title": "Seleccionar Cuenta",
+      "subtitle": "Elige la cuenta con la que quieres jugar.",
+      "manage": "Administrar cuentas"
     }
   },
-  "microsoft": {
-    "loginTitle": "Iniciar Sesión con Microsoft",
-    "logoutTitle": "Cerrar Sesión de Microsoft",
-    "connecting": "Conectando con Microsoft...",
-    "success": "Autenticación exitosa",
-    "error": "Error en la autenticación"
+
+  "common": {
+    "actions": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "dismiss": "Descartar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "copy": "Copiar",
+      "close": "Cerrar",
+      "back": "Volver",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "ok": "Aceptar",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "status": {
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "offline": "Sin conexión",
+      "online": "Conectado",
+      "required": "Requerido",
+      "optional": "Opcional",
+      "selected": "Seleccionado",
+      "main": "Principal",
+      "loading": "Cargando...",
+      "success": "Éxito",
+      "error": "Error",
+      "warning": "Advertencia",
+      "info": "Información",
+      "ready": "Listo",
+      "connecting": "Conectando...",
+      "disconnected": "Desconectado"
+    },
+    "size": {
+      "height": "Alto",
+      "width": "Ancho"
+    },
+    "system": {
+      "open-folder": "Abrir carpeta",
+      "refresh": "Refrescar"
+    }
   },
+
   "updater": {
     "checking": "Buscando actualizaciones...",
     "available": "Actualización disponible v{{version}}",
@@ -96,63 +138,231 @@
       "viewFull": "Ver notas completas"
     }
   },
-  "general": {
-    "error": "Error",
-    "success": "Éxito",
-    "cancel": "Cancelar",
-    "ok": "Aceptar",
-    "close": "Cerrar",
-    "yes": "Sí",
-    "no": "No",
-    "loading": "Cargando...",
-    "save": "Guardar",
-    "delete": "Eliminar",
-    "edit": "Editar"
-  },
-  "launcher": {
-    "title": "Perrito Studios Launcher",
-    "loading": "Cargando launcher...",
-    "connecting": "Conectando...",
-    "ready": "Listo para jugar",
-    "welcome": "¡Bienvenido de vuelta, {{username}}!",
-    "totalGames": "Total de juegos: {{count}}",
-    "lastPlayed": "Último juego: {{game}}",
-    "playTime": "Tiempo jugado: {{hours}} horas",
-    "language": {
-      "title": "Idioma del Launcher",
-      "description": "Puedes cambiar el idioma en la lista de abajo. Los cambios se aplicarán inmediatamente.",
-      "select_placeholder": "Selecciona un idioma"
-    },
-    "prerelease": {
-      "title": "Permitir Actualizaciones Pre-Release",
-      "description": "Las pre-releases incluyen nuevas características que pueden no haber sido completamente probadas o integradas. Esto siempre será verdadero si estás usando una versión pre-release.",
-      "label": "Permitir Pre-Releases"
-    },
-    "data_directory": {
-      "title": "Directorio de Datos",
-      "description": "Ubicación donde se almacenan todos los datos del launcher, incluidos juegos, configuraciones y mods.",
-      "select_placeholder": "Selecciona un directorio...",
-      "warning": "⚠️ Cambiar el directorio de datos moverá todos los archivos existentes a la nueva ubicación. Este proceso puede tardar varios minutos dependiendo del tamaño de los datos."
-    }
-  },
+
   "navigation": {
-    "home": "Inicio",
-    "games": "Juegos",
-    "store": "Tienda",
-    "profile": "Perfil",
-    "settings": "Configuración",
-    "help": "Ayuda"
+    "account": "Cuenta",
+    "minecraft": "Minecraft",
+    "mods": "Mods",
+    "java": "Java",
+    "launcher": "Launcher",
+    "about": "Acerca de",
+    "updates": "Actualizaciones"
   },
+
   "discord": {
     "waiting": "Esperando al jugador...",
     "state": "Jugando en {{shortId}}"
   },
+
   "settings": {
-    "tabs": {
-      "about": {
-        "title": "Acerca de",
-        "description": "Información sobre el launcher y las últimas actualizaciones"
+    "account": {
+      "title": "Cuenta",
+      "description": "Añada nuevas cuentas o administre las existentes",
+      "actions": {
+        "add-microsoft": "Añadir cuenta Microsoft",
+        "add-offline": "Añadir cuenta Perrito Studios"
+      },
+      "empty": {
+        "title": "No hay cuentas disponibles",
+        "description": "Agrega una cuenta desde la sección de Cuentas en configuración",
+        "actions": {
+          "add-microsoft": "Añadir cuenta Microsoft",
+          "add-offline": "Añadir cuenta Perrito Studios"
+        }
       }
+    },
+
+    "minecraft": {
+      "title": "Minecraft",
+      "description": "Configura las opciones de lanzamiento de Minecraft",
+      "resolution": {
+        "title": "Resolución del Juego"
+      },
+      "fullscreen": {
+        "title": "Pantalla Completa",
+        "description": "Lanza Minecraft en modo pantalla completa"
+      },
+      "autoconnect": {
+        "title": "Autoconección al servidor",
+        "description": "Conecta automáticamente al servidor cuando inicie el juego"
+      },
+      "sync-language": {
+        "title": "Sincronizar idioma",
+        "description": "Usa el mismo idioma del launcher en el juego"
+      },
+      "process-independent": {
+        "title": "Proceso independiente",
+        "description": "Permite cerrar el launcher después de iniciar el juego"
+      }
+    },
+
+    "mods": {
+      "title": "Mods",
+      "description": "Configura los mods para {{serverName}}",
+      "mods-required": {
+        "title": "Mods obligatorios",
+        "description": "Estos mods son requeridos por el servidor y siempre están activos"
+      },
+      "mods-optional": {
+        "title": "Mods opcionales",
+        "description": "Estos mods pueden activarse o desactivarse según tus preferencias"
+      },
+      "mods-local": {
+        "title": "Mods Locales (Drop-in)",
+        "description": "Administra tus mods locales arrastrando archivos .jar, .zip o .litemod",
+        "drag-drop": {
+          "hover": {
+            "title": "Suelta los archivos aquí",
+            "description": "Formatos soportados: .jar, .zip, .litemod"
+          },
+          "empty": {
+            "title": "No hay mods instalados",
+            "description": "Arrastra archivos aquí o usa los botones para gestionar tus mods"
+          },
+          "installed": {
+            "title": "Arrastra más mods aquí para añadirlos"
+          }
+        },
+        "installed": {
+          "title": "Mods instalados"
+        },
+        "stats": {
+          "total": "Total",
+          "enabled": "Activos",
+          "disabled": "Inactivos"
+        }
+      }
+    },
+
+    "java": {
+      "title": "Java",
+      "description": "Configura las opciones de Java para Minecraft",
+      "memory": {
+        "title": "Memoria",
+        "description": "Configura la memoria asignada a Minecraft",
+        "system": "Memoria del Sistema: {{system}} (Disponible: {{available}})",
+        "max": "Memoria Máxima (RAM)",
+        "min": "Memoria Mínima (RAM)",
+        "info": "La memoria mínima recomendada es {{recommended}} para un rendimiento óptimo."
+      },
+      "executable": {
+        "title": "Ejecutable de Java",
+        "description": "Selecciona la versión de Java a utilizar",
+        "selected": "Seleccionado: {{name}} ({{vendor}})",
+        "required": "El ejecutable de Java es validado antes del lanzamiento del juego. Se requiere Java 21 x64.",
+        "info": "La ruta debe terminar con bin\\javaw.exe"
+      },
+      "jvm": {
+        "title": "Opciones Adicionales de JVM",
+        "description": "Configura opciones adicionales para la JVM",
+        "info": "Opciones que serán proporcionadas a la JVM en tiempo de ejecución. -Xms y -Xmx no deben incluirse.",
+        "recommended": "Opciones recomendadas: "
+      },
+      "launcher": {
+        "title": "Launcher",
+        "description": "Configura las opciones generales del launcher",
+        "language": {
+          "title": "Idioma del Launcher",
+          "description": "Puedes cambiar el idioma en la lista de abajo. Los cambios se aplicarán inmediatamente.",
+          "select_placeholder": "Selecciona un idioma"
+        },
+        "prerelease": {
+          "title": "Permitir Actualizaciones Pre-Release",
+          "description": "Las pre-releases incluyen nuevas características que pueden no haber sido completamente probadas o integradas. Esto siempre será verdadero si estás usando una versión pre-release.",
+          "label": "Permitir Pre-Releases"
+        },
+        "data_directory": {
+          "title": "Directorio de Datos",
+          "description": "Ubicación donde se almacenan todos los datos del launcher, incluidos juegos, configuraciones y mods.",
+          "select_placeholder": "Selecciona un directorio...",
+          "warning": "⚠️ Cambiar el directorio de datos moverá todos los archivos existentes a la nueva ubicación. Este proceso puede tardar varios minutos dependiendo del tamaño de los datos."
+        }
+      }
+    },
+
+    "about": {
+      "title": "Acerca de",
+      "description": "Información sobre el launcher y las últimas actualizaciones",
+      "info": {
+        "title": "Perrito Studios Launcher",
+        "description": "Launcher oficial para los servidores de Perrito Studios",
+        "versions": {
+          "stable": "Versión Estable",
+          "prerelease": "Versión Pre-Release"
+        },
+        "actions": {
+          "source-code": "Código Fuente",
+          "report-issue": "Reportar Problema",
+          "open-dev-tools": "Herramientas de Desarrollo"
+        }
+      },
+      "changelog": {
+        "title": "Notas de Versión",
+        "empty": {
+          "description": "Información de release disponible una vez publicada",
+          "message": "Aún no se han publicado releases",
+          "info": "Este launcher está actualmente en desarrollo. Las notas de release estarán disponibles una vez que se publique la primera versión oficial.",
+          "actions": {
+            "view-release": "Ver Progreso de Desarrollo"
+          }
+        },
+        "release": {
+          "description": "Información de la versión",
+          "actions": {
+            "view-release": "Ver Notas de Versión en GitHub"
+          }
+        }
+      },
+
+      "updates": {
+        "title": "Estado del Launcher",
+        "description": "Información sobre la versión actual y actualizaciones",
+        "version-status": {
+          "active": "Versión actual: {{version}}",
+          "latest": "Versión más reciente: {{version}}",
+          "prerelease": "Versión pre-release: {{version}}",
+          "stable": "Versión estable: {{version}}"
+        },
+        "latest": "Tu estás usando la versión más reciente",
+        "actions": {
+          "verify": "Verificar"
+        }
+      }
+    }
+  },
+
+  "server": {
+    "title": "Seleccionar Servidor",
+    "description": "Elige el servidor en el que quieres jugar",
+    "actions": {
+      "change": "Cambiar servidor"
+    },
+    "status": {
+      "online": "{{count}} jugadores conectados",
+      "offline": "Servidor no disponible"
+    }
+  },
+
+  "plurals": {
+    "files": {
+      "zero": "No hay archivos",
+      "one": "{{count}} archivo",
+      "other": "{{count}} archivos"
+    }
+  },
+
+  "formatting": {
+    "date": {
+      "formats": {
+        "short": "DD/MM/YYYY",
+        "long": "DD de MMMM de YYYY"
+      }
+    },
+    "size": {
+      "bytes": "{{value}} B",
+      "kb": "{{value}} KB",
+      "mb": "{{value}} MB",
+      "gb": "{{value}} GB"
     }
   }
 }

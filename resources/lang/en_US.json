@@ -1,43 +1,85 @@
 {
-  "loginOptions": {
-    "loginOptionsTitle": "Sign In",
-    "loginWithMicrosoft": "Continue with Microsoft",
-    "loginWithMojang": "Continue with Mojang",
-    "cancelButton": "Cancel"
+  "_meta": {
+    "name": "English (United States)",
+    "code": "en_US",
+    "flag": "🇺🇸",
+    "completion": 100,
+    "contributors": ["Reyserlyn"],
+    "lastUpdated": "2025-06-26"
   },
-  "test": {
-    "title": "🧪 Language System Tests",
-    "subtitle": "Usage examples and features",
-    "simple": "Simple text in English",
-    "withVariable": "Hello {{name}}, welcome to the launcher",
-    "withNumber": "You have {{count}} games installed",
-    "progress": "Progress: {{percent}}%",
-    "games": {
-      "zero": "You have no games",
-      "one": "You have {{count}} game",
-      "other": "You have {{count}} games"
+
+  "auth": {
+    "login": {
+      "title": "Welcome to Perrito Launcher",
+      "subtitle": "To continue, you must sign in with an account",
+      "microsoft": "Sign in with Microsoft",
+      "offline": "Sign in offline",
+      "footer": "Having an account is required to use the launcher"
     },
-    "users": {
-      "zero": "No users connected",
-      "one": "{{count}} user connected",
-      "other": "{{count}} users connected"
+    "offline": {
+      "title": "Sign in to Perrito Launcher",
+      "subtitle": "Enter your username",
+      "form": {
+        "label": "Username",
+        "placeholder": "Enter your username"
+      },
+      "login": "Sign in"
     },
-    "lastSeen": "Last seen: {{date}}",
-    "fileSize": "File size: {{size}} bytes",
-    "sections": {
-      "basic": "Basic Usage",
-      "variables": "Variables",
-      "pluralization": "Pluralization",
-      "formatting": "Formatting"
+    "microsoft": {
+      "title": "Signing in with Microsoft...",
+      "subtitle": "A window will open for sign in. Once you complete the process, this window will close automatically."
+    },
+    "account": {
+      "title": "Select Account",
+      "subtitle": "Choose the account you want to play with.",
+      "manage": "Manage accounts"
     }
   },
-  "microsoft": {
-    "loginTitle": "Microsoft Login",
-    "logoutTitle": "Microsoft Logout",
-    "connecting": "Connecting to Microsoft...",
-    "success": "Authentication successful",
-    "error": "Authentication error"
+
+  "common": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "dismiss": "Dismiss",
+      "delete": "Delete",
+      "edit": "Edit",
+      "copy": "Copy",
+      "close": "Close",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "ok": "OK",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "offline": "Offline",
+      "online": "Online",
+      "required": "Required",
+      "optional": "Optional",
+      "selected": "Selected",
+      "main": "Main",
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Information",
+      "ready": "Ready",
+      "connecting": "Connecting...",
+      "disconnected": "Disconnected"
+    },
+    "size": {
+      "height": "Height",
+      "width": "Width"
+    },
+    "system": {
+      "open-folder": "Open folder",
+      "refresh": "Refresh"
+    }
   },
+
   "updater": {
     "checking": "Checking for updates...",
     "available": "Update available v{{version}}",
@@ -73,9 +115,11 @@
     "config": {
       "title": "Update Settings",
       "description": "Customize how updates are handled",
-      "allowPrerelease": {
-        "title": "Allow pre-release versions",
-        "description": "Receive updates for beta and pre-release versions"
+      "updates": {
+        "allowPrerelease": {
+          "title": "Allow pre-release versions",
+          "description": "Receive updates for beta and pre-release versions"
+        }
       },
       "autoCheck": {
         "title": "Automatic checking",
@@ -94,63 +138,231 @@
       "viewFull": "View full notes"
     }
   },
-  "general": {
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "ok": "OK",
-    "close": "Close",
-    "yes": "Yes",
-    "no": "No",
-    "loading": "Loading...",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit"
-  },
-  "launcher": {
-    "title": "Perrito Studios Launcher",
-    "loading": "Loading launcher...",
-    "connecting": "Connecting...",
-    "ready": "Ready to play",
-    "welcome": "Welcome back, {{username}}!",
-    "totalGames": "Total games: {{count}}",
-    "lastPlayed": "Last game: {{game}}",
-    "playTime": "Play time: {{hours}} hours",
-    "language": {
-      "title": "Launcher Language",
-      "description": "You can change the language in the list below. Changes will be applied immediately.",
-      "select_placeholder": "Select a language"
-    },
-    "prerelease": {
-      "title": "Allow Pre-Release Updates",
-      "description": "Pre-releases include new features that may not have been fully tested or integrated. This will always be true if you are using a pre-release version.",
-      "label": "Allow Pre-Releases"
-    },
-    "data_directory": {
-      "title": "Data Directory",
-      "description": "Location where all launcher data is stored, including games, configurations, and mods.",
-      "select_placeholder": "Select a directory...",
-      "warning": "⚠️ Changing the data directory will move all existing files to the new location. This process may take several minutes depending on the size of the data."
-    }
-  },
+
   "navigation": {
-    "home": "Home",
-    "games": "Games",
-    "store": "Store",
-    "profile": "Profile",
-    "settings": "Settings",
-    "help": "Help"
+    "account": "Account",
+    "minecraft": "Minecraft",
+    "mods": "Mods",
+    "java": "Java",
+    "launcher": "Launcher",
+    "about": "About",
+    "updates": "Updates"
   },
+
   "discord": {
     "waiting": "Waiting for the player...",
     "state": "Playing on {{shortId}}"
   },
+
   "settings": {
-    "tabs": {
-      "about": {
-        "title": "About",
-        "description": "Information about the launcher and latest updates"
+    "account": {
+      "title": "Account",
+      "description": "Add new accounts or manage existing ones",
+      "actions": {
+        "add-microsoft": "Add Microsoft account",
+        "add-offline": "Add Perrito Studios account"
+      },
+      "empty": {
+        "title": "No accounts available",
+        "description": "Add an account from the Accounts section in settings",
+        "actions": {
+          "add-microsoft": "Add Microsoft account",
+          "add-offline": "Add Perrito Studios account"
+        }
       }
+    },
+
+    "minecraft": {
+      "title": "Minecraft",
+      "description": "Configure Minecraft launch options",
+      "resolution": {
+        "title": "Game Resolution"
+      },
+      "fullscreen": {
+        "title": "Fullscreen",
+        "description": "Launch Minecraft in fullscreen mode"
+      },
+      "autoconnect": {
+        "title": "Auto-connect to server",
+        "description": "Automatically connect to the server when the game starts"
+      },
+      "sync-language": {
+        "title": "Sync language",
+        "description": "Use the same launcher language in the game"
+      },
+      "process-independent": {
+        "title": "Independent process",
+        "description": "Allow closing the launcher after starting the game"
+      }
+    },
+
+    "mods": {
+      "title": "Mods",
+      "description": "Configure mods for {{serverName}}",
+      "mods-required": {
+        "title": "Required mods",
+        "description": "These mods are required by the server and are always active"
+      },
+      "mods-optional": {
+        "title": "Optional mods",
+        "description": "These mods can be enabled or disabled according to your preferences"
+      },
+      "mods-local": {
+        "title": "Local Mods (Drop-in)",
+        "description": "Manage your local mods by dragging .jar, .zip or .litemod files",
+        "drag-drop": {
+          "hover": {
+            "title": "Drop files here",
+            "description": "Supported formats: .jar, .zip, .litemod"
+          },
+          "empty": {
+            "title": "No mods installed",
+            "description": "Drag files here or use the buttons to manage your mods"
+          },
+          "installed": {
+            "title": "Drag more mods here to add them"
+          }
+        },
+        "installed": {
+          "title": "Installed mods"
+        },
+        "stats": {
+          "total": "Total",
+          "enabled": "Active",
+          "disabled": "Inactive"
+        }
+      }
+    },
+
+    "java": {
+      "title": "Java",
+      "description": "Configure Java options for Minecraft",
+      "memory": {
+        "title": "Memory",
+        "description": "Configure memory allocated to Minecraft",
+        "system": "System Memory: {{system}} (Available: {{available}})",
+        "max": "Maximum Memory (RAM)",
+        "min": "Minimum Memory (RAM)",
+        "info": "Recommended minimum memory is {{recommended}} for optimal performance."
+      },
+      "executable": {
+        "title": "Java Executable",
+        "description": "Select the Java version to use",
+        "selected": "Selected: {{name}} ({{vendor}})",
+        "required": "Java executable is validated before game launch. Java 21 x64 is required.",
+        "info": "The path must end with bin\\javaw.exe"
+      },
+      "jvm": {
+        "title": "Additional JVM Options",
+        "description": "Configure additional options for the JVM",
+        "info": "Options that will be provided to the JVM at runtime. -Xms and -Xmx should not be included.",
+        "recommended": "Recommended options: "
+      },
+      "launcher": {
+        "title": "Launcher",
+        "description": "Configure general launcher options",
+        "language": {
+          "title": "Launcher Language",
+          "description": "You can change the language in the list below. Changes will be applied immediately.",
+          "select_placeholder": "Select a language"
+        },
+        "prerelease": {
+          "title": "Allow Pre-Release Updates",
+          "description": "Pre-releases include new features that may not have been fully tested or integrated. This will always be true if you are using a pre-release version.",
+          "label": "Allow Pre-Releases"
+        },
+        "data_directory": {
+          "title": "Data Directory",
+          "description": "Location where all launcher data is stored, including games, configurations and mods.",
+          "select_placeholder": "Select a directory...",
+          "warning": "⚠️ Changing the data directory will move all existing files to the new location. This process may take several minutes depending on the size of the data."
+        }
+      }
+    },
+
+    "about": {
+      "title": "About",
+      "description": "Information about the launcher and latest updates",
+      "info": {
+        "title": "Perrito Studios Launcher",
+        "description": "Official launcher for Perrito Studios servers",
+        "versions": {
+          "stable": "Stable Version",
+          "prerelease": "Pre-Release Version"
+        },
+        "actions": {
+          "source-code": "Source Code",
+          "report-issue": "Report Issue",
+          "open-dev-tools": "Development Tools"
+        }
+      },
+      "changelog": {
+        "title": "Release Notes",
+        "empty": {
+          "description": "Release information available once published",
+          "message": "No releases have been published yet",
+          "info": "This launcher is currently in development. Release notes will be available once the first official version is published.",
+          "actions": {
+            "view-release": "View Development Progress"
+          }
+        },
+        "release": {
+          "description": "Version information",
+          "actions": {
+            "view-release": "View Release Notes on GitHub"
+          }
+        }
+      },
+
+      "updates": {
+        "title": "Launcher Status",
+        "description": "Information about current version and updates",
+        "version-status": {
+          "active": "Current version: {{version}}",
+          "latest": "Latest version: {{version}}",
+          "prerelease": "Pre-release version: {{version}}",
+          "stable": "Stable version: {{version}}"
+        },
+        "latest": "You are using the latest version",
+        "actions": {
+          "verify": "Verify"
+        }
+      }
+    }
+  },
+
+  "server": {
+    "title": "Select Server",
+    "description": "Choose the server you want to play on",
+    "actions": {
+      "change": "Change server"
+    },
+    "status": {
+      "online": "{{count}} players connected",
+      "offline": "Server not available"
+    }
+  },
+
+  "plurals": {
+    "files": {
+      "zero": "No files",
+      "one": "{{count}} file",
+      "other": "{{count}} files"
+    }
+  },
+
+  "formatting": {
+    "date": {
+      "formats": {
+        "short": "MM/DD/YYYY",
+        "long": "MMMM DD, YYYY"
+      }
+    },
+    "size": {
+      "bytes": "{{value}} B",
+      "kb": "{{value}} KB",
+      "mb": "{{value}} MB",
+      "gb": "{{value}} GB"
     }
   }
 }
