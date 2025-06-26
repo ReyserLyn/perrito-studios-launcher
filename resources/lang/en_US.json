@@ -99,5 +99,13 @@
   "discord": {
     "waiting": "Waiting for the player...",
     "state": "Playing on {{shortId}}"
+  },
+  "settings": {
+    "tabs": {
+      "about": {
+        "title": "About",
+        "description": "Information about the launcher and latest updates"
+      }
+    }
   }
 }

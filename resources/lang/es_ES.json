@@ -99,5 +99,13 @@
   "discord": {
     "waiting": "Esperando al jugador...",
     "state": "Jugando en {{shortId}}"
+  },
+  "settings": {
+    "tabs": {
+      "about": {
+        "title": "Acerca de",
+        "description": "Información sobre el launcher y las últimas actualizaciones"
+      }
+    }
   }
 }

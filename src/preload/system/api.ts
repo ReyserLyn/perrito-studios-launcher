@@ -54,6 +54,25 @@ export const systemAPI: SystemApi = {
     ipcRenderer.invoke(SHELL_OPCODE.SELECT_FOLDER),
 
   /**
+   * Obtiene la versión de la aplicación
+   * @returns La versión de la aplicación
+   */
+  getAppVersion: (): Promise<string> => ipcRenderer.invoke(SHELL_OPCODE.GET_APP_VERSION),
+
+  /**
+   * Abre las herramientas de desarrollo
+   */
+  openDevTools: (): void => ipcRenderer.send(SHELL_OPCODE.OPEN_DEV_TOOLS),
+
+  /**
+   * Abre una URL externa en el navegador por defecto
+   * @param url URL a abrir
+   * @returns Resultado de la operación
+   */
+  openExternal: (url: string): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke(SHELL_OPCODE.OPEN_EXTERNAL, url),
+
+  /**
    * Escucha el evento de finalización del índice de distribución
    * @param callback Función a ejecutar cuando se complete el índice
    */

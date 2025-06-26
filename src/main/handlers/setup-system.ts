@@ -1,4 +1,4 @@
-import { dialog, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import * as fs from 'fs-extra'
 import * as os from 'os'
 import * as path from 'path'
@@ -26,6 +26,39 @@ export default function setupSystemHandlers(): void {
     return {
       total: totalMemory,
       free: freeMemory
+    }
+  })
+
+  /**
+   * Handler para obtener la versión de la aplicación
+   */
+  ipcMain.handle(SHELL_OPCODE.GET_APP_VERSION, (): string => {
+    return app.getVersion()
+  })
+
+  /**
+   * Handler para abrir las herramientas de desarrollo
+   */
+  ipcMain.on(SHELL_OPCODE.OPEN_DEV_TOOLS, () => {
+    const focusedWindow = BrowserWindow.getFocusedWindow()
+    if (focusedWindow) {
+      focusedWindow.webContents.toggleDevTools()
+    }
+  })
+
+  /**
+   * Handler para abrir URLs externas
+   */
+  ipcMain.handle(SHELL_OPCODE.OPEN_EXTERNAL, async (_event, url: string): Promise<BaseResult> => {
+    try {
+      await shell.openExternal(url)
+      return { success: true }
+    } catch (error) {
+      console.error('Error abriendo URL externa:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error abriendo URL externa'
+      }
     }
   })
 

@@ -15,6 +15,9 @@ export interface SystemApi {
   selectJavaExecutable: () => Promise<{ success: boolean; path?: string; error?: string }>
   selectFolder: () => Promise<{ success: boolean; path?: string; error?: string }>
   getSystemMemory: () => Promise<{ total: number; free: number }>
+  getAppVersion: () => Promise<string>
+  openDevTools: () => void
+  openExternal: (url: string) => Promise<{ success: boolean; error?: string }>
 
   // Language
   changeLanguage: (lang: string) => void

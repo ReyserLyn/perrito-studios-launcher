@@ -1,3 +1,4 @@
+import { ConfigAbout } from '@/components/config-manager/config-about'
 import { ConfigAccount } from '@/components/config-manager/config-account'
 import { ConfigJava } from '@/components/config-manager/config-java'
 import { ConfigLauncher } from '@/components/config-manager/config-launcher'
@@ -123,6 +124,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
             <ConfigMods />
             <ConfigJava />
             <ConfigLauncher />
+            <ConfigAbout />
           </Tabs>
         </div>
       </div>

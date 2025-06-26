@@ -25,7 +25,10 @@ export const SHELL_OPCODE = {
   RESOLVE_FILE_PATH: 'shell:resolve-file-path',
   SELECT_JAVA_EXECUTABLE: 'shell:select-java-executable',
   SELECT_FOLDER: 'shell:select-folder',
-  GET_SYSTEM_MEMORY: 'shell:get-system-memory'
+  GET_SYSTEM_MEMORY: 'shell:get-system-memory',
+  GET_APP_VERSION: 'shell:get-app-version',
+  OPEN_DEV_TOOLS: 'shell:open-dev-tools',
+  OPEN_EXTERNAL: 'shell:open-external'
 } as const
 
 export const AUTO_UPDATER = {
