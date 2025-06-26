@@ -63,12 +63,22 @@
         "no-selected": "No hay cuenta seleccionada",
         "selected": "Cuenta seleccionada exitosamente",
         "removed": "Cuenta eliminada exitosamente"
+      },
+      "other-accounts": {
+        "title": "Cuentas Disponibles",
+        "subtitle": "Selecciona una cuenta para continuar",
+        "login": "Iniciar Sesión con Otra Cuenta"
       }
     },
     "error": {
       "no-accounts": "Error al cargar cuentas",
       "duplicate-username": "El nombre de usuario \"{{username}}\" ya está en uso. Por favor ingresa otro nombre o revisa las cuentas cargadas.",
-      "select-account": "Error al seleccionar cuenta"
+      "select-account": "Error al seleccionar cuenta",
+      "authentication-error": "Error de autenticación",
+      "unknown-error": "Error desconocido"
+    },
+    "success": {
+      "select": "Cuenta seleccionada exitosamente"
     }
   },
 
@@ -153,6 +163,11 @@
   },
 
   "settings": {
+    "title": "Configuración",
+    "saving": "Guardando...",
+    "save": "Guardar Cambios",
+    "discard": "Descartar Cambios",
+
     "hook": {
       "success": {
         "save": "Configuración guardada exitosamente",

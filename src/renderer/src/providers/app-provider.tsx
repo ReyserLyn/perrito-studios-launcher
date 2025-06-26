@@ -9,7 +9,6 @@ interface AppProviderProps extends PropsWithChildren {
 }
 
 function AppInitializer({ children }: PropsWithChildren) {
-  // Sincronizar React Query con Zustand store
   useAuthSync()
 
   return <>{children}</>
@@ -19,6 +18,7 @@ export function AppProvider({ children }: AppProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AppInitializer>{children}</AppInitializer>
+
       {/* Solo mostrar devtools en desarrollo */}
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>

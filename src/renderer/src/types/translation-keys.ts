@@ -1,7 +1,7 @@
 // 🤖 Auto-generated file. Do not edit manually.
 // Run 'npm run generate-types' to regenerate.
 
-export type TranslationKey =
+export type TranslationKey = 
   | 'auth.login.title'
   | 'auth.login.subtitle'
   | 'auth.login.microsoft'
@@ -34,9 +34,15 @@ export type TranslationKey =
   | 'auth.account.status.no-selected'
   | 'auth.account.status.selected'
   | 'auth.account.status.removed'
+  | 'auth.account.other-accounts.title'
+  | 'auth.account.other-accounts.subtitle'
+  | 'auth.account.other-accounts.login'
   | 'auth.error.no-accounts'
   | 'auth.error.duplicate-username'
   | 'auth.error.select-account'
+  | 'auth.error.authentication-error'
+  | 'auth.error.unknown-error'
+  | 'auth.success.select'
   | 'common.actions.save'
   | 'common.actions.cancel'
   | 'common.actions.dismiss'
@@ -89,6 +95,10 @@ export type TranslationKey =
   | 'screens.status.error'
   | 'discord.waiting'
   | 'discord.state'
+  | 'settings.title'
+  | 'settings.saving'
+  | 'settings.save'
+  | 'settings.discard'
   | 'settings.hook.success.save'
   | 'settings.hook.success.reset'
   | 'settings.hook.success.reload'
@@ -332,4 +342,4 @@ export interface TranslationParams {
   [key: string]: string | number
 }
 
-// Total keys: 325
+// Total keys: 335

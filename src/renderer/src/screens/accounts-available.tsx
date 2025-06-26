@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { AppScreen } from '@/types/navigation'
 import { Loader2, Plus, User, Users } from 'lucide-react'
@@ -16,15 +17,16 @@ export function AccountsAvailable() {
   const selectAccount = useSelectAccount()
   const { goTo } = useNavigationStore()
   const { accounts } = useAuthData()
+  const { t } = useTranslation()
 
   const handleAccountSelect = async (uuid: string) => {
     setSelectedAccountId(uuid)
     try {
       await selectAccount.mutateAsync(uuid)
-      toast.success('Cuenta seleccionada exitosamente')
+      toast.success(t('auth.success.select'))
     } catch (error) {
-      console.error('Error seleccionando cuenta:', error)
-      toast.error('Error al seleccionar la cuenta')
+      console.error('[AccountsAvailable] Error seleccionando cuenta:', error)
+      toast.error(t('auth.error.select-account'))
       setSelectedAccountId(null)
     }
   }
@@ -55,7 +57,7 @@ export function AccountsAvailable() {
           {/* Detalles de la cuenta */}
           <div className="flex-1 text-left space-y-2">
             <div className="font-medium text-lg text-white">
-              {account.displayName || 'Usuario sin nombre'}
+              {account.displayName || t('auth.account.status.not-found')}
             </div>
 
             <div className="text-sm text-gray-400">UUID: {account.uuid}</div>
@@ -95,8 +97,10 @@ export function AccountsAvailable() {
             alt="Perrito Studios Logo"
             className="w-64 h-auto object-contain mx-auto mb-6 opacity-90"
           />
-          <h1 className="text-3xl font-acherus text-white mb-2">Cuentas Disponibles</h1>
-          <p className="text-gray-400 text-lg">Selecciona una cuenta para continuar</p>
+          <h1 className="text-3xl font-acherus text-white mb-2">
+            {t('auth.account.other-accounts.title')}
+          </h1>
+          <p className="text-gray-400 text-lg">{t('auth.account.other-accounts.subtitle')}</p>
         </div>
 
         {/* Lista de cuentas */}
@@ -115,7 +119,7 @@ export function AccountsAvailable() {
             disabled={selectAccount.isPending}
           >
             <Plus className="w-5 h-5 mr-2" />
-            Iniciar Sesión con Otra Cuenta
+            {t('auth.account.other-accounts.login')}
           </Button>
         </div>
 

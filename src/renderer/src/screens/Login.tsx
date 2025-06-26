@@ -1,5 +1,5 @@
 import { LoginSelection, MicrosoftLoginLoading, OfflineLoginForm } from '@/components/auth'
-import { useAddMicrosoftAccount } from '@/hooks/auth/use-auth'
+import { useAddMicrosoftAccount, useTranslation } from '@/hooks'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -7,6 +7,7 @@ type LoginMode = 'selection' | 'mojang' | 'microsoft-loading'
 
 export function Login() {
   const [mode, setMode] = useState<LoginMode>('selection')
+  const { t } = useTranslation()
 
   // Mutations
   const addMicrosoftAccount = useAddMicrosoftAccount()
@@ -28,7 +29,9 @@ export function Login() {
         })
       } else if (type === 'MSFT_AUTH_REPLY_ERROR') {
         console.error('[Login] Microsoft auth error:', data)
-        toast.error(`Error de autenticación: ${data.error || 'Error desconocido'}`)
+        toast.error(
+          `${t('auth.error.authentication-error')}: ${data.error || t('auth.error.unknown-error')}`
+        )
         setMode('selection')
       } else if (type === 'close') {
         setMode('selection')
@@ -42,7 +45,7 @@ export function Login() {
     return () => {
       window.api.microsoftAuth.removeLoginListener()
     }
-  }, [mode, addMicrosoftAccount])
+  }, [mode, addMicrosoftAccount, t])
 
   const handleMicrosoftLogin = () => {
     console.log('[Login] Starting Microsoft login flow')

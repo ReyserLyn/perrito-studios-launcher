@@ -39,7 +39,7 @@ export const processModules = (
   for (const module of modules) {
     // Verificación de seguridad
     if (!module?.rawModule) {
-      console.warn('Módulo inválido encontrado:', module)
+      console.warn('[processModules] Módulo inválido encontrado:', module)
       continue
     }
 
@@ -107,7 +107,7 @@ export const processModules = (
 
     const mod: ServerMod = {
       id: moduleId,
-      name: module.rawModule.name || module.rawModule.id || 'Mod desconocido',
+      name: module.rawModule.name || module.rawModule.id || 'Mod unknown',
       version: version,
       required: isRequired,
       enabled: isEnabled,

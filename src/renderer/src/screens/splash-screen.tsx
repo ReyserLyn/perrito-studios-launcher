@@ -42,7 +42,7 @@ export function SplashScreen({ onComplete, duration = 2500 }: SplashScreenProps)
               }`}
               onLoad={() => setLogoLoaded(true)}
               onError={(e) => {
-                console.error('Error cargando logo:', e)
+                console.error('[SplashScreen] Error cargando logo:', e)
                 setLogoLoaded(true)
               }}
             />

@@ -63,12 +63,22 @@
         "no-selected": "No account selected",
         "selected": "Account selected successfully",
         "removed": "Account removed successfully"
+      },
+      "other-accounts": {
+        "title": "Available Accounts",
+        "subtitle": "Select an account to continue",
+        "login": "Sign in with another account"
       }
     },
     "error": {
       "no-accounts": "Error loading accounts",
       "duplicate-username": "The username \"{{username}}\" is already in use. Please enter another name or check the loaded accounts.",
-      "select-account": "Error selecting account"
+      "select-account": "Error selecting account",
+      "authentication-error": "Authentication error",
+      "unknown-error": "Unknown error"
+    },
+    "success": {
+      "select": "Account selected successfully"
     }
   },
 
@@ -153,6 +163,11 @@
   },
 
   "settings": {
+    "title": "Settings",
+    "saving": "Saving...",
+    "save": "Save Changes",
+    "discard": "Discard Changes",
+
     "hook": {
       "success": {
         "save": "Configuration saved successfully",

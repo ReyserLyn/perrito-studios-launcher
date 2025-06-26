@@ -7,7 +7,7 @@ import ConfigMods from '@/components/config-manager/config-mods'
 import { ConfigUpdates } from '@/components/config-manager/config-updates'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useConfigManager } from '@/hooks'
+import { useConfigManager, useTranslation } from '@/hooks'
 import { useNavigationStore } from '@/stores/use-navigation-store'
 import { ArrowLeft, Bot, Download, Gamepad, Info, Settings, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -58,6 +58,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
   const { backToHome } = useNavigationStore()
   const [activeTab, setActiveTab] = useState(tab)
   const { isLoading, isDirty, save, reset } = useConfigManager()
+  const { t } = useTranslation()
 
   useEffect(() => {
     setActiveTab(tab)
@@ -75,7 +76,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-2xl font-acherus font-bold">Configuración</h1>
+        <h1 className="text-2xl font-acherus font-bold">{t('settings.title')}</h1>
       </div>
 
       {/* Contenido principal */}
@@ -105,7 +106,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
                     disabled={!isDirty || isLoading}
                     className="w-full"
                   >
-                    Descartar Cambios
+                    {t('settings.discard')}
                   </Button>
                 )}
 
@@ -115,7 +116,7 @@ export default function ConfigManager({ tab = 'account' }: ConfigManagerProps) {
                   disabled={!isDirty || isLoading}
                   className="w-full"
                 >
-                  {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+                  {isLoading ? t('settings.saving') : t('settings.save')}
                 </Button>
               </div>
             </TabsList>

@@ -1,5 +1,6 @@
 import { Settings } from 'lucide-react'
 
+import { useTranslation } from '@/hooks'
 import logo from '../assets/images/logos/Cua_Color_LBlanco.webp'
 import { SocialButtons } from '../components/sidebar/social-buttons'
 import { Button } from '../components/ui/button'
@@ -7,6 +8,7 @@ import { useNavigationStore } from '../stores/use-navigation-store'
 
 export function Sidebar() {
   const { goToConfig } = useNavigationStore()
+  const { t } = useTranslation()
 
   return (
     <div className="h-screen w-20 bg-[#151126] border-r border-[#2c1e4d] flex flex-col">
@@ -24,7 +26,7 @@ export function Sidebar() {
           <Button
             variant="ghost"
             size="icon"
-            title="Configuración"
+            title={t('settings.title')}
             onClick={() => goToConfig('minecraft')}
             className="bg-[#1d1332] border-[#2c1e4d] border-1 p-3 h-11 w-11"
           >

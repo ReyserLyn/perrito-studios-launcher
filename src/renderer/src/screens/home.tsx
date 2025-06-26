@@ -3,20 +3,21 @@ import { DialogAccounts } from '@/components/dialog-accounts'
 import { DialogServers } from '@/components/dialog-servers'
 import { LaunchButton } from '@/components/launch-button'
 import { Badge } from '@/components/ui/badge'
-import { useCurrentServerStatus, useServerData } from '@/hooks'
+import { useCurrentServerStatus, useServerData, useTranslation } from '@/hooks'
 import { Loader2 } from 'lucide-react'
 import fondo from '../assets/images/fondos/noche-steve-dog.webp'
 
 export function Home() {
   const { currentServer, isLoading: serverLoading } = useServerData()
   const { data: currentServerStatus, isLoading: statusLoading } = useCurrentServerStatus()
+  const { t } = useTranslation()
 
   if (serverLoading) {
     return (
       <main className="px-12 py-24 w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 size={48} className="animate-spin" />
-          <p className="text-lg">Cargando...</p>
+          <p className="text-lg">{t('common.status.loading')}</p>
         </div>
       </main>
     )
@@ -52,8 +53,8 @@ export function Home() {
                 />
               )}
               {statusLoading
-                ? 'Cargando...'
-                : currentServerStatus?.players?.label || 'Desconectado'}
+                ? t('common.status.loading')
+                : currentServerStatus?.players?.label || t('common.status.offline')}
             </Badge>
 
             <h1 className="text-5xl 2xl:text-6xl font-extrabold">
