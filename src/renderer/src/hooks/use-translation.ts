@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface PluralOptions {
   count: number
@@ -18,122 +18,72 @@ interface TranslationHook {
 }
 
 export function useTranslation(): TranslationHook {
-  const [currentLanguage, setCurrentLanguage] = useState<string>('es')
-  const [isReady, setIsReady] = useState<boolean>(false)
+  const [currentLanguage, setCurrentLanguage] = useState<string>('')
+  const [isReady, setIsReady] = useState(false)
 
-  // Función para obtener traducciones desde el main process
-  const t = useCallback((key: string, placeholders?: Record<string, string | number>): string => {
-    if (!window.electron?.ipcRenderer) {
-      console.warn('IPC Renderer no disponible')
-      return key
+  useEffect(() => {
+    const initializeLanguage = async () => {
+      try {
+        // Obtener el idioma desde la configuración
+        const configResponse = await window.api.config.getCurrentLanguage()
+        if (configResponse.success && configResponse.language) {
+          setCurrentLanguage(configResponse.language)
+          window.api.language.change(configResponse.language)
+        } else {
+          const currentLang = window.api.language.getCurrent()
+          setCurrentLanguage(currentLang)
+        }
+        setIsReady(true)
+      } catch (error) {
+        console.error('Error inicializando idioma:', error)
+        setCurrentLanguage('es_ES')
+        setIsReady(true)
+      }
     }
 
-    try {
-      // Enviar solicitud síncrona al main process
-      const result = window.electron.ipcRenderer.sendSync('language-query', key, placeholders)
-      return result || key
-    } catch (error) {
-      console.warn('Error getting translation for key:', key, error)
-      return key
-    }
-  }, [])
+    initializeLanguage()
 
-  // Función para pluralización
-  const plural = useCallback((key: string, options: PluralOptions): string => {
-    if (!window.electron?.ipcRenderer) {
-      console.warn('IPC Renderer no disponible')
-      return key
-    }
-
-    try {
-      const result = window.electron.ipcRenderer.sendSync('language-plural', key, options)
-      return result || key
-    } catch (error) {
-      console.warn('Error getting plural translation for key:', key, error)
-      return key
-    }
-  }, [])
-
-  // Función para formatear fechas
-  const formatDate = useCallback((date: Date, format: 'short' | 'long' = 'short'): string => {
-    if (!window.electron?.ipcRenderer) {
-      return date.toLocaleDateString()
-    }
-
-    try {
-      const result = window.electron.ipcRenderer.sendSync(
-        'language-format-date',
-        date.toISOString(),
-        format
-      )
-      return result || date.toLocaleDateString()
-    } catch (error) {
-      console.warn('Error formatting date:', error)
-      return date.toLocaleDateString()
-    }
-  }, [])
-
-  // Función para formatear números
-  const formatNumber = useCallback((num: number): string => {
-    if (!window.electron?.ipcRenderer) {
-      return num.toString()
-    }
-
-    try {
-      const result = window.electron.ipcRenderer.sendSync('language-format-number', num)
-      return result || num.toString()
-    } catch (error) {
-      console.warn('Error formatting number:', error)
-      return num.toString()
-    }
-  }, [])
-
-  // Función para cambiar idioma
-  const changeLanguage = useCallback((lang: string): void => {
-    if (!window.electron?.ipcRenderer) {
-      console.warn('IPC Renderer no disponible')
-      return
-    }
-
-    try {
-      window.electron.ipcRenderer.send('language-change', lang)
+    // Suscribirse a cambios de idioma
+    window.api.language.onLanguageChanged((lang: string) => {
       setCurrentLanguage(lang)
-    } catch (error) {
-      console.warn('Error changing language:', error)
-    }
-  }, [])
-
-  // Obtener idioma actual al cargar
-  useEffect(() => {
-    if (!window.electron?.ipcRenderer) {
-      setIsReady(true)
-      return
-    }
-
-    try {
-      const lang = window.electron.ipcRenderer.sendSync('language-get-current')
-      setCurrentLanguage(lang || 'es')
-      setIsReady(true)
-    } catch (error) {
-      console.warn('Error getting current language:', error)
-      setIsReady(true)
-    }
-  }, [])
-
-  // Escuchar cambios de idioma
-  useEffect(() => {
-    if (!window.electron?.ipcRenderer) return
-
-    const handleLanguageChange = (_event: Electron.IpcRendererEvent, newLang: string) => {
-      setCurrentLanguage(newLang)
-    }
-
-    window.electron.ipcRenderer.on('language-changed', handleLanguageChange)
+    })
 
     return () => {
-      window.electron.ipcRenderer.removeAllListeners('language-changed')
+      window.api.language.removeLanguageListener()
     }
   }, [])
+
+  const changeLanguage = async (lang: string) => {
+    try {
+      window.api.language.change(lang)
+      const response = await window.api.config.setLanguage(lang)
+      if (!response.success) {
+        throw new Error(response.error || 'Error guardando idioma en configuración')
+      }
+      await window.api.config.save()
+    } catch (error) {
+      console.error('Error cambiando idioma:', error)
+    }
+  }
+
+  const t = (key: string, placeholders?: Record<string, string | number>) => {
+    return window.api.language.query(key, placeholders)
+  }
+
+  const plural = (
+    key: string,
+    options: { count: number; zero?: string; one?: string; other?: string }
+  ) => {
+    return window.api.language.plural(key, options)
+  }
+
+  const formatDate = (date: Date, format: 'short' | 'long' = 'short') => {
+    return window.api.language.formatDate(date.toISOString(), format)
+  }
+
+  const formatNumber = (num: number) => {
+    return window.api.language.formatNumber(num)
+  }
 
   return {
     t,
