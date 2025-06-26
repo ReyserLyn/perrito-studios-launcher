@@ -208,7 +208,6 @@ export function load(): void {
     let doValidate = false
     try {
       const rawConfig = fs.readFileSync(configPath, 'utf8')
-      logger.info('Configuración leída:', rawConfig)
       const parsedConfig = JSON.parse(rawConfig)
       config = parsedConfig
       logger.info('Idioma en configuración:', parsedConfig.settings?.launcher?.language)
@@ -251,11 +250,9 @@ function validateKeySet(srcObj: any, destObj: any): any {
   }
   const validationBlacklist = ['authenticationDatabase', 'javaConfig']
   const keys = Object.keys(srcObj)
-  logger.info('Validando configuración, keys:', keys)
 
   for (let i = 0; i < keys.length; i++) {
     if (typeof destObj[keys[i]] === 'undefined') {
-      logger.info('Campo faltante, usando valor por defecto:', keys[i])
       destObj[keys[i]] = srcObj[keys[i]]
     } else if (
       typeof srcObj[keys[i]] === 'object' &&
@@ -263,7 +260,6 @@ function validateKeySet(srcObj: any, destObj: any): any {
       srcObj[keys[i]] !== null &&
       !validationBlacklist.includes(keys[i])
     ) {
-      logger.info('Validando objeto anidado:', keys[i])
       destObj[keys[i]] = validateKeySet(srcObj[keys[i]], destObj[keys[i]])
     }
   }
