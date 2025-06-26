@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useAppInfo } from '@/hooks/config/about/use-app-info'
 import { Clock, ExternalLink, Github, Loader2, ScrollText } from 'lucide-react'
-import { ConfigCard } from '../config-card'
+import { ConfigCard } from '../config-manager/config-card'
 
 export const ReleaseNotesCard = () => {
   const { isLoading, error, releaseInfo, actions } = useAppInfo()

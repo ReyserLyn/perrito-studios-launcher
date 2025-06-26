@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useAppInfo } from '@/hooks/config/about/use-app-info'
 import { CheckCircle, ExternalLink, Github, Info, Loader2, Settings } from 'lucide-react'
-import { ConfigCard } from '../config-card'
+import { ConfigCard } from '../config-manager/config-card'
 
 export const AppInfoCard = () => {
   const { appInfo, isLoading, error, actions } = useAppInfo()
