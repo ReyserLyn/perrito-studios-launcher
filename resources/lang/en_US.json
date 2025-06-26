@@ -70,7 +70,23 @@
     "welcome": "Welcome back, {{username}}!",
     "totalGames": "Total games: {{count}}",
     "lastPlayed": "Last game: {{game}}",
-    "playTime": "Play time: {{hours}} hours"
+    "playTime": "Play time: {{hours}} hours",
+    "language": {
+      "title": "Launcher Language",
+      "description": "You can change the language in the list below. Changes will be applied immediately.",
+      "select_placeholder": "Select a language"
+    },
+    "prerelease": {
+      "title": "Allow Pre-Release Updates",
+      "description": "Pre-releases include new features that may not have been fully tested or integrated. This will always be true if you are using a pre-release version.",
+      "label": "Allow Pre-Releases"
+    },
+    "data_directory": {
+      "title": "Data Directory",
+      "description": "Location where all launcher data is stored, including games, configurations, and mods.",
+      "select_placeholder": "Select a directory...",
+      "warning": "⚠️ Changing the data directory will move all existing files to the new location. This process may take several minutes depending on the size of the data."
+    }
   },
   "navigation": {
     "home": "Home",
